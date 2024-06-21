@@ -16,21 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unsis.spring.app.Entity.BD1.Instituto;
-import com.unsis.spring.app.Service.BD1.InstitutoService;
+import com.unsis.spring.app.Entity.BD1.Investigador;
+import com.unsis.spring.app.Service.BD1.InvestigadorService;
 
 @RestController
-@RequestMapping("/api/v1")
-public class InstitutoController {
-    
-    @Autowired
-	private InstitutoService institutoService;
+@RequestMapping("/api/v1") 	
+public class InvestigadorController {
 
-    @GetMapping(value="/instituto")
+    @Autowired
+	private InvestigadorService investigadorService;
+
+    @GetMapping(value="/investigador")
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Instituto> list  = institutoService.findAll();
+			List<Investigador> list  = investigadorService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -39,10 +39,10 @@ public class InstitutoController {
 		} 
  	}
 
-     @GetMapping(value="/instituto/{id}")
+     @GetMapping(value="/investigador/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-			 Instituto data  = institutoService.findById(id);
+			Investigador data  = investigadorService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -52,11 +52,11 @@ public class InstitutoController {
          } 
       }
 
-	@PostMapping(value="/instituto")
-	public ResponseEntity<Object> create(@RequestBody Instituto instituto){ 
+      @PostMapping(value="/investigador")
+	public ResponseEntity<Object> create(@RequestBody Investigador investigador){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Instituto res = institutoService.save(instituto);  
+			Investigador res = investigadorService.save(investigador);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -65,18 +65,22 @@ public class InstitutoController {
 		} 
  	}
 
-     @PutMapping("/instituto/{id}")
-     public ResponseEntity<Object> update(@RequestBody Instituto instituto, @PathVariable Long id){ 
+     @PutMapping("/investigador/{id}")
+     public ResponseEntity<Object> update(@RequestBody Investigador investigador, @PathVariable Long id){ 
          Map<String, Object> map = new HashMap<String, Object>();
          try {
              
-			Instituto currentrInstituto = institutoService.findById(id);
+			Investigador currentrInvestigador = investigadorService.findById(id);
              
-            currentrInstituto.setNombre(instituto.getNombre());
+            currentrInvestigador.setNum_empleado(investigador.getNum_empleado());
+			currentrInvestigador.setNombre_1_investigador(investigador.getNombre_1_investigador());
+			currentrInvestigador.setNombre_2_investigador(investigador.getNombre_2_investigador());
+			currentrInvestigador.setApellido_paterno_1_investigador(investigador.getApellido_paterno_1_investigador());
+			currentrInvestigador.setApellido_materno_2_investigador(investigador.getApellido_materno_2_investigador());
+
+			Investigador updatedInvestigador = investigadorService.save(currentrInvestigador);
              
-			Instituto updatedInstituto = institutoService.save(currentrInstituto);
-             
-            return new ResponseEntity<Object>(updatedInstituto,HttpStatus.OK);
+            return new ResponseEntity<Object>(updatedInvestigador,HttpStatus.OK);
          } 
          catch (Exception e) {
              map.put("message", e.getMessage());
@@ -84,12 +88,12 @@ public class InstitutoController {
          } 
       }
 
-      @DeleteMapping("/instituto/{id}")
+      @DeleteMapping("/investigador/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try { 
-			Instituto currentrInstituto = institutoService.findById(id); 
-			institutoService.delete(currentrInstituto);
+			Investigador currentrInvestigador = investigadorService.findById(id); 
+			investigadorService.delete(currentrInvestigador);
 			map.put("deleted", true);
 			return new ResponseEntity<Object>(map,HttpStatus.OK);
 		} 
