@@ -75,9 +75,6 @@ public class UserController {
 			User currentrUser = userService.findById(id);
             
             currentrUser.setUsername(user.getUsername());
-            currentrUser.setApellidoP(user.getApellidoP());
-            currentrUser.setNombres(user.getNombres());
-            currentrUser.setApellidoM(user.getApellidoM());
             currentrUser.setPassword(user.getPassword());
             currentrUser.setRole(user.getRole());
              

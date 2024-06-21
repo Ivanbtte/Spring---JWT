@@ -36,9 +36,6 @@ public class User implements UserDetails{
     @Column(nullable = false)
     String username;
     @Column(nullable = false)
-    String apellidoP;
-    String nombres;
-    String apellidoM;
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
