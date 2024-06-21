@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Table(name="instituto")
 public class Instituto{
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
