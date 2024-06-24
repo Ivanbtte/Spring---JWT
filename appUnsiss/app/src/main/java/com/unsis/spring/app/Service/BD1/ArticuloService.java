@@ -2,16 +2,16 @@ package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
 
-import com.unsis.spring.app.Entity.BD1.Articulo;
+import com.unsis.spring.app.Entity.BD1.Articulos;
 
 public interface ArticuloService {
     
-    public List<Articulo> findAll();
+    public List<Articulos> findAll();
 	
-	public Articulo save(Articulo art);
+	public Articulos save(Articulos art);
 	
-	public Articulo findById(Long id);
+	public Articulos findById(Long id);
 	
-	public void delete(Articulo art);
+	public void delete(Articulos art);
     
 }

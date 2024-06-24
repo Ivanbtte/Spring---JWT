@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unsis.spring.app.Entity.BD1.Articulo;
+import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 
 @RestController
@@ -29,7 +29,7 @@ public class ArticuloController {
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Articulo> list  = articuloService.findAll();
+			List<Articulos> list  = articuloService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -41,7 +41,7 @@ public class ArticuloController {
      @GetMapping(value="/articulo/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-			Articulo data  = articuloService.findById(id);
+			Articulos data  = articuloService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -52,10 +52,10 @@ public class ArticuloController {
       }
 
       @PostMapping(value="/articulo")
-	public ResponseEntity<Object> create(@RequestBody Articulo articulo){ 
+	public ResponseEntity<Object> create(@RequestBody Articulos articulo){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Articulo res = articuloService.save(articulo);  
+			Articulos res = articuloService.save(articulo);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -65,11 +65,11 @@ public class ArticuloController {
  	}
 
     @PutMapping("/articulo/{id}")
-    public ResponseEntity<Object> update(@RequestBody Articulo articulo, @PathVariable Long id){ 
+    public ResponseEntity<Object> update(@RequestBody Articulos articulo, @PathVariable Long id){ 
         Map<String, Object> map = new HashMap<String, Object>();
         try {
              
-			Articulo currentrArticulo = articuloService.findById(id);
+			Articulos currentrArticulo = articuloService.findById(id);
              
             currentrArticulo.setFecha_publicacion(articulo.getFecha_publicacion());
 			currentrArticulo.setTitulo_revista(articulo.getTitulo_revista());
@@ -82,7 +82,7 @@ public class ArticuloController {
             currentrArticulo.setIsbn_digital(articulo.getIsbn_digital());
 
 
-			Articulo updatedInvestigador = articuloService.save(currentrArticulo);
+			Articulos updatedInvestigador = articuloService.save(currentrArticulo);
              
             return new ResponseEntity<Object>(updatedInvestigador,HttpStatus.OK);
          } 
@@ -96,7 +96,7 @@ public class ArticuloController {
 	public ResponseEntity<Object> delete(@PathVariable Long id){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try { 
-			Articulo currentrInvestigador = articuloService.findById(id); 
+			Articulos currentrInvestigador = articuloService.findById(id); 
 			articuloService.delete(currentrInvestigador);
 			map.put("deleted", true);
 			return new ResponseEntity<Object>(map,HttpStatus.OK);

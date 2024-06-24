@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
-import com.unsis.spring.app.Entity.BD1.Instituto;
 import com.unsis.spring.app.User.User;
 import com.unsis.spring.app.User.UserRepository;
 

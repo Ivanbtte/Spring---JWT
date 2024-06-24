@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.unsis.spring.app.Entity.BD1.Articulo;
+import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Repository.BD1.ArticuloDao;
 
 import jakarta.transaction.Transactional;
@@ -17,24 +17,24 @@ public class ArticuloServiceImpl implements ArticuloService{
 	
 	@Override
 	@Transactional
-	public List<Articulo> findAll() {
-		return (List<Articulo>) articuloDao.findAll();
+	public List<Articulos> findAll() {
+		return (List<Articulos>) articuloDao.findAll();
 	}
 
 	@Override
 	@Transactional
-	public Articulo save(Articulo articulo) {
+	public Articulos save(Articulos articulo) {
 		return articuloDao.save(articulo);
 	}
 
 	@Override 
-	public Articulo findById(Long id) {
+	public Articulos findById(Long id) {
 		return articuloDao.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
-	public void delete(Articulo articulo) {
+	public void delete(Articulos articulo) {
 		articuloDao.delete(articulo);
 		
 	}
