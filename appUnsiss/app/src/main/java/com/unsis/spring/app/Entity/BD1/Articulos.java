@@ -46,12 +46,12 @@ public class Articulos {
     @Column(nullable = false)
     private Integer pag_final;
 
-    @Column(nullable = false)
+    @Column
     private String doi;
     
-    @Column(nullable = false)
+    @Column
     private String isbn_impreso;
 
-    @Column(nullable = false)
+    @Column
     private String isbn_digital;
 }
