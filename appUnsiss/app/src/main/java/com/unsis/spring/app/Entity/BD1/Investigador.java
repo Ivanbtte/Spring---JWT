@@ -1,9 +1,9 @@
 package com.unsis.spring.app.Entity.BD1;
 
-import org.antlr.v4.runtime.misc.NotNull;
 
 import com.unsis.spring.app.User.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,20 +26,20 @@ public class Investigador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @JoinColumn(nullable = false)
-    Integer num_empleado;
+    @Column(nullable = false)
+    private Integer num_empleado;
 
-    @JoinColumn(nullable = false)
-    String nombre_1_investigador;
+    @Column(nullable = false)
+    private  String nombre_1_investigador;
 
-    @JoinColumn(nullable = false)
-    String nombre_2_investigador;
+    @Column(nullable = false)
+    private String nombre_2_investigador;
 
-    @JoinColumn(nullable = false)
-    String apellido_paterno_1_investigador;
+    @Column(nullable = false)
+    private String apellido_paterno_1_investigador;
     
-    @JoinColumn()
-    String apellido_materno_2_investigador;
+    @Column()
+    private String apellido_materno_2_investigador;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", nullable = false)
