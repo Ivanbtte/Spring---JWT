@@ -2,7 +2,8 @@
 <p *ngIf="!userLoginOn">Usuario NO autenticado</p>
 <p *ngIf="userLoginOn">Usuario Autenticado</p>
 <div *ngIf="userLoginOn">
-</div>
-<div class="card-body m-0">
+  <div class="card-body m-0">
+    <app-usuario></app-usuario>
     <app-personal-details></app-personal-details>
+  </div>
 </div>
