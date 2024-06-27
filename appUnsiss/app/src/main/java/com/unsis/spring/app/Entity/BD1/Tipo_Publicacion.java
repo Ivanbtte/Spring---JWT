@@ -2,6 +2,8 @@ package com.unsis.spring.app.Entity.BD1;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,5 +30,6 @@ public class Tipo_Publicacion {
     private String descripcion_publicacion_tipo;
 
     @OneToMany(mappedBy = "tipo_Publicacion")
+     @JsonManagedReference
     private List<Articulos> articulos;
 }

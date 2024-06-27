@@ -1,6 +1,10 @@
 package com.unsis.spring.app.Entity.BD1;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -26,6 +32,7 @@ public class Articulos {
 
     @ManyToOne
     @JoinColumn(name = "id_publicacion_tipo", nullable = false)
+    @JsonBackReference
     private Tipo_Publicacion tipo_Publicacion;
     
     @Column(nullable = false)
@@ -54,4 +61,12 @@ public class Articulos {
 
     @Column
     private String isbn_digital;
+
+    @ManyToMany
+    @JoinTable(
+        name = "articulo_autor",
+        joinColumns = @JoinColumn(name = "id_articulo"),
+        inverseJoinColumns = @JoinColumn(name = "id_autor")
+    )
+    private Set<Autor> autores = new HashSet<>();
 }
