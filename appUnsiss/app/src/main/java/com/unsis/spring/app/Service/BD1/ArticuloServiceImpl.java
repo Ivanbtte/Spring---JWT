@@ -38,4 +38,10 @@ public class ArticuloServiceImpl implements ArticuloService{
 		articuloDao.delete(articulo);
 		
 	}
+
+	// Método para obtener artículos por ID del autor
+	@Transactional
+    public List<Articulos> findArticulosByAutorId(Long autorId) {
+        return articuloDao.findArticulosByAutorId(autorId);
+    }
 }
