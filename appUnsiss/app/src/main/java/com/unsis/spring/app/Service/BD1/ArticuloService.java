@@ -13,5 +13,7 @@ public interface ArticuloService {
 	public Articulos findById(Long id);
 	
 	public void delete(Articulos art);
+
+	public List<Articulos> findArticulosByAutorId(Long autorId);
     
 }

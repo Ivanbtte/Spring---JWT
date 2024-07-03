@@ -162,4 +162,16 @@ public class ArticuloController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value="/articulos/autor/{autorId}")
+    public ResponseEntity<Object> getArticulosByAutorId(@PathVariable Long autorId) {
+        try {
+            List<Articulos> data = articuloService.findArticulosByAutorId(autorId);
+            return new ResponseEntity<>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
