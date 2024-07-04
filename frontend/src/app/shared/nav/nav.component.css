@@ -1,38 +1,41 @@
 /* Estilos para la barra de navegación */
 .navbar {
-    background-color: #550603; /* Color de fondo oscuro */
-    padding: 5px 10px;
-  }
-  
-  .navbar-brand {
-    font-size: 20px;
-    font-weight: bold;
-    color: #ffffff;
-  }
-  
-  .navbar-nav .nav-item .nav-link {
-    font-size: 16px;
-    font-weight: 500;
-    color: #ffffff;
-    padding: 10px 15px;
-    transition: color 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .navbar-nav .nav-item .nav-link:hover {
-    color: #83b5eb;
-    background-color: #3b0503; /* Color de fondo al pasar el ratón */
-    border-radius: 5px;
-  }
-  
-  .navbar-toggler {
-    border: none;
-  }
-  
-  .navbar-toggler-icon {
-   color: #ffffff;
-  }
-  
-  .ml-auto {
-    margin-left: auto;
-  }
-  
+  background-color: #550603; /* Color de fondo oscuro */
+  padding: 10px 20px; /* Aumentado ligeramente para mejorar la visualización */
+}
+
+.navbar-brand {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.navbar-brand i {
+  margin-right: 5px; /* Espacio entre el icono y el texto */
+}
+
+.navbar-nav .nav-item .nav-link {
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  padding: 10px 15px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #83b5eb;
+  background-color: #3b0503; /* Color de fondo al pasar el ratón */
+  border-radius: 5px;
+}
+
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  color: #ffffff;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
