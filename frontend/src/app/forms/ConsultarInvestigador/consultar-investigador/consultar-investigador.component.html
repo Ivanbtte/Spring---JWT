@@ -1,0 +1,41 @@
+<app-nav></app-nav>
+<div class="container content">
+    <h3>Consultar Investigaciones</h3>
+    <form>
+        <div class="form-group">
+            <label for="instituto">Instituto</label>
+            <select class="form-control" id="instituto" onchange="loadProfessors()">
+                <option value="">Seleccione un instituto</option>
+                <option value="IEM">Instituto de Estudios Municipales</option>
+                <option value="ISP">Instituto de Investigación sobre la Salud Pública</option>
+                <option value="IF">Instituto de Informática</option>
+                <option value="IN">Instituto de Nutrición</option>
+                <option value="IE">Instituto de Estudios Empresariales</option>
+                <option value="DEP">División de Estudios de Postgrado</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="profesor">Profesor</label>
+            <select class="form-control" id="profesor" onchange="loadInvestigations()">
+                <option value="">Seleccione un profesor</option>
+                <!-- Opciones de profesores se cargarán dinámicamente -->
+                <option value="">Juan</option>
+                <option value="">Pedro</option>
+                <option value="">Maria</option>
+            </select>
+        </div>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID de Investigación</th>
+                <th>Cita APA</th>
+                <th>Nombre de la Investigación</th>
+            </tr>
+        </thead>
+        <tbody id="investigations-table-body">
+            <!-- Las investigaciones se cargarán aquí dinámicamente -->
+        </tbody>
+    </table>
+</div>

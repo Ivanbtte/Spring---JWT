@@ -12,6 +12,9 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NavComponent } from './shared/nav/nav.component';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details.component';
 import { UsuarioComponent } from './forms/usuario/usuario.component';
+import { ConsultarInvestigadorComponent } from './forms/ConsultarInvestigador/consultar-investigador/consultar-investigador.component';
+import { RegistrarInvestigadorComponent } from './forms/RegistrarInvestigador/registrar-investigador/registrar-investigador.component';
+import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { UsuarioComponent } from './forms/usuario/usuario.component';
     LoginComponent,
     NavComponent,
     PersonalDetailsComponent,
-    UsuarioComponent
+    UsuarioComponent,
+    ConsultarInvestigadorComponent,
+    RegistrarInvestigadorComponent,
+    RegistrarPublicacionComponent
   ],
   imports: [
     BrowserModule,
