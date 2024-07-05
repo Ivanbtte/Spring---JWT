@@ -15,6 +15,7 @@ import { UsuarioComponent } from './forms/usuario/usuario.component';
 import { ConsultarInvestigadorComponent } from './forms/ConsultarInvestigador/consultar-investigador/consultar-investigador.component';
 import { RegistrarInvestigadorComponent } from './forms/RegistrarInvestigador/registrar-investigador/registrar-investigador.component';
 import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
+import { CrearUsuarioComponent } from './forms/CrearUsuario/crear-usuario/crear-usuario.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/regi
     UsuarioComponent,
     ConsultarInvestigadorComponent,
     RegistrarInvestigadorComponent,
-    RegistrarPublicacionComponent
+    RegistrarPublicacionComponent,
+    CrearUsuarioComponent
   ],
   imports: [
     BrowserModule,
