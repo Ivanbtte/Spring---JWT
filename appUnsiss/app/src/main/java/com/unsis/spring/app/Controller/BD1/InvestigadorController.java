@@ -77,6 +77,9 @@ public class InvestigadorController {
 			currentrInvestigador.setNombre_2_investigador(investigador.getNombre_2_investigador());
 			currentrInvestigador.setApellido_paterno_1_investigador(investigador.getApellido_paterno_1_investigador());
 			currentrInvestigador.setApellido_materno_2_investigador(investigador.getApellido_materno_2_investigador());
+			currentrInvestigador.setUser(investigador.getUser());
+			currentrInvestigador.setInstituto(investigador.getInstituto());
+			currentrInvestigador.setAutor(investigador.getAutor());
 
 			Investigador updatedInvestigador = investigadorService.save(currentrInvestigador);
              
