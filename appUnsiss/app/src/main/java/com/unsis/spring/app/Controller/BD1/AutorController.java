@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unsis.spring.app.DTO.ArticuloDto;
+import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
@@ -36,7 +38,7 @@ public class AutorController {
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Autor> list  = autorService.findAll();
+			List<AutorDto> list  = autorService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -48,7 +50,7 @@ public class AutorController {
      @GetMapping(value="/autor/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-            Autor data  = autorService.findById(id);
+            AutorDto data  = autorService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -59,10 +61,10 @@ public class AutorController {
       }
 
       @PostMapping(value="/autor")
-	public ResponseEntity<Object> create(@RequestBody Autor autor){ 
+	public ResponseEntity<Object> create(@RequestBody AutorDto autorDto){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Autor res = autorService.save(autor);  
+			AutorDto res = autorService.save(autorDto);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -72,19 +74,20 @@ public class AutorController {
  	}
 
      @PutMapping("/autor/{id}")
-     public ResponseEntity<Object> update(@RequestBody Autor autor, @PathVariable Long id){ 
+     public ResponseEntity<Object> update(@RequestBody AutorDto autorDto, @PathVariable Long id){ 
          Map<String, Object> map = new HashMap<String, Object>();
          try {
              
-			Autor currentrAutor = autorService.findById(id);
+			AutorDto currentrAutor = autorService.findById(id);
              
-            currentrAutor.setNombre1Autor(autor.getNombre1Autor());
-            currentrAutor.setNombre2Autor(autor.getNombre2Autor());
-            currentrAutor.setApellidoPaternoAutor(autor.getApellidoPaternoAutor());
-            currentrAutor.setApellidoMaternoAutor(autor.getApellidoMaternoAutor());
-            currentrAutor.setAutorUnsis(autor.getAutorUnsis());
+            currentrAutor.setNombre1Autor(autorDto.getNombre1Autor());
+            currentrAutor.setNombre2Autor(autorDto.getNombre2Autor());
+            currentrAutor.setApellidoPaternoAutor(autorDto.getApellidoPaternoAutor());
+            currentrAutor.setApellidoMaternoAutor(autorDto.getApellidoMaternoAutor());
+            currentrAutor.setAutorUnsis(autorDto.getAutorUnsis());
+            currentrAutor.setArticulos(autorDto.getArticulos());
              
-			Autor updatedAutor = autorService.save(currentrAutor);
+			AutorDto updatedAutor = autorService.save(currentrAutor);
              
             return new ResponseEntity<Object>(updatedAutor,HttpStatus.OK);
          } 
@@ -95,39 +98,37 @@ public class AutorController {
       }
 
       @DeleteMapping("/autor/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try { 
-			Autor currentrAutor = autorService.findById(id); 
-			autorService.delete(currentrAutor);
-			map.put("deleted", true);
-			return new ResponseEntity<Object>(map,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+      public ResponseEntity<Object> delete(@PathVariable Long id) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            autorService.delete(id);
+            map.put("deleted", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 	 @PostMapping("/autor/{id}/articulos/{articuloId}")
     public ResponseEntity<Object> addArticuloToAutor(@PathVariable Long id, @PathVariable Long articuloId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            Autor autor = autorService.findById(id);
-            if (autor == null) {
+            AutorDto autorDto = autorService.findById(id);
+            if (autorDto == null) {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            Articulos articulo = articuloService.findById(articuloId);
-            if (articulo == null) {
+            ArticuloDto articuloDto = articuloService.findById(articuloId);
+            if (articuloDto == null) {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            autor.getArticulos().add(articulo);
-            Autor updatedAutor = autorService.save(autor);
-            return new ResponseEntity<>(updatedAutor, HttpStatus.OK);
+            autorDto.getArticulos().add(articuloDto);
+            AutorDto updatedAutorDto = autorService.save(autorDto);
+            return new ResponseEntity<>(updatedAutorDto, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -138,21 +139,21 @@ public class AutorController {
     public ResponseEntity<Object> removeArticuloFromAutor(@PathVariable Long id, @PathVariable Long articuloId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            Autor autor = autorService.findById(id);
-            if (autor == null) {
+            AutorDto autorDto = autorService.findById(id);
+            if (autorDto == null) {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            Articulos articulo = articuloService.findById(articuloId);
-            if (articulo == null) {
+            ArticuloDto articuloDto = articuloService.findById(articuloId);
+            if (articuloDto == null) {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            autor.getArticulos().remove(articulo);
-            Autor updatedAutor = autorService.save(autor);
-            return new ResponseEntity<>(updatedAutor, HttpStatus.OK);
+            autorDto.getArticulos().remove(articuloDto);
+            AutorDto updatedAutorDto = autorService.save(autorDto);
+            return new ResponseEntity<>(updatedAutorDto, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);

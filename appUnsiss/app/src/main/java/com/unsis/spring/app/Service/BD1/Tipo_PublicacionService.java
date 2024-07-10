@@ -2,14 +2,15 @@ package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
 
-import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
+import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
 
 public interface Tipo_PublicacionService {
-    public List<Tipo_Publicacion> findAll();
 	
-	public Tipo_Publicacion save(Tipo_Publicacion tipo_Publicacion);
-	
-	public Tipo_Publicacion findById(Long id);
-	
-	public void delete(Tipo_Publicacion tipo_Publicacion);
+	List<Tipo_PublicacionDto> findAll();
+    
+    Tipo_PublicacionDto save(Tipo_PublicacionDto tipoPublicacionDto);
+    
+    Tipo_PublicacionDto findById(Long id);
+    
+    void delete(Long id);
 }

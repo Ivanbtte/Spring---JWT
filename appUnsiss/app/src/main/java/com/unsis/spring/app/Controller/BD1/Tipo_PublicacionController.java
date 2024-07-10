@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
 import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
 import com.unsis.spring.app.Service.BD1.Tipo_PublicacionService;
 
 @RestController
 @RequestMapping("/api/v1")
 public class Tipo_PublicacionController {
+
     @Autowired
 	private Tipo_PublicacionService tipo_PublicacionService;
 
@@ -29,7 +31,7 @@ public class Tipo_PublicacionController {
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Tipo_Publicacion> list  = tipo_PublicacionService.findAll();
+			List<Tipo_PublicacionDto> list  = tipo_PublicacionService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -41,7 +43,7 @@ public class Tipo_PublicacionController {
      @GetMapping(value="/tipo_Publicacion/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-            Tipo_Publicacion data  = tipo_PublicacionService.findById(id);
+            Tipo_PublicacionDto data  = tipo_PublicacionService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -52,10 +54,10 @@ public class Tipo_PublicacionController {
       }
 
       @PostMapping(value="/tipo_Publicacion")
-	public ResponseEntity<Object> create(@RequestBody Tipo_Publicacion tipo_Publicacion){ 
+	public ResponseEntity<Object> create(@RequestBody Tipo_PublicacionDto tipo_PublicacionDto){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Tipo_Publicacion res = tipo_PublicacionService.save(tipo_Publicacion);  
+			Tipo_PublicacionDto res = tipo_PublicacionService.save(tipo_PublicacionDto);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -65,15 +67,15 @@ public class Tipo_PublicacionController {
  	}
 
      @PutMapping("/tipo_Publicacion/{id}")
-     public ResponseEntity<Object> update(@RequestBody Tipo_Publicacion tipo_Publicacion, @PathVariable Long id){ 
+     public ResponseEntity<Object> update(@RequestBody Tipo_PublicacionDto tipo_PublicacionDto, @PathVariable Long id){ 
          Map<String, Object> map = new HashMap<String, Object>();
          try {
              
-			Tipo_Publicacion currentrTipo_Publicacion = tipo_PublicacionService.findById(id);
+			Tipo_PublicacionDto currentrTipo_Publicacion = tipo_PublicacionService.findById(id);
              
-            currentrTipo_Publicacion.setDescripcion_publicacion_tipo(tipo_Publicacion.getDescripcion_publicacion_tipo());
+            currentrTipo_Publicacion.setDescripcion_publicacion_tipo(tipo_PublicacionDto.getDescripcion_publicacion_tipo());
              
-			Tipo_Publicacion updatedTipo_Publicacion = tipo_PublicacionService.save(currentrTipo_Publicacion);
+			Tipo_PublicacionDto updatedTipo_Publicacion = tipo_PublicacionService.save(currentrTipo_Publicacion);
              
             return new ResponseEntity<Object>(updatedTipo_Publicacion,HttpStatus.OK);
          } 
@@ -84,17 +86,15 @@ public class Tipo_PublicacionController {
       }
 
       @DeleteMapping("/tipo_Publicacion/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try { 
-			Tipo_Publicacion currentrTipo_Publicacion = tipo_PublicacionService.findById(id); 
-			tipo_PublicacionService.delete(currentrTipo_Publicacion);
-			map.put("deleted", true);
-			return new ResponseEntity<Object>(map,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+	  public ResponseEntity<Object> delete(@PathVariable Long id){ 
+        Map<String, Object> map = new HashMap<>();
+        try { 
+            tipo_PublicacionService.delete(id);
+            map.put("deleted", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        } 
+    }
 }

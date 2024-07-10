@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unsis.spring.app.Entity.BD1.Articulos;
-import com.unsis.spring.app.Entity.BD1.Autor;
+import com.unsis.spring.app.DTO.ArticuloDto;
+import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
 
@@ -35,7 +34,7 @@ public class ArticuloController {
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Articulos> list  = articuloService.findAll();
+			List<ArticuloDto> list  = articuloService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -47,7 +46,7 @@ public class ArticuloController {
      @GetMapping(value="/articulo/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-			Articulos data  = articuloService.findById(id);
+			ArticuloDto data  = articuloService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -58,10 +57,10 @@ public class ArticuloController {
       }
 
       @PostMapping(value="/articulo")
-	public ResponseEntity<Object> create(@RequestBody Articulos articulo){ 
+	public ResponseEntity<Object> create(@RequestBody ArticuloDto articuloDto){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Articulos res = articuloService.save(articulo);  
+			ArticuloDto res = articuloService.save(articuloDto);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -71,26 +70,25 @@ public class ArticuloController {
  	}
 
     @PutMapping("/articulo/{id}")
-    public ResponseEntity<Object> update(@RequestBody Articulos articulo, @PathVariable Long id){ 
+    public ResponseEntity<Object> update(@RequestBody ArticuloDto articuloDto, @PathVariable Long id){ 
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-             
-			Articulos currentrArticulo = articuloService.findById(id);
-             
-            currentrArticulo.setFecha_publicacion(articulo.getFecha_publicacion());
-			currentrArticulo.setTitulo_revista(articulo.getTitulo_revista());
-			currentrArticulo.setNumero_revista(articulo.getNumero_revista());
-			currentrArticulo.setVolumen_revista(articulo.getVolumen_revista());
-			currentrArticulo.setPag_inicio(articulo.getPag_inicio());
-            currentrArticulo.setPag_final(articulo.getPag_final());
-            currentrArticulo.setDoi(articulo.getDoi());
-            currentrArticulo.setIsbn_impreso(articulo.getIsbn_impreso());
-            currentrArticulo.setIsbn_digital(articulo.getIsbn_digital());
+            ArticuloDto currentArticulo = articuloService.findById(id);
 
+            currentArticulo.setFecha_publicacion(articuloDto.getFecha_publicacion());
+            currentArticulo.setTitulo_revista(articuloDto.getTitulo_revista());
+            currentArticulo.setNumero_revista(articuloDto.getNumero_revista());
+            currentArticulo.setVolumen_revista(articuloDto.getVolumen_revista());
+            currentArticulo.setPag_inicio(articuloDto.getPag_inicio());
+            currentArticulo.setPag_final(articuloDto.getPag_final());
+            currentArticulo.setDoi(articuloDto.getDoi());
+            currentArticulo.setIsbn_impreso(articuloDto.getIsbn_impreso());
+            currentArticulo.setIsbn_digital(articuloDto.getIsbn_digital());
+            currentArticulo.setAutores(articuloDto.getAutores());
 
-			Articulos updatedInvestigador = articuloService.save(currentrArticulo);
+            ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
              
-            return new ResponseEntity<Object>(updatedInvestigador,HttpStatus.OK);
+            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
          } 
          catch (Exception e) {
              map.put("message", e.getMessage());
@@ -99,39 +97,37 @@ public class ArticuloController {
       }
 
     @DeleteMapping("/articulo/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try { 
-			Articulos currentrInvestigador = articuloService.findById(id); 
-			articuloService.delete(currentrInvestigador);
-			map.put("deleted", true);
-			return new ResponseEntity<Object>(map,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+	public ResponseEntity<Object> delete(@PathVariable Long id) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            articuloService.delete(id);
+            map.put("deleted", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 	@PostMapping("/articulo/{id}/autores/{autorId}")
     public ResponseEntity<Object> addAutorToArticulo(@PathVariable Long id, @PathVariable Long autorId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            Articulos articulo = articuloService.findById(id);
-            if (articulo == null) {
+            ArticuloDto articuloDto = articuloService.findById(id);
+            if (articuloDto == null) {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            Autor autor = autorService.findById(autorId);
-            if (autor == null) {
+            AutorDto autorDto = autorService.findById(autorId);
+            if (autorDto == null) {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            articulo.getAutores().add(autor);
-            Articulos updatedArticulo = articuloService.save(articulo);
-            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
+            articuloDto.getAutores().add(autorDto);
+            ArticuloDto updatedArticuloDto = articuloService.save(articuloDto);
+            return new ResponseEntity<>(updatedArticuloDto, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -142,21 +138,21 @@ public class ArticuloController {
     public ResponseEntity<Object> removeAutorFromArticulo(@PathVariable Long id, @PathVariable Long autorId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            Articulos articulo = articuloService.findById(id);
-            if (articulo == null) {
+            ArticuloDto articuloDto = articuloService.findById(id);
+            if (articuloDto == null) {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            Autor autor = autorService.findById(autorId);
-            if (autor == null) {
+            AutorDto autorDto = autorService.findById(autorId);
+            if (autorDto == null) {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            articulo.getAutores().remove(autor);
-            Articulos updatedArticulo = articuloService.save(articulo);
-            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
+            articuloDto.getAutores().remove(autorDto);
+            ArticuloDto updatedArticuloDto = articuloService.save(articuloDto);
+            return new ResponseEntity<>(updatedArticuloDto, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -166,7 +162,7 @@ public class ArticuloController {
     @GetMapping(value="/articulos/autor/{autorId}")
     public ResponseEntity<Object> getArticulosByAutorId(@PathVariable Long autorId) {
         try {
-            List<Articulos> data = articuloService.findArticulosByAutorId(autorId);
+            List<ArticuloDto> data = articuloService.findArticulosByAutorId(autorId);
             return new ResponseEntity<>(data, HttpStatus.OK);
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<>();
