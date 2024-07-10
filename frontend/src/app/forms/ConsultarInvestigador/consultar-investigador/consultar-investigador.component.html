@@ -37,12 +37,16 @@
         <thead>
             <tr>
                 <th>ID de Investigación</th>
-                <th>Cita APA</th>
-                <th>Nombre de la Investigación</th>
+                <th>Titulo de revista</th>
+                <th>Fecha de publicación</th>
             </tr>
         </thead>
         <tbody id="investigations-table-body">
-            <!-- Las investigaciones se cargarán aquí dinámicamente -->
+            <tr *ngFor="let articulo of articulos; trackBy: trackById">
+                <td>{{articulo.id}}</td>
+                <td>{{articulo.titulo_revista}}</td>
+                <td>{{articulo.fecha_publicacion}}</td>
+            </tr>
         </tbody>
     </table>
 </div>

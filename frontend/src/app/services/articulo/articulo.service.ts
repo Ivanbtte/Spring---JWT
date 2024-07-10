@@ -1,30 +1,27 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
-import { User } from '../auth/user';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserService {
+export class ArticuloService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
-
-  getUser(id:number):Observable<User>
-  {
-      return this.http.get<User>(environment.urlApi+"user/"+id).pipe(
-        catchError(this.handleError)
-      )
+  getList(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi+'articulo').pipe(
+      catchError(this.handleError)
+    )
   }
+
   private handleError(error:HttpErrorResponse){
-    if(error.status===0){
-      console.error('Se ha producido un error ', error.error);
+    if(error.status==0){
+      console.error('Se ha producido un error ',error.status, error.error);
     }
     else{
       console.error('Backend retornó el código de estado ', error.status, error.error);
     }
     return throwError(()=> new Error('Algo falló. Por favor intente nuevamente.'));
   }
-
 }
