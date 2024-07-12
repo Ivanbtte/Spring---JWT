@@ -1,39 +1,82 @@
 <app-nav></app-nav>
-    <div class="container">
-        <h3>Registrar Publicación en Formato APA 6</h3>
-        <form class="publication-form">
-            <div class="form-group">
-                <label for="author">Autor(es)</label>
-                <input type="text" class="form-control" id="author" placeholder="Ingresar nombre(s) del autor(es)">
-            </div>
-            <div class="form-group">
-                <label for="year">Año de Publicación</label>
-                <input type="number" class="form-control" id="year" placeholder="Ingresar año de publicación">
-            </div>
-            <div class="form-group">
-                <label for="title">Título de la Publicación</label>
-                <input type="text" class="form-control" id="title" placeholder="Ingresar título de la publicación">
-            </div>
-            <div class="form-group">
-                <label for="journal">Nombre de la Revista o Conferencia</label>
-                <input type="text" class="form-control" id="journal" placeholder="Ingresar nombre de la revista o conferencia">
-            </div>
-            <div class="form-group">
-                <label for="volume">Volumen</label>
-                <input type="text" class="form-control" id="volume" placeholder="Ingresar volumen">
-            </div>
-            <div class="form-group">
-                <label for="issue">Número</label>
-                <input type="text" class="form-control" id="issue" placeholder="Ingresar número">
-            </div>
-            <div class="form-group">
-                <label for="pages">Páginas</label>
-                <input type="text" class="form-control" id="pages" placeholder="Ingresar rango de páginas (e.g., 23-45)">
-            </div>
-            <div class="form-group">
-                <label for="doi">DOI (opcional)</label>
-                <input type="text" class="form-control" id="doi" placeholder="Ingresar DOI (si aplica)">
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Registrar Publicación</button>
-        </form>
-    </div>
+<!--
+<div class="container">
+    <h2>Registrar</h2>
+    <form>
+      <div class="form-group">
+        <label for="tipoPublicacion">Tipo de publicación</label>
+        <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
+          <option *ngFor="let tipo of tiposPublicacion" [value]="tipo">{{ tipo }}</option>
+        </select>
+      </div>
+  
+      <div *ngIf="tipoPublicacion === 'Artículo'">
+        <div class="form-group">
+          <label for="titulo">Titulo</label>
+          <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required />
+        </div>
+        <div class="form-group">
+          <label for="nombreRevista">Nombre de la revista</label>
+          <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="colaboradores">Colaboradores</label>
+          <button type="button" class="btn btn-secondary" (click)="agregarColaborador()">Agregar persona</button>
+        </div>
+        
+        <div *ngFor="let colaborador of colaboradores; let i = index">
+          <div class="form-group">
+            <label for="primerNombre">Primer nombre</label>
+            <input type="text" id="primerNombre" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre-{{i}}" />
+          </div>
+          <div class="form-group">
+            <label for="apellido">Apellido</label>
+            <input type="text" id="apellido" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido-{{i}}" />
+          </div>
+          <div class="form-group">
+            <label for="rol">Rol</label>
+            <select id="rol" class="form-control" [(ngModel)]="colaborador.rol" name="rol-{{i}}">
+              <option *ngFor="let rol of rolesColaboradores" [value]="rol">{{ rol }}</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="form-group-container">
+          <div class="form-group">
+            <label for="numVolumen">Número de volumen</label>
+            <input type="number" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" />
+          </div>
+          <div class="form-group">
+            <label for="numEmision">Número de emisión</label>
+            <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" />
+          </div>
+          <div class="form-group">
+            <label for="numArticulo">Número de artículo</label>
+            <input type="number" id="numArticulo" class="form-control" [(ngModel)]="numArticulo" name="numArticulo" />
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label for="fechaPublicacion">Fecha de publicación</label>
+          <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion" name="fechaPublicacion" />
+        </div>
+        <div class="form-group-container">
+          <div class="form-group">
+            <label for="paginaInicio">Página de inicio</label>
+            <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" />
+          </div>
+          <div class="form-group">
+            <label for="paginaFin">Página final</label>
+            <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="doi">DOI</label>
+          <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi" />
+        </div>
+        <button type="button" class="btn btn-success" (click)="agregarArticulo()">Agregar</button>
+      </div>
+    </form>
+  </div>
+-->

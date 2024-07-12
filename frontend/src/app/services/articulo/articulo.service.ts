@@ -14,6 +14,9 @@ export class ArticuloService {
       catchError(this.handleError)
     )
   }
+  searchPublications(criteria: any): Observable<any> {
+    return this.http.post<any>(environment.urlApi+'articulo', criteria);
+  }
 
   private handleError(error:HttpErrorResponse){
     if(error.status==0){
