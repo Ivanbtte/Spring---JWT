@@ -52,8 +52,21 @@ export class CrearUsuarioComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      this.registrarusuarioService.registro(this.userForm.value);
-      console.log(this.userForm.value);
+      const user = {
+        username: this.userForm.value.email,
+        password: this.userForm.value.password
+      };
+
+      this.registrarusuarioService.registro(user).subscribe(
+        response => {
+          console.log('Usuario registrado:', response);
+          // Aquí puedes manejar la respuesta, por ejemplo, mostrar un mensaje de éxito
+        },
+        error => {
+          console.error('Error al registrar usuario:', error);
+          // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
+        }
+      );
     }
   }
 }
