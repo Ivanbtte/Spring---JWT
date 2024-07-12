@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unsis.spring.app.Auth.AuthResponse;
-import com.unsis.spring.app.Auth.AuthService;
-import com.unsis.spring.app.Auth.RegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
      
     private final UserService userService;
-	private final AuthService authService;
 
 	@GetMapping(value = "/user")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -43,8 +40,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/user")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<AuthResponse> register(@RequestBody UserRequestRol request) {
+        return ResponseEntity.ok(userService.register(request));
     }
 
     @PutMapping("/user/{id}")
