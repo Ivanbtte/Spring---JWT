@@ -8,12 +8,12 @@
     <ul class="navbar-nav ml-auto">
       <li *ngIf="!userLoginOn" class="nav-item">
         <a class="nav-link" routerLink="/iniciar-sesion">
-          <i class="fa fa-sign-in-alt"></i> Iniciar Sesión
+          <i class="fa fa-sign-in" aria-hidden="true"></i> Iniciar Sesión
         </a>
       </li>
       <li *ngIf="userLoginOn" class="nav-item">
         <a class="nav-link" (click)="logout()" routerLink="/inicio">
-          <i class="fa fa-sign-out-alt"></i> Cerrar Sesión
+          <i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión
         </a>
       </li>
     </ul>

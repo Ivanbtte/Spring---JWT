@@ -1,0 +1,41 @@
+<!-- user-list.component.html -->
+<app-nav></app-nav>
+<div class="container">
+    <div class="header">
+        <h3>Investigadores
+        <button class="btn btn-success float-right" (click)="onCreate()">
+            <i class="fa fa-plus"></i> Crear
+        </button>
+        </h3>
+    </div>
+    
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Nombre</th>
+            <th>Segundo Nombre</th>
+            <th>Número de Empleado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let investigador of investigadores">
+            <td>{{ investigador.apellido_paterno_1_investigador }}</td>
+            <td>{{ investigador.apellido_materno_2_investigador }}</td>
+            <td>{{ investigador.nombre_1_investigador }}</td>
+            <td>{{ investigador.nombre_2_investigador }}</td>
+            <td>{{ investigador.num_empleado }}</td>
+            <td>
+            <button class="btn btn-primary" (click)="onEdit(investigador)">
+                <i class="fa fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-danger" (click)="onDelete(investigador)">
+                <i class="fa fa-trash"></i> Dar de baja
+            </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

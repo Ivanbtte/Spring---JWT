@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -12,10 +13,12 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NavComponent } from './shared/nav/nav.component';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details.component';
 import { UsuarioComponent } from './forms/usuario/usuario.component';
-import { ConsultarInvestigadorComponent } from './forms/ConsultarInvestigador/consultar-investigador/consultar-investigador.component';
 import { RegistrarInvestigadorComponent } from './forms/RegistrarInvestigador/registrar-investigador/registrar-investigador.component';
 import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
 import { CrearUsuarioComponent } from './forms/CrearUsuario/crear-usuario/crear-usuario.component';
+import { ConsultarPublicacionComponent } from './forms/ConsultarPublicacion/consultar-publicacion/consultar-publicacion.component';
+import { MenuComponent } from './forms/menu/menu/menu.component';
+import { InvestigadorComponent } from './forms/investigador/investigador.component';
 import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { ErrorInterceptorService } from './services/auth/error-interceptor.service';
 
@@ -29,16 +32,19 @@ import { ErrorInterceptorService } from './services/auth/error-interceptor.servi
     NavComponent,
     PersonalDetailsComponent,
     UsuarioComponent,
-    ConsultarInvestigadorComponent,
     RegistrarInvestigadorComponent,
     RegistrarPublicacionComponent,
-    CrearUsuarioComponent
+    CrearUsuarioComponent,
+    ConsultarPublicacionComponent,
+    MenuComponent,
+    InvestigadorComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    FormsModule,
   ],
   providers: [
     {provide:HTTP_INTERCEPTORS,useClass:JwtInterceptorService,multi:true},

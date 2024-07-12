@@ -4,6 +4,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { User } from '../auth/user';
 import { environment } from 'src/environments/environment';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,6 +18,30 @@ export class UserService {
         catchError(this.handleError)
       )
   }
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.urlApi}user`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  createUser(user: User): Observable<User> {
+    return this.http.post<User>(`${environment.urlApi}user`, user).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  updateUser(id: number, user: User): Observable<User> {
+    return this.http.put<User>(`${environment.urlApi}user/${id}`, user).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.urlApi}user/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status===0){
       console.error('Se ha producido un error ', error.error);
@@ -26,5 +51,7 @@ export class UserService {
     }
     return throwError(()=> new Error('Algo falló. Por favor intente nuevamente.'));
   }
+
+
 
 }

@@ -1,0 +1,61 @@
+<app-nav></app-nav>
+<div class="container">
+    <h3>Consultar publicaciones</h3>
+    <form>
+        <div class="form-group">
+            <label for="profesor">Profesor</label>
+            <select class="form-control" id="profesor" onchange="loadInvestigations()">
+                <option value="">Seleccione un profesor</option>
+                <!-- Opciones de profesores se cargarán dinámicamente -->
+            </select>
+        </div>
+    </form>
+    <form (ngSubmit)="searchPublications()">
+        <div class="form-group">
+            <label for="instituto">Instituto</label>
+            <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
+                <option value="">Seleccione un instituto</option>
+                <option *ngFor="let instituto of institutos" [value]="instituto.value">{{ instituto.name }}</option>
+            </select>
+        </div>
+
+    </form>
+
+    <form>
+        <div class="form-group">
+            <label>
+              <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}" /> Filtrar por fechas
+            </label>
+          </div>
+          
+          <div *ngIf="filtrarPorFechas" class="form-group-container">
+            <div class="form-group">
+              <label for="startDate">Fecha de Inicio</label>
+              <input type="date" id="start" name="start" [(ngModel)]="startDate" />
+            </div>
+            <div class="form-group">
+              <label for="endDate">Fecha Final</label>
+              <input type="date" id="end" name="end" [(ngModel)]="endDate" />
+            </div>
+          </div>
+          
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID de Investigación</th>
+                <th>Titulo de revista</th>
+                <th>Fecha de publicación</th>
+            </tr>
+        </thead>
+        <tbody id="investigations-table-body">
+            <tr *ngFor="let articulo of articulos; trackBy: trackById">
+                <td>{{articulo.id_articulo}}</td>
+                <td>{{articulo.titulo_revista}}</td>
+                <td>{{articulo.fecha_publicacion}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
