@@ -1,5 +1,5 @@
 export interface registrarusuarioRequest{
     password: string,
-    rol: string,
+    role: string,
     username: string
 }

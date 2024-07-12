@@ -12,7 +12,7 @@ export class RegistrarusuarioService {
 
   constructor(private http: HttpClient) { }
 
-  registro(user: any): Observable<any> {
+  registro(user: registrarusuarioRequest): Observable<any> {
     return this.http.post<any>(this.apiUrl, user);
   }
 }

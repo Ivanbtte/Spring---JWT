@@ -18,7 +18,8 @@ export class CrearUsuarioComponent implements OnInit {
         Validators.minLength(8),
         this.passwordValidator
       ]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      role: ['', [Validators.required]]  // Asegúrate de que el control role esté definido aquí
     });
 
     this.userForm.setValidators(this.passwordMatchValidator);
@@ -54,7 +55,8 @@ export class CrearUsuarioComponent implements OnInit {
     if (this.userForm.valid) {
       const user = {
         username: this.userForm.value.email,
-        password: this.userForm.value.password
+        password: this.userForm.value.password,
+        role: this.userForm.value.role.toUpperCase() // Asegúrate de que el rol esté en mayúsculas
       };
 
       this.registrarusuarioService.registro(user).subscribe(
