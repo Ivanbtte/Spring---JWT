@@ -18,7 +18,8 @@ export class CrearUsuarioComponent implements OnInit {
         Validators.minLength(8),
         this.passwordValidator
       ]],
-      confirmPassword: ['', [Validators.required]]
+      confirmPassword: ['', [Validators.required]],
+      role: ['', [Validators.required]]  // Asegúrate de que el control role esté definido aquí
     });
 
     this.userForm.setValidators(this.passwordMatchValidator);
@@ -52,8 +53,22 @@ export class CrearUsuarioComponent implements OnInit {
 
   onSubmit() {
     if (this.userForm.valid) {
-      this.registrarusuarioService.registro(this.userForm.value);
-      console.log(this.userForm.value);
+      const user = {
+        username: this.userForm.value.email,
+        password: this.userForm.value.password,
+        role: this.userForm.value.role.toUpperCase() // Asegúrate de que el rol esté en mayúsculas
+      };
+
+      this.registrarusuarioService.registro(user).subscribe(
+        response => {
+          console.log('Usuario registrado:', response);
+          // Aquí puedes manejar la respuesta, por ejemplo, mostrar un mensaje de éxito
+        },
+        error => {
+          console.error('Error al registrar usuario:', error);
+          // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
+        }
+      );
     }
   }
 }
