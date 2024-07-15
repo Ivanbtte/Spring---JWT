@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.AutorDto;
+import com.unsis.spring.app.Entity.BD1.Articulos;
+import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
 
@@ -72,7 +74,7 @@ public class ArticuloController {
  	}
 
     @PutMapping("/articulo/{id}")
-    public ResponseEntity<Object> update(@RequestBody ArticuloDto articuloDto, @PathVariable Long id){ 
+    public ResponseEntity<Object> update(@RequestBody ArticuloDto articuloDto, @PathVariable Long id) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             ArticuloDto currentArticulo = articuloService.findById(id);
@@ -86,17 +88,17 @@ public class ArticuloController {
             currentArticulo.setDoi(articuloDto.getDoi());
             currentArticulo.setIsbn_impreso(articuloDto.getIsbn_impreso());
             currentArticulo.setIsbn_digital(articuloDto.getIsbn_digital());
-            currentArticulo.setAutores(articuloDto.getAutores());
+            currentArticulo.setTipoPublicacion(articuloDto.getTipoPublicacion());
+            currentArticulo.setInstituto(articuloDto.getInstituto());
 
             ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
-             
+
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @DeleteMapping("/articulo/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
@@ -115,22 +117,22 @@ public class ArticuloController {
     public ResponseEntity<Object> addAutorToArticulo(@PathVariable Long id, @PathVariable Long autorId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            ArticuloDto articuloDto = articuloService.findById(id);
-            if (articuloDto == null) {
+            Articulos articulo = articuloService.findByIdArticulo(id);
+            if (articulo==null){
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
+            Autor autor = autorService.findByIdAutor(autorId);
+            if (autor == null) {
 
-            AutorDto autorDto = autorService.findById(autorId);
-            if (autorDto == null) {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
-
-            articuloDto.getAutores().add(autorDto);
-            ArticuloDto updatedArticuloDto = articuloService.save(articuloDto);
-            return new ResponseEntity<>(updatedArticuloDto, HttpStatus.OK);
-        } catch (Exception e) {
+            articulo.getAutores().add(autor);
+            Articulos updatedArticulo = articuloService.saveArticulo(articulo);
+            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
+        }
+        catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -140,21 +142,23 @@ public class ArticuloController {
     public ResponseEntity<Object> removeAutorFromArticulo(@PathVariable Long id, @PathVariable Long autorId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            ArticuloDto articuloDto = articuloService.findById(id);
-            if (articuloDto == null) {
+            Articulos articulo = articuloService.findByIdArticulo(id);
+            if (articulo == null) {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            AutorDto autorDto = autorService.findById(autorId);
-            if (autorDto == null) {
+            Autor autor = autorService.findByIdAutor(autorId);
+            if (autor == null) {
+
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
 
-            articuloDto.getAutores().remove(autorDto);
-            ArticuloDto updatedArticuloDto = articuloService.save(articuloDto);
-            return new ResponseEntity<>(updatedArticuloDto, HttpStatus.OK);
+            articulo.getAutores().remove(autor);
+            Articulos updatedArticulo = articuloService.saveArticulo(articulo);
+            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
+
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,7 +168,7 @@ public class ArticuloController {
     @GetMapping(value="/articulos/autor/{autorId}")
     public ResponseEntity<Object> getArticulosByAutorId(@PathVariable Long autorId) {
         try {
-            List<ArticuloDto> data = articuloService.findArticulosByAutorId(autorId);
+            List<Articulos> data = articuloService.findArticulosByAutorId(autorId);
             return new ResponseEntity<>(data, HttpStatus.OK);
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<>();

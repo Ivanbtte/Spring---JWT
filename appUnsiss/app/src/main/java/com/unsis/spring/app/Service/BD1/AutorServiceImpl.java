@@ -84,4 +84,10 @@ public class AutorServiceImpl implements AutorService {
                 .collect(Collectors.toSet()));
         return autor;
     }
+
+    @Override
+    public Autor findByIdAutor(Long id) {
+            return autorDao.findById(id).orElse(null);
+    
+    }
 }

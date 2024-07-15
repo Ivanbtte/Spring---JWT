@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticuloDto {
     private Long id_articulo;
-    private Long tipoPublicacionId;
+    private Tipo_PublicacionDto tipoPublicacion;
+    private InstitutoDto instituto;
     private Date fecha_publicacion;
     private String titulo_revista;
     private Integer numero_revista;
@@ -22,5 +22,4 @@ public class ArticuloDto {
     private String doi;
     private String isbn_impreso;
     private String isbn_digital;
-    private List<AutorDto> autores;
 }
