@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unsis.spring.app.DTO.InvestigadorDto;
 import com.unsis.spring.app.Entity.BD1.Investigador;
 import com.unsis.spring.app.Service.BD1.InvestigadorService;
 
@@ -32,7 +33,7 @@ public class InvestigadorController {
 	public ResponseEntity<Object> get(){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			List<Investigador> list  = investigadorService.findAll();
+			List<InvestigadorDto> list  = investigadorService.findAll();
 			return new ResponseEntity<Object>(list,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -44,7 +45,7 @@ public class InvestigadorController {
      @GetMapping(value="/investigador/{id}")
      public ResponseEntity<Object> getById(@PathVariable Long id){ 
          try {
-			Investigador data  = investigadorService.findById(id);
+			InvestigadorDto data  = investigadorService.findById(id);
              return new ResponseEntity<Object>(data,HttpStatus.OK);
          } 
          catch (Exception e) {
@@ -55,10 +56,10 @@ public class InvestigadorController {
       }
 
       @PostMapping(value="/investigador")
-	public ResponseEntity<Object> create(@RequestBody Investigador investigador){ 
+	public ResponseEntity<Object> create(@RequestBody InvestigadorDto investigadorDto){ 
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-			Investigador res = investigadorService.save(investigador);  
+			InvestigadorDto res = investigadorService.save(investigadorDto);  
 			return new ResponseEntity<Object>(res,HttpStatus.OK);
 		} 
 		catch (Exception e) {
@@ -68,43 +69,39 @@ public class InvestigadorController {
  	}
 
      @PutMapping("/investigador/{id}")
-     public ResponseEntity<Object> update(@RequestBody Investigador investigador, @PathVariable Long id){ 
-         Map<String, Object> map = new HashMap<String, Object>();
-         try {
-             
-			Investigador currentrInvestigador = investigadorService.findById(id);
-             
-            currentrInvestigador.setNum_empleado(investigador.getNum_empleado());
-			currentrInvestigador.setNombre_1_investigador(investigador.getNombre_1_investigador());
-			currentrInvestigador.setNombre_2_investigador(investigador.getNombre_2_investigador());
-			currentrInvestigador.setApellido_paterno_1_investigador(investigador.getApellido_paterno_1_investigador());
-			currentrInvestigador.setApellido_materno_2_investigador(investigador.getApellido_materno_2_investigador());
-			currentrInvestigador.setUser(investigador.getUser());
-			currentrInvestigador.setInstituto(investigador.getInstituto());
-			currentrInvestigador.setAutor(investigador.getAutor());
+     public ResponseEntity<Object> update(@RequestBody InvestigadorDto investigadorDto, @PathVariable Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            InvestigadorDto currentrInvestigador = investigadorService.findById(id);
 
-			Investigador updatedInvestigador = investigadorService.save(currentrInvestigador);
-             
-            return new ResponseEntity<Object>(updatedInvestigador,HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
+            currentrInvestigador.setNum_empleado(investigadorDto.getNum_empleado());
+            currentrInvestigador.setNombre_1_investigador(investigadorDto.getNombre_1_investigador());
+            currentrInvestigador.setNombre_2_investigador(investigadorDto.getNombre_2_investigador());
+            currentrInvestigador.setApellido_paterno_1_investigador(investigadorDto.getApellido_paterno_1_investigador());
+            currentrInvestigador.setApellido_materno_2_investigador(investigadorDto.getApellido_materno_2_investigador());
+            currentrInvestigador.setUser(investigadorDto.getUser());
+            currentrInvestigador.setInstituto(investigadorDto.getInstituto());
+            currentrInvestigador.setAutor(investigadorDto.getAutor());
+
+            InvestigadorDto updatedInvestigador = investigadorService.save(currentrInvestigador);
+
+            return new ResponseEntity<Object>(updatedInvestigador, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
       @DeleteMapping("/investigador/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try { 
-			Investigador currentrInvestigador = investigadorService.findById(id); 
-			investigadorService.delete(currentrInvestigador);
-			map.put("deleted", true);
-			return new ResponseEntity<Object>(map,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+	  public ResponseEntity<Object> delete(@PathVariable Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            investigadorService.delete(id);
+            map.put("deleted", true);
+            return new ResponseEntity<Object>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

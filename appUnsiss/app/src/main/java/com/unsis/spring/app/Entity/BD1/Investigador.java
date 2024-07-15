@@ -1,6 +1,5 @@
 package com.unsis.spring.app.Entity.BD1;
 
-
 import com.unsis.spring.app.User.User;
 
 import jakarta.persistence.Column;
