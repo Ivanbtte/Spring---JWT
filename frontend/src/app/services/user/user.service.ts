@@ -17,6 +17,9 @@ export class UserService {
         catchError(this.handleError)
       )
   }
+
+  
+
   private handleError(error:HttpErrorResponse){
     if(error.status===0){
       console.error('Se ha producido un error ', error.error);
