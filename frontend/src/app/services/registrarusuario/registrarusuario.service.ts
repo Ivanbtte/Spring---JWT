@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { registrarusuarioRequest } from './registrarusuarioRequest';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,5 +14,12 @@ export class RegistrarusuarioService {
 
   registro(user: registrarusuarioRequest): Observable<any> {
     return this.http.post<any>(this.apiUrl, user);
+  }
+
+  reporte() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/pdf'
+    });
+    return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }
 }

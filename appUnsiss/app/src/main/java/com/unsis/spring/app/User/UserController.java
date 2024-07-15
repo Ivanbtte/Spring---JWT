@@ -1,5 +1,9 @@
 package com.unsis.spring.app.User;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -12,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lowagie.text.DocumentException;
 import com.unsis.spring.app.Auth.AuthResponse;
+import com.unsis.spring.app.ReportPDF.UserReportPDf;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -39,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/user") 
     public ResponseEntity<AuthResponse> register(@RequestBody UserRequestRol request) {
         return ResponseEntity.ok(userService.register(request));
     }
@@ -47,6 +54,24 @@ public class UserController {
     @PutMapping("/user/{id}")
     public ResponseEntity<UserResponse> updateUser(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.updateUser(userRequest));
+    }
+
+	@GetMapping(value = "/user/exportarPDF")
+    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException{
+        response.setContentType("application/pdf");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Usuarios_" + fechaActual + ".pdf";
+
+        response.setHeader(cabecera, valor);
+
+        List<UserDTO> usuarios = userService.getAllUsers();
+     
+        UserReportPDf exporter = new UserReportPDf(usuarios);
+        exporter.exportar(response);
     }
 
 }
