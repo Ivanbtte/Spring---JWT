@@ -8,9 +8,9 @@ import { InstitutoService } from 'src/app/services/instituto/instituto.service';
   styleUrls: ['./consultar-publicacion.component.css']
 })
 export class ConsultarPublicacionComponent implements OnInit {
-  filtrarPorInstituto: boolean = true;
-  filtrarPorProfesor: boolean = true;
-  filtrarPorFechas: boolean = true;
+  filtrarPorInstituto: boolean = false;
+  filtrarPorProfesor: boolean = false;
+  filtrarPorFechas: boolean = false;
   selectedInstituto: string | undefined;
   profesores: any[] = [];
   selectedProfesor: string | undefined;
@@ -24,7 +24,7 @@ export class ConsultarPublicacionComponent implements OnInit {
     private articuloService: ArticuloService,
     private autorService: AutorService,
     private institutoService: InstitutoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.articuloService.getList().subscribe(
