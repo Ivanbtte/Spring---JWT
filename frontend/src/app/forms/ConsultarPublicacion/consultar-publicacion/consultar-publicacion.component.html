@@ -1,39 +1,58 @@
 <app-nav></app-nav>
 <div class="container">
     <h3>Consultar publicaciones</h3>
-    <form>
-        <div class="form-group">
-            <label for="profesor">Profesor</label>
-            <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
-                <option value="">Seleccione un profesor</option>
-                <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor }} {{ profesor.apellidoPaternoAutor }}</option>
-            </select>
-        </div>
-    </form>
     <form (ngSubmit)="searchPublications()">
         <div class="form-group">
-            <label for="instituto">Instituto</label>
-            <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
-                <option value="">Seleccione un instituto</option>
-                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
-            </select>
+            <label>
+                <input type="checkbox" [(ngModel)]="filtrarPorInstituto" [ngModelOptions]="{standalone: true}" />
+                Filtrar por instituto
+            </label>
         </div>
-        
+        <div *ngIf="filtrarPorInstituto" class="form-group-container">
+            <div class="form-group">
+                <label for="instituto">Instituto</label>
+                <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
+                    <option value="">Seleccione un instituto</option>
+                    <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                </select>
+            </div>
+        </div>
     </form>
     <form>
         <div class="form-group">
             <label>
-              <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}" /> Filtrar por fechas
+                <input type="checkbox" [(ngModel)]="filtrarPorProfesor" [ngModelOptions]="{standalone: true}" /> Filtrar
+                por profesor
+            </label>
+        </div>
+        <div *ngIf="filtrarPorProfesor" class="form-group-container">
+            <div class="form-group">
+                <label for="profesor">Profesor</label>
+                <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
+                    <option value="">Seleccione un profesor</option>
+                    <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor }} {{
+                        profesor.apellidoPaternoAutor }}</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+ 
+    <form>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}" /> Filtrar
+                por fechas
             </label>
         </div>
         <div *ngIf="filtrarPorFechas" class="form-group-container">
             <div class="form-group">
-              <label for="startDate">Fecha de Inicio</label>
-              <input type="date" id="start" name="start" [(ngModel)]="startDate" />
+                <label for="startDate">Fecha de Inicio</label>
+                <input type="date" id="start" name="start" [(ngModel)]="startDate" />
             </div>
             <div class="form-group">
-              <label for="endDate">Fecha Final</label>
-              <input type="date" id="end" name="end" [(ngModel)]="endDate" />
+                <label for="endDate">Fecha Final</label>
+                <input type="date" id="end" name="end" [(ngModel)]="endDate" />
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
