@@ -9,6 +9,7 @@ public interface AutorService {
     public List<AutorDto> findAll();
     public AutorDto save(AutorDto autorDto);
     public AutorDto findById(Long id);
+    public Autor findByIdAutor(Long id);
     public void delete(Long id);
     public AutorDto convertToDto(Autor autor);
     public Autor convertToEntity(AutorDto autorDto);

@@ -16,9 +16,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity
@@ -33,6 +31,10 @@ public class Articulos {
     @JoinColumn(name = "id_publicacion_tipo", nullable = false)
     @JsonBackReference
     private Tipo_Publicacion tipo_Publicacion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_instituto", nullable = false)
+    private Instituto instituto;
 
     @Column(nullable = false)
     private Date fecha_publicacion;
@@ -73,11 +75,12 @@ public class Articulos {
     public Articulos() {}
 
     // Constructor con todos los parámetros
-    public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Date fecha_publicacion, String titulo_revista,
+    public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion, String titulo_revista,
                      Integer numero_revista, String volumen_revista, Integer pag_inicio, Integer pag_final,
                      String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores) {
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
+        this.instituto = instituto;
         this.fecha_publicacion = fecha_publicacion;
         this.titulo_revista = titulo_revista;
         this.numero_revista = numero_revista;
@@ -105,6 +108,14 @@ public class Articulos {
 
     public void setTipo_Publicacion(Tipo_Publicacion tipo_Publicacion) {
         this.tipo_Publicacion = tipo_Publicacion;
+    }
+
+    public Instituto getInstituto() {
+        return instituto;
+    }
+
+    public void setInstituto(Instituto instituto) {
+        this.instituto = instituto;
     }
 
     public Date getFecha_publicacion() {

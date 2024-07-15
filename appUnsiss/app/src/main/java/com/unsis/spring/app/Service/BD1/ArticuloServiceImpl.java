@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.AutorDto;
+import com.unsis.spring.app.DTO.InstitutoDto;
+import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
+import com.unsis.spring.app.Entity.BD1.Instituto;
 import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
 import com.unsis.spring.app.Repository.BD1.ArticuloDao;
+import com.unsis.spring.app.Repository.BD1.InstitutoDao;
 import com.unsis.spring.app.Repository.BD1.Tipo_PublicacionDao;
 
 import jakarta.transaction.Transactional;
@@ -30,6 +34,9 @@ public class ArticuloServiceImpl implements ArticuloService {
     @Autowired
     @Lazy
     private AutorService autorService;
+
+    @Autowired
+    private InstitutoDao institutoDao;
 
     @Override
     @Transactional
@@ -59,22 +66,24 @@ public class ArticuloServiceImpl implements ArticuloService {
         articuloDao.deleteById(id);
     }
 
+    
     @Override
-    public List<ArticuloDto> findArticulosByAutorId(Long autorId) {
-        return articuloDao.findArticulosByAutorId(autorId).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+	// Método para obtener artículos por ID del autor
+	@Transactional
+    public List<Articulos> findArticulosByAutorId(Long autorId) {
+        return articuloDao.findArticulosByAutorId(autorId);
     }
 
-    @Override
+     @Override
     public ArticuloDto convertToDto(Articulos articulo) {
         if (articulo == null) return null;
-        List<AutorDto> autoresDto = articulo.getAutores().stream()
-                .map(autorService::convertToDto)
-                .collect(Collectors.toList());
+        Tipo_PublicacionDto tipoPublicacionDto = new Tipo_PublicacionDto(articulo.getTipo_Publicacion().getId_publicacion_tipo(), articulo.getTipo_Publicacion().getDescripcion_publicacion_tipo());
+        InstitutoDto institutoDto = new InstitutoDto(articulo.getInstituto().getId(), articulo.getInstituto().getNombre());
+
         return new ArticuloDto(
                 articulo.getId_articulo(),
-                articulo.getTipo_Publicacion().getId_publicacion_tipo(),
+                tipoPublicacionDto,
+                institutoDto,
                 articulo.getFecha_publicacion(),
                 articulo.getTitulo_revista(),
                 articulo.getNumero_revista(),
@@ -83,31 +92,41 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getPag_final(),
                 articulo.getDoi(),
                 articulo.getIsbn_impreso(),
-                articulo.getIsbn_digital(),
-                autoresDto
+                articulo.getIsbn_digital()
         );
     }
 
-    @Override
-	public Articulos convertToEntity(ArticuloDto articuloDto) {
-    Tipo_Publicacion tipoPublicacion = tipoPublicacionDao.findById(articuloDto.getTipoPublicacionId()).orElse(null);
-    Articulos articulo = new Articulos(
-            articuloDto.getId_articulo(),
-            tipoPublicacion,
-            articuloDto.getFecha_publicacion(),
-            articuloDto.getTitulo_revista(),
-            articuloDto.getNumero_revista(),
-            articuloDto.getVolumen_revista(),
-            articuloDto.getPag_inicio(),
-            articuloDto.getPag_final(),
-            articuloDto.getDoi(),
-            articuloDto.getIsbn_impreso(),
-            articuloDto.getIsbn_digital(),
-            new HashSet<>()
-    );
-    articulo.setAutores(articuloDto.getAutores().stream()
-            .map(autorService::convertToEntity)
-            .collect(Collectors.toSet()));
-    return articulo;
+   @Override
+    public Articulos convertToEntity(ArticuloDto articuloDto) {
+        Tipo_Publicacion tipoPublicacion = tipoPublicacionDao.findById(articuloDto.getTipoPublicacion().getId_publicacion_tipo()).orElse(null);
+        Instituto instituto = institutoDao.findById(articuloDto.getInstituto().getId()).orElse(null);
+
+        return new Articulos(
+                articuloDto.getId_articulo(),
+                tipoPublicacion,
+                instituto,
+                articuloDto.getFecha_publicacion(),
+                articuloDto.getTitulo_revista(),
+                articuloDto.getNumero_revista(),
+                articuloDto.getVolumen_revista(),
+                articuloDto.getPag_inicio(),
+                articuloDto.getPag_final(),
+                articuloDto.getDoi(),
+                articuloDto.getIsbn_impreso(),
+                articuloDto.getIsbn_digital(),
+                new HashSet<>()
+        );
+    }
+
+@Override
+public Articulos findByIdArticulo(Long id) {
+    return articuloDao.findById(id).orElse(null);
 }
+
+@Override
+@Transactional
+public Articulos saveArticulo(Articulos articulo) {
+    return articuloDao.save(articulo);
+}
+
 }
