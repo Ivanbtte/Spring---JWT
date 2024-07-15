@@ -21,6 +21,7 @@ import { MenuComponent } from './forms/menu/menu/menu.component';
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
 import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { ErrorInterceptorService } from './services/auth/error-interceptor.service';
+import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ErrorInterceptorService } from './services/auth/error-interceptor.servi
     CrearUsuarioComponent,
     ConsultarPublicacionComponent,
     MenuComponent,
-    InvestigadorComponent
+    InvestigadorComponent,
+    EditarUsuarioComponent
   ],
   imports: [
     BrowserModule,

@@ -61,3 +61,24 @@ h3 {
     background-color: #0056b3;
     border-color: #004085;
 }
+
+.form-group-container {
+    display: flex;
+    gap: 20px; /* Añade espacio entre los elementos */
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    margin-bottom: 5px;
+  }
+  .highlighted-field {
+    border: 2px solid #007bff; /* Color del borde */
+    background-color: #e7f1ff; /* Color de fondo */
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Sombra */
+    padding: 10px; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+  }

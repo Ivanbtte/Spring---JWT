@@ -7,6 +7,7 @@ import { RegistrarInvestigadorComponent } from './forms/RegistrarInvestigador/re
 import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
 import { CrearUsuarioComponent} from './forms/CrearUsuario/crear-usuario/crear-usuario.component';
 import { UsuarioComponent } from './forms/usuario/usuario.component';
+import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
 
 
@@ -19,7 +20,8 @@ const routes: Routes = [
   {path:'registrar-publicacion', component: RegistrarPublicacionComponent },
   {path:'crear-usuario',component: CrearUsuarioComponent},
   {path:'usuario', component:UsuarioComponent},
-  {path:'investigador', component:InvestigadorComponent}
+  {path:'investigador', component:InvestigadorComponent},
+  { path: 'editar-usuario/:id', component: EditarUsuarioComponent },
 ];
 
 @NgModule({

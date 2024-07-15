@@ -20,6 +20,9 @@ export class UsuarioComponent implements OnInit {
   FormCrear() {
     this.router.navigate(['/crear-usuario']);
   }
+  FormEditar(user: User): void {
+    this.router.navigate(['/editar-usuario/', user.id]);
+  }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe(

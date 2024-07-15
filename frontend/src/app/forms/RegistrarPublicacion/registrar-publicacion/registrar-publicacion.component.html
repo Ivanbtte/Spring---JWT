@@ -1,82 +1,340 @@
 <app-nav></app-nav>
-<!--
 <div class="container">
     <h2>Registrar</h2>
     <form>
-      <div class="form-group">
-        <label for="tipoPublicacion">Tipo de publicación</label>
-        <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
-          <option *ngFor="let tipo of tiposPublicacion" [value]="tipo">{{ tipo }}</option>
-        </select>
-      </div>
-  
-      <div *ngIf="tipoPublicacion === 'Artículo'">
-        <div class="form-group">
-          <label for="titulo">Titulo</label>
-          <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required />
-        </div>
-        <div class="form-group">
-          <label for="nombreRevista">Nombre de la revista</label>
-          <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista" required />
-        </div>
-  
-        <div class="form-group">
-          <label for="colaboradores">Colaboradores</label>
-          <button type="button" class="btn btn-secondary" (click)="agregarColaborador()">Agregar persona</button>
-        </div>
-        
-        <div *ngFor="let colaborador of colaboradores; let i = index">
-          <div class="form-group">
-            <label for="primerNombre">Primer nombre</label>
-            <input type="text" id="primerNombre" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre-{{i}}" />
-          </div>
-          <div class="form-group">
-            <label for="apellido">Apellido</label>
-            <input type="text" id="apellido" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido-{{i}}" />
-          </div>
-          <div class="form-group">
-            <label for="rol">Rol</label>
-            <select id="rol" class="form-control" [(ngModel)]="colaborador.rol" name="rol-{{i}}">
-              <option *ngFor="let rol of rolesColaboradores" [value]="rol">{{ rol }}</option>
+        <div class="form-group highlighted-field">
+            <label for="tipoPublicacion">Tipo de publicación</label>
+            <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
+              <option>Artículo</option>
+              <option>Artículo en revista indexada</option>
+              <option>Capítulo de libro</option>
+              <option>Libro</option>
             </select>
           </div>
+        <!-- Sección para Articulo -->
+        <div *ngIf="tipoPublicacion === 'Artículo'">
+            <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required>
+            </div>
+            <div class="form-group">
+                <label for="nombreRevista">Nombre de la revista</label>
+                <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista"
+                    name="nombreRevista" required>
+            </div>
+            <div class="form-group">
+                <label>Colaboradores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
+                <div class="card-body">
+                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
+                    <div class="form-group">
+                        <label for="primerNombre{{ i }}">Primer nombre</label>
+                        <input type="text" id="primerNombre{{ i }}" class="form-control"
+                            [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido{{ i }}">Apellido</label>
+                        <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido"
+                            name="apellido{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rol{{ i }}">Rol</label>
+                        <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
+                            <option>Autor</option>
+                            <option>Traductor</option>
+                            <option>Editor</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
+                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group-container">
+                <div class="form-group">
+                    <label for="numVolumen">Número de volumen</label>
+                    <input type="number" id="numVolumen" class="form-control" [(ngModel)]="numVolumen"
+                        name="numVolumen" />
+                </div>
+                <div class="form-group">
+                    <label for="numEmision">Número de emisión</label>
+                    <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision"
+                        name="numEmision" />
+                </div>
+                <div class="form-group">
+                    <label for="numArticulo">Número de artículo</label>
+                    <input type="number" id="numArticulo" class="form-control" [(ngModel)]="numArticulo"
+                        name="numArticulo" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="fechaPublicacion">Fecha de publicación</label>
+                <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+                    name="fechaPublicacion">
+            </div>
+            <div class="form-group-container">
+                <div class="form-group">
+                    <label for="paginaInicio">Página de inicio</label>
+                    <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio"
+                        name="paginaInicio" />
+                </div>
+                <div class="form-group">
+                    <label for="paginaFin">Página final</label>
+                    <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="doi">DOI</label>
+                <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi">
+            </div>
+            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
+                <i class="fa fa-check"></i> Agregar
+            </button>
         </div>
-  
-        <div class="form-group-container">
-          <div class="form-group">
-            <label for="numVolumen">Número de volumen</label>
-            <input type="number" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" />
-          </div>
-          <div class="form-group">
-            <label for="numEmision">Número de emisión</label>
-            <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" />
-          </div>
-          <div class="form-group">
-            <label for="numArticulo">Número de artículo</label>
-            <input type="number" id="numArticulo" class="form-control" [(ngModel)]="numArticulo" name="numArticulo" />
-          </div>
+        <!-- Sección para Artículo en revista indexada -->        
+        <div *ngIf="tipoPublicacion === 'Artículo en revista indexada'">
+            <div class="container">
+                <h2>Registrar Capítulo en Revista Indexada</h2>
+                <form>
+                  <div class="form-group">
+                    <label for="titulo">Título del capítulo</label>
+                    <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="fechaPublicacion">Fecha de publicación</label>
+                    <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion" name="fechaPublicacion" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <h3>Colaboradores</h3>
+                    <div *ngFor="let colaborador of colaboradores; let i = index" class="card mb-2">
+                      <div class="card-body">
+                        <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
+                        <div class="form-group">
+                          <label for="primerNombre">Primer nombre</label>
+                          <input type="text" id="primerNombre" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre{{i}}" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="apellido">Apellido</label>
+                          <input type="text" id="apellido" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido{{i}}" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="rol">Rol</label>
+                          <select id="rol" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{i}}" required>
+                            <option value="autor">Autor</option>
+                            <option value="traductor">Traductor</option>
+                            <option value="editor">Editor</option>
+                          </select>
+                        </div>
+                        <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
+                          <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                        </button>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
+                      <i class="fa fa-plus" aria-hidden="true"></i> Agregar Colaborador
+                    </button>
+                  </div>
+              
+                  <div class="form-group">
+                    <label for="tituloRevista">Título de la Revista</label>
+                    <input type="text" id="tituloRevista" class="form-control" [(ngModel)]="tituloRevista" name="tituloRevista" required>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="volumen">Volumen</label>
+                      <input type="text" id="volumen" class="form-control" [(ngModel)]="volumen" name="volumen" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="numeroRevista">Número de la Revista</label>
+                      <input type="text" id="numeroRevista" class="form-control" [(ngModel)]="numeroRevista" name="numeroRevista" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="paginaInicio">Número de página inicio</label>
+                      <input type="text" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" required>
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="paginaFinal">Número de página final</label>
+                      <input type="text" id="paginaFinal" class="form-control" [(ngModel)]="paginaFinal" name="paginaFinal" required>
+                    </div>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="doi">DOI</label>
+                    <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="issnImpreso">ISSN versión impresa (opcional)</label>
+                    <input type="text" id="issnImpreso" class="form-control" [(ngModel)]="issnImpreso" name="issnImpreso">
+                  </div>
+                  <div class="form-group">
+                    <label for="issnOnline">ISSN versión en línea (opcional)</label>
+                    <input type="text" id="issnOnline" class="form-control" [(ngModel)]="issnOnline" name="issnOnline">
+                  </div>
+                  <button type="submit" class="btn btn-success">
+                    <i class="fa fa-save" aria-hidden="true"></i> Registrar
+                  </button>
+                </form>
+              </div>              
         </div>
-  
-        <div class="form-group">
-          <label for="fechaPublicacion">Fecha de publicación</label>
-          <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion" name="fechaPublicacion" />
+
+        <!-- Sección para Libro -->
+        <div *ngIf="tipoPublicacion === 'Libro'">
+            <div class="form-group">
+                <label for="tituloLibro">Título</label>
+                <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro"
+                    required>
+            </div>
+            <div class="form-group">
+                <label>Colaboradores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
+                <div class="card-body">
+                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
+                    <div class="form-group">
+                        <label for="primerNombre{{ i }}">Primer nombre</label>
+                        <input type="text" id="primerNombre{{ i }}" class="form-control"
+                            [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido{{ i }}">Apellido</label>
+                        <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido"
+                            name="apellido{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rol{{ i }}">Rol</label>
+                        <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
+                            <option>Autor</option>
+                            <option>Traductor</option>
+                            <option>Editor</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
+                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="lugarPublicacion">Lugar de publicación</label>
+                <input type="text" id="lugarPublicacion" class="form-control" [(ngModel)]="lugarPublicacion"
+                    name="lugarPublicacion">
+            </div>
+            <div class="form-group">
+                <label for="editorial">Editorial</label>
+                <input type="text" id="editorial" class="form-control" [(ngModel)]="editorial" name="editorial">
+            </div>
+            <div class="form-group">
+                <label for="fechaPublicacionLibro">Fecha de publicación</label>
+                <input type="date" id="fechaPublicacionLibro" class="form-control" [(ngModel)]="fechaPublicacionLibro"
+                    name="fechaPublicacionLibro">
+            </div>
+            <div class="form-group">
+                <label for="isbn">ISBN</label>
+                <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
+            </div>
+            <div class="form-group">
+                <label for="url">URL (en caso de ser necesario)</label>
+                <input type="text" id="url" class="form-control" [(ngModel)]="url" name="url">
+            </div>
+            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
+                <i class="fa fa-check"></i> Agregar
+            </button>
         </div>
-        <div class="form-group-container">
-          <div class="form-group">
-            <label for="paginaInicio">Página de inicio</label>
-            <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" />
-          </div>
-          <div class="form-group">
-            <label for="paginaFin">Página final</label>
-            <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
-          </div>
+
+        <!-- Sección para Capítulo de Libro -->
+        <div *ngIf="tipoPublicacion === 'Capítulo de libro'">
+            <div class="form-group">
+                <label for="tituloCapitulo">Título del capítulo</label>
+                <input type="text" id="tituloCapitulo" class="form-control" [(ngModel)]="tituloCapitulo"
+                    name="tituloCapitulo" required>
+            </div>
+            <div class="form-group">
+                <label>Colaboradores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
+                <div class="card-body">
+                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
+                    <div class="form-group">
+                        <label for="primerNombre{{ i }}">Primer nombre</label>
+                        <input type="text" id="primerNombre{{ i }}" class="form-control"
+                            [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido{{ i }}">Apellido</label>
+                        <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido"
+                            name="apellido{{ i }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="rol{{ i }}">Rol</label>
+                        <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
+                            <option>Autor</option>
+                            <option>Traductor</option>
+                            <option>Editor</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
+                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nombreLibro">Nombre del libro</label>
+                <input type="text" id="nombreLibro" class="form-control" [(ngModel)]="nombreLibro" name="nombreLibro">
+            </div>
+            <div class="form-group">
+                <label for="edicionLibro">Edición del libro</label>
+                <input type="text" id="edicionLibro" class="form-control" [(ngModel)]="edicionLibro"
+                    name="edicionLibro">
+            </div>
+            <div class="form-group">
+                <label for="paginaInicial">Página inicial</label>
+                <input type="text" id="paginaInicial" class="form-control" [(ngModel)]="paginaInicial"
+                    name="paginaInicial">
+            </div>
+            <div class="form-group">
+                <label for="paginaFinal">Página final</label>
+                <input type="text" id="paginaFinal" class="form-control" [(ngModel)]="paginaFinal" name="paginaFinal">
+            </div>
+            <div class="form-group">
+                <label for="fechaPublicacionCapitulo">Fecha de publicación</label>
+                <input type="date" id="fechaPublicacionCapitulo" class="form-control"
+                    [(ngModel)]="fechaPublicacionCapitulo" name="fechaPublicacionCapitulo">
+            </div>
+            <div class="form-group">
+                <label for="editorialCapitulo">Editorial</label>
+                <input type="text" id="editorialCapitulo" class="form-control" [(ngModel)]="editorialCapitulo"
+                    name="editorialCapitulo">
+            </div>
+            <div class="form-group">
+                <label for="isbnCapitulo">ISBN</label>
+                <input type="text" id="isbnCapitulo" class="form-control" [(ngModel)]="isbnCapitulo"
+                    name="isbnCapitulo">
+            </div>
+            <div class="form-group">
+                <label for="urlCapitulo">URL (en caso de ser necesario)</label>
+                <input type="text" id="urlCapitulo" class="form-control" [(ngModel)]="urlCapitulo" name="urlCapitulo">
+            </div>
+            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
+                <i class="fa fa-check"></i> Agregar
+            </button>
         </div>
-        <div class="form-group">
-          <label for="doi">DOI</label>
-          <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi" />
-        </div>
-        <button type="button" class="btn btn-success" (click)="agregarArticulo()">Agregar</button>
-      </div>
     </form>
-  </div>
--->
+</div>

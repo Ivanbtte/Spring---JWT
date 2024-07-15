@@ -12,7 +12,13 @@ export class AutorService {
 
 
   getProfessorsByInstitute(): Observable<any> {
-    return this.http.get<any>(environment.urlApi+`/autor`);
+    return this.http.get<any>(environment.urlApi+`autor`);
+  }
+
+  getList(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi+'autor').pipe(
+      catchError(this.handleError)
+    )
   }
 
   private handleError(error:HttpErrorResponse){
