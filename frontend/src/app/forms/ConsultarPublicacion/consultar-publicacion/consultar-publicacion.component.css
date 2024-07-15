@@ -36,3 +36,8 @@ label {
 label {
   margin-bottom: 5px;
 }
+
+.btn-report{
+  color:cadetblue;
+  background-color: bisque;
+}

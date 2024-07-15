@@ -4,9 +4,9 @@
     <form>
         <div class="form-group">
             <label for="profesor">Profesor</label>
-            <select class="form-control" id="profesor" onchange="loadInvestigations()">
+            <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
                 <option value="">Seleccione un profesor</option>
-                <!-- Opciones de profesores se cargarán dinámicamente -->
+                <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor }} {{ profesor.apellidoPaternoAutor }}</option>
             </select>
         </div>
     </form>
@@ -15,20 +15,18 @@
             <label for="instituto">Instituto</label>
             <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
                 <option value="">Seleccione un instituto</option>
-                <option *ngFor="let instituto of institutos" [value]="instituto.value">{{ instituto.name }}</option>
+                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
             </select>
         </div>
-
+        
     </form>
-
     <form>
         <div class="form-group">
             <label>
               <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}" /> Filtrar por fechas
             </label>
-          </div>
-          
-          <div *ngIf="filtrarPorFechas" class="form-group-container">
+        </div>
+        <div *ngIf="filtrarPorFechas" class="form-group-container">
             <div class="form-group">
               <label for="startDate">Fecha de Inicio</label>
               <input type="date" id="start" name="start" [(ngModel)]="startDate" />
@@ -37,11 +35,9 @@
               <label for="endDate">Fecha Final</label>
               <input type="date" id="end" name="end" [(ngModel)]="endDate" />
             </div>
-          </div>
-          
+        </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-
     <table class="table table-striped">
         <thead>
             <tr>
@@ -50,7 +46,7 @@
                 <th>Fecha de publicación</th>
             </tr>
         </thead>
-        <tbody id="investigations-table-body">
+        <tbody>
             <tr *ngFor="let articulo of articulos; trackBy: trackById">
                 <td>{{articulo.id_articulo}}</td>
                 <td>{{articulo.titulo_revista}}</td>
@@ -58,4 +54,6 @@
             </tr>
         </tbody>
     </table>
+
+    <button type="report" class="btn btn-report">Generar Reporte</button>
 </div>
