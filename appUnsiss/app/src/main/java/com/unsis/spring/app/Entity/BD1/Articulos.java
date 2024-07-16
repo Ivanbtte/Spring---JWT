@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +21,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="articulo")
+@Table(name="articulos")
 public class Articulos {
 
     @Id
@@ -63,12 +64,13 @@ public class Articulos {
     @Column
     private String isbn_digital;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "articulo_autor",
         joinColumns = @JoinColumn(name = "id_articulo"),
         inverseJoinColumns = @JoinColumn(name = "id_autor")
     )
+
     private Set<Autor> autores = new HashSet<>();
 
     // Constructor sin parámetros

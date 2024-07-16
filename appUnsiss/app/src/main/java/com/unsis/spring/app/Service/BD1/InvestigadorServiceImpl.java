@@ -114,7 +114,7 @@ public class InvestigadorServiceImpl implements InvestigadorService{
     private AutorDto convertToAutorDto(Autor autor) {
         return new AutorDto(autor.getId_autor(), autor.getNombre1Autor(), autor.getNombre2Autor(),
             autor.getApellidoPaternoAutor(), autor.getApellidoMaternoAutor(),
-            autor.getAutorUnsis(), null); // Assuming articulos are null for now
+            autor.getAutorUnsis()); // Assuming articulos are null for now
     }
 
     private Autor convertToAutor(AutorDto autorDto) {

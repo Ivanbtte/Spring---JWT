@@ -8,6 +8,7 @@ import com.unsis.spring.app.Entity.BD1.Autor;
 public interface AutorService {
     public List<AutorDto> findAll();
     public AutorDto save(AutorDto autorDto);
+    public Autor saveAutor(Autor autor);
     public AutorDto findById(Long id);
     public Autor findByIdAutor(Long id);
     public void delete(Long id);

@@ -21,10 +21,6 @@ public class AutorServiceImpl implements AutorService {
     @Autowired
     private AutorDao autorDao;
 
-    @Autowired
-    @Lazy
-    private ArticuloService articuloService;
-
     @Override
     @Transactional
     public List<AutorDto> findAll() {
@@ -55,17 +51,13 @@ public class AutorServiceImpl implements AutorService {
 
     public AutorDto convertToDto(Autor autor) {
         if (autor == null) return null;
-        List<ArticuloDto> articulosDto = autor.getArticulos().stream()
-                .map(articuloService::convertToDto)
-                .collect(Collectors.toList());
         return new AutorDto(
                 autor.getId_autor(),
                 autor.getNombre1Autor(),
                 autor.getNombre2Autor(),
                 autor.getApellidoPaternoAutor(),
                 autor.getApellidoMaternoAutor(),
-                autor.getAutorUnsis(),
-                articulosDto
+                autor.getAutorUnsis()
         );
     }
 
@@ -79,9 +71,6 @@ public class AutorServiceImpl implements AutorService {
                 autorDto.getAutorUnsis(),
                 new HashSet<>()
         );
-        autor.setArticulos(autorDto.getArticulos().stream()
-                .map(articuloService::convertToEntity)
-                .collect(Collectors.toSet()));
         return autor;
     }
 
@@ -89,5 +78,11 @@ public class AutorServiceImpl implements AutorService {
     public Autor findByIdAutor(Long id) {
             return autorDao.findById(id).orElse(null);
     
+    }
+
+    @Override
+    @Transactional
+    public Autor saveAutor(Autor autor) {
+        return autorDao.save(autor);
     }
 }
