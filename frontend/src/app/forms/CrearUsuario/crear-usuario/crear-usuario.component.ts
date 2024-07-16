@@ -63,9 +63,11 @@ export class CrearUsuarioComponent implements OnInit {
         response => {
           console.log('Usuario registrado:', response);
           // Aquí puedes manejar la respuesta, por ejemplo, mostrar un mensaje de éxito
+          alert('Usuario registrado exitosamente');
         },
         error => {
           console.error('Error al registrar usuario:', error);
+          alert('Error al registrar usuario');
           // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
         }
       );

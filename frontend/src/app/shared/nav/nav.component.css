@@ -31,11 +31,10 @@
 .navbar-toggler {
   border: none;
 }
-
-.navbar-toggler-icon {
-  color: #ffffff;
+.toggler-icon {
+  color: #ffffff; /* Cambia el color a blanco */
+  font-size: 24px; /* Ajusta el tamaño del ícono según sea necesario */
 }
-
 .ml-auto {
   margin-left: auto;
 }
