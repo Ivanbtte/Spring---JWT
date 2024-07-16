@@ -18,9 +18,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="autores")
+@Table(name = "autores")
 public class Autor {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_autor;
@@ -40,6 +40,6 @@ public class Autor {
     @Column(name = "autor_unsis", nullable = false)
     private Boolean autorUnsis;
 
-        @ManyToMany(mappedBy = "autores")
+    @ManyToMany(mappedBy = "autores")
     private Set<Articulos> articulos = new HashSet<>();
 }

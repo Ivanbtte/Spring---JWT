@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,5 +14,4 @@ public class AutorDto {
     private String apellidoPaternoAutor;
     private String apellidoMaternoAutor;
     private Boolean autorUnsis;
-    private List<ArticuloDto> articulos;
 }
