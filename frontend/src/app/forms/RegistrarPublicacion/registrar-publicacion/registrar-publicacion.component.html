@@ -7,7 +7,6 @@
             <label for="tipoPublicacion">Tipo de publicación</label>
             <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
                 <option>Artículo</option>
-                <option>Artículo en revista indexada</option>
                 <option>Capítulo de libro</option>
                 <option>Libro</option>
             </select>
@@ -99,105 +98,6 @@
             <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
                 <i class="fa fa-check"></i> Agregar
             </button>
-        </div>
-        <!-- Sección para Artículo en revista indexada -->
-        <div *ngIf="tipoPublicacion === 'Artículo en revista indexada'">
-            <div class="container">
-                <h2>Registrar Capítulo en Revista Indexada</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="titulo">Título del capítulo</label>
-                        <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="fechaPublicacion">Fecha de publicación</label>
-                        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
-                            name="fechaPublicacion" required>
-                    </div>
-
-                    <div class="form-group">
-                        <h3>Colaboradores</h3>
-                        <div *ngFor="let colaborador of colaboradores; let i = index" class="card mb-2">
-                            <div class="card-body">
-                                <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
-                                <div class="form-group">
-                                    <label for="primerNombre">Primer nombre</label>
-                                    <input type="text" id="primerNombre" class="form-control"
-                                        [(ngModel)]="colaborador.primerNombre" name="primerNombre{{i}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="apellido">Apellido</label>
-                                    <input type="text" id="apellido" class="form-control"
-                                        [(ngModel)]="colaborador.apellido" name="apellido{{i}}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="rol">Rol</label>
-                                    <select id="rol" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{i}}"
-                                        required>
-                                        <option value="autor">Autor</option>
-                                        <option value="traductor">Traductor</option>
-                                        <option value="editor">Editor</option>
-                                    </select>
-                                </div>
-                                <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                                </button>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Agregar Colaborador
-                        </button>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tituloRevista">Título de la Revista</label>
-                        <input type="text" id="tituloRevista" class="form-control" [(ngModel)]="tituloRevista"
-                            name="tituloRevista" required>
-                    </div>
-                    <!-- Volumen y Número de la Revista en el mismo renglón -->
-                    <div class="form-group-container">
-                        <div class="form-group">
-                            <label for="volumen">Volumen</label>
-                            <input type="text" id="volumen" class="form-control" [(ngModel)]="volumen" name="volumen"
-                                required>
-                            </div>
-                            <div class="form-group">
-                            <label for="numeroRevista">Número de la Revista</label>
-                            <input type="text" id="numeroRevista" class="form-control" [(ngModel)]="numeroRevista"
-                                name="numeroRevista" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group-container">
-                        <div class="form-group">
-                            <label for="paginaInicio">Página de inicio</label>
-                            <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio"
-                                name="paginaInicio" />
-                        </div>
-                        <div class="form-group">
-                            <label for="paginaFin">Página final</label>
-                            <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="doi">DOI</label>
-                        <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="issnImpreso">ISSN versión impresa (opcional)</label>
-                        <input type="text" id="issnImpreso" class="form-control" [(ngModel)]="issnImpreso"
-                            name="issnImpreso">
-                    </div>
-                    <div class="form-group">
-                        <label for="issnOnline">ISSN versión en línea (opcional)</label>
-                        <input type="text" id="issnOnline" class="form-control" [(ngModel)]="issnOnline"
-                            name="issnOnline">
-                    </div>
-                    <button type="submit" class="btn btn-success">
-                        <i class="fa fa-save" aria-hidden="true"></i> Registrar
-                    </button>
-                </form>
-            </div>
         </div>
 
         <!-- Sección para Libro -->

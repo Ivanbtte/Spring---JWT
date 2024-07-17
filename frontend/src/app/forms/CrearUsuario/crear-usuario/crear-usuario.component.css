@@ -3,10 +3,10 @@ body {
     background-color: #f8f9fa;
     margin: 0;
     padding: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 }
 .container {
     margin: 50px auto;
@@ -75,3 +75,18 @@ body {
     margin-top: 1rem;
     margin-bottom: 1rem;
 }
+.input-group-append .input-group-text {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .form-control {
+    padding-right: 2.5rem; /* Añadir espacio para el icono dentro del input */
+  }
+  
+  .password-toggle i {
+    font-size: 1.2rem; /* Ajustar el tamaño del icono si es necesario */
+  }
+  
+  
