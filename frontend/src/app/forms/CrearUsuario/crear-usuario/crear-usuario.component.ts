@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { RegistrarusuarioService } from 'src/app/services/registrarusuario/registrarusuario.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-usuario',
@@ -9,7 +10,8 @@ import { RegistrarusuarioService } from 'src/app/services/registrarusuario/regis
 })
 export class CrearUsuarioComponent implements OnInit {
   userForm: FormGroup;
-
+  passwordFieldType: string = 'password';
+  passwordToggleIcon: string = 'fa fa-eye';
   constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -61,14 +63,19 @@ export class CrearUsuarioComponent implements OnInit {
 
       this.registrarusuarioService.registro(user).subscribe(
         response => {
-          console.log('Usuario registrado:', response);
-          // Aquí puedes manejar la respuesta, por ejemplo, mostrar un mensaje de éxito
-          alert('Usuario registrado exitosamente');
+          Swal.fire({
+            icon: "success",
+            title: "¡Registro Exitoso!",
+            text: "El usuario ha sido registrado correctamente.",
+          });
+          this.userForm.reset(); // Limpiar el formulario después del registro
         },
         error => {
-          console.error('Error al registrar usuario:', error);
-          alert('Error al registrar usuario');
-          // Aquí puedes manejar el error, por ejemplo, mostrar un mensaje de error
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Algo salió mal!",
+          });
         }
       );
     }

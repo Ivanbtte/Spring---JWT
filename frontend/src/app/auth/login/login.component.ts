@@ -10,6 +10,8 @@ import { LoginRequest } from 'src/app/services/auth/loginRequest';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  passwordFieldType: string = 'password';
+  passwordToggleIcon: string = 'fa fa-eye';
   loginError:string="";
   loginForm=this.formBuilder.group({
     username:['',[Validators.required,Validators.email]],
@@ -29,6 +31,17 @@ export class LoginComponent implements OnInit {
   {
     return this.loginForm.controls.password;
   }
+
+  togglePasswordVisibility() {
+    if (this.passwordFieldType === 'password') {
+      this.passwordFieldType = 'text';
+      this.passwordToggleIcon = 'fa fa-eye-slash';
+    } else {
+      this.passwordFieldType = 'password';
+      this.passwordToggleIcon = 'fa fa-eye';
+    }
+  }
+
   login(){
     if(this.loginForm.valid){
       this.loginError="";

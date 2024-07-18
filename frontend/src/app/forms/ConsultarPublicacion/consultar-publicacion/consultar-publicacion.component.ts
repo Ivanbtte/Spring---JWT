@@ -9,9 +9,13 @@ import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 })
 export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorInstituto: boolean = false;
+  filtrarPorPublicación: boolean = false;
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
+  filtrarPorTipo: boolean = false;
   selectedInstituto: string | undefined;
+  selectedPublicacion: string | undefined;
+  publicacion:any[]=[];
   profesores: any[] = [];
   selectedProfesor: string | undefined;
   publicaciones: any[] = [];
@@ -67,5 +71,15 @@ export class ConsultarPublicacionComponent implements OnInit {
 
   trackById(index: number, articulo: any): number {
     return articulo.id;
+  }
+
+  editarArticulo(articulo: any) {
+    // Lógica para editar el artículo, por ejemplo redirigir a una página de edición.
+    console.log('Editar artículo:', articulo);
+  }
+
+  darDeBajaArticulo(articulo: any) {
+    // Lógica para dar de baja el artículo, por ejemplo mostrar un mensaje de confirmación.
+    console.log('Dar de baja artículo:', articulo);
   }
 }

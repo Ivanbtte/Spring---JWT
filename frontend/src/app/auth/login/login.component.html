@@ -15,7 +15,7 @@
         <p class="text-danger">{{loginError}}</p>
         
         <div class="form-group">
-          <label for="exampleInputEmail1"> <i class="fa fa-envelope-o"></i>   Correo</label>
+          <label for="exampleInputEmail1"><i class="fa fa-envelope-o"></i> Correo</label>
           <div class="input-group">
             <input formControlName="username" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ingresar Correo">
           </div>
@@ -25,23 +25,27 @@
           </div>
         </div>
         
-        <div class="form-group">
-          <label for="exampleInputPassword1"><i class="fa fa-key"></i>   Contraseña</label>
-          <div class="input-group">
-            <input formControlName="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Contraseña">
-          </div>
-          <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
-            <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
-          </div>
-        </div>
+<div class="form-group">
+  <label for="exampleInputPassword1"><i class="fa fa-key"></i> Contraseña</label>
+  <div class="input-group position-relative">
+    <input formControlName="password" [type]="passwordFieldType" class="form-control pr-5" id="exampleInputPassword1" placeholder="Contraseña">
+    <span class="input-group-text position-absolute" style="right: 0px;  top: 40%; transform: translateY(-50%); width: 40px; height: 80%; border-radius: 5px;" (click)="togglePasswordVisibility()">
+      <i [class]="passwordToggleIcon"></i>
+    </span>
+  </div>
+  <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+    <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
+  </div>
+</div>
+
+        
         
         <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
       </form>
     </div>
     <div id="derecho">
       <div class="titulo">Bienvenido</div>
-        <a href="#">« Volver</a>
-      </div>
+      <a href="#">« Volver</a>
     </div>
   </div>
-
+</div>

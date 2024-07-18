@@ -11,6 +11,7 @@ import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
 
 
+
 const routes: Routes = [
   {path:'',redirectTo:'/inicio', pathMatch:'full'},
   {path:'inicio',component:DashboardComponent},
@@ -25,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes) ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
