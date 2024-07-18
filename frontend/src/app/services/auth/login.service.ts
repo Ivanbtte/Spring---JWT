@@ -18,20 +18,21 @@ export class LoginService {
     this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
   }
 
-  login(credentials:LoginRequest):Observable<any>{
-    return this.http.post<any>(environment.urlHost+"auth/login",credentials).pipe(
-      tap( (userData) => {
+  login(credentials: LoginRequest): Observable<any> {
+    return this.http.post<any>(environment.urlHost + "auth/login", credentials).pipe(
+      tap((userData) => {
         sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("role", userData.role); // Guardar el rol en sessionStorage
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
-      map((userData)=> userData.token),
+      map((userData) => ({ token: userData.token, role: userData.role })), // Devolver ambos valores
       catchError(this.handleError)
     );
   }
-
-  logout():void{
+  logout(): void {
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role"); // Quitar el rol del sessionStorage
     this.currentUserLoginOn.next(false);
   }
 
