@@ -86,7 +86,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getTipo_Publicacion().getDescripcion_publicacion_tipo());
         InstitutoDto institutoDto = new InstitutoDto(articulo.getInstituto().getId(),
                 articulo.getInstituto().getNombre());
-        TrimestreDto trimestreDto = new TrimestreDto(articulo.getTrimestre().getId_trimestre(), articulo.getTrimestre().getNombre(), articulo.getTrimestre().getFecha_inicio(), articulo.getTrimestre().getFecha_fin());
+        TrimestreDto trimestreDto = new TrimestreDto(articulo.getTrimestre().getId_trimestre(),
+                articulo.getTrimestre().getNombre(), articulo.getTrimestre().getFecha_inicio(),
+                articulo.getTrimestre().getFecha_fin());
 
         return new ArticuloDto(
                 articulo.getId_articulo(),
@@ -107,9 +109,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getObservaciones_directores(),
                 articulo.getObservaciones_gestion(),
                 articulo.getIndice_miar(),
-                articulo.isCompilado(),
+                articulo.getCompilado(),
                 trimestreDto,
-                articulo.isFinanciamiento_prodep());
+                articulo.getFinanciamiento_prodep());
     }
 
     @Override
@@ -144,7 +146,6 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articuloDto.isFinanciamiento_prodep());
     }
 
-
     @Override
     public Articulos findByIdArticulo(Long id) {
         return articuloDao.findById(id).orElse(null);
@@ -167,26 +168,38 @@ public class ArticuloServiceImpl implements ArticuloService {
         Object[] firstResult = results.get(0);
 
         Articulos articulo = new Articulos();
-        articulo.setId_articulo((Long) firstResult[0]);
-        articulo.setDoi((String) firstResult[1]);
-        articulo.setFecha_publicacion((Date) firstResult[2]);
-        articulo.setIsbn_digital((String) firstResult[3]);
-        articulo.setIsbn_impreso((String) firstResult[4]);
-        articulo.setNumero_revista((Integer) firstResult[5]);
-        articulo.setPag_final((Integer) firstResult[6]);
-        articulo.setPag_inicio((Integer) firstResult[7]);
-        articulo.setTitulo_revista((String) firstResult[8]);
-        articulo.setVolumen_revista((String) firstResult[9]);
+        articulo.setId_articulo((Long) firstResult[6]);
+        articulo.setDoi((String) firstResult[10]);
+        articulo.setFecha_publicacion((Date) firstResult[5]);
+        articulo.setIsbn_digital((String) firstResult[13]);
+        articulo.setIsbn_impreso((String) firstResult[14]);
+        articulo.setNumero_revista((Integer) firstResult[2]);
+        articulo.setPag_final((Integer) firstResult[3]);
+        articulo.setPag_inicio((Integer) firstResult[4]);
+        articulo.setTitulo_revista((String) firstResult[19]);
+        articulo.setVolumen_revista((String) firstResult[20]);
 
         // Obtener los IDs de las llaves foráneas
-        Long idInstituto = (Long) firstResult[10];
-        Long idTipoPublicacion = (Long) firstResult[11];
+        Long idInstituto = (Long) firstResult[7];
+        Long idTipoPublicacion = (Long) firstResult[8];
+        Long idTrimestre = (Long) firstResult[9];
+
+        articulo.setNombre_articulo((String) firstResult[15]);
+        articulo.setEditorial((String) firstResult[11]);
+        articulo.setNombre_capitulo((String) firstResult[16]);
+        articulo.setObservaciones_directores((String) firstResult[17]);
+        articulo.setObservaciones_gestion((String) firstResult[18]);
+        articulo.setIndice_miar((String) firstResult[12]);
+        articulo.setCompilado((Boolean) firstResult[0]);
+        articulo.setFinanciamiento_prodep((Boolean) firstResult[1]);
 
         // Buscar las entidades de Instituto y Tipo_Publicacion basadas en los IDs
         Instituto instituto = institutoDao.findById(idInstituto)
                 .orElseThrow(() -> new ResourceNotFoundException("Instituto not found"));
         Tipo_Publicacion tipoPublicacion = tipoPublicacionDao.findById(idTipoPublicacion)
                 .orElseThrow(() -> new ResourceNotFoundException("Tipo_Publicacion not found"));
+        Trimestre trimestre = trimestreDao.findById(idTrimestre)
+                .orElseThrow(() -> new ResourceNotFoundException("Trimestre not found")); // Buscar el trimestre
 
         articulo.setInstituto(instituto);
         articulo.setTipo_Publicacion(tipoPublicacion);
@@ -199,14 +212,20 @@ public class ArticuloServiceImpl implements ArticuloService {
                 instituto.getId(),
                 instituto.getNombre());
 
+        TrimestreDto trimestreDto = new TrimestreDto(
+                trimestre.getId_trimestre(),
+                trimestre.getNombre(),
+                trimestre.getFecha_inicio(),
+                trimestre.getFecha_fin());
+
         List<AutorDto> autoresDto = results.stream().map(result -> {
             AutorDto autorDto = new AutorDto();
-            autorDto.setId_autor((Long) result[12]);
-            autorDto.setApellidoMaternoAutor((String) result[13]);
-            autorDto.setApellidoPaternoAutor((String) result[14]);
-            autorDto.setAutorUnsis((Boolean) result[15]);
-            autorDto.setNombre1Autor((String) result[16]);
-            autorDto.setNombre2Autor((String) result[17]);
+            autorDto.setId_autor((Long) result[22]);
+            autorDto.setApellidoMaternoAutor((String) result[23]);
+            autorDto.setApellidoPaternoAutor((String) result[24]);
+            autorDto.setAutorUnsis((Boolean) result[21]);
+            autorDto.setNombre1Autor((String) result[25]);
+            autorDto.setNombre2Autor((String) result[26]);
             return autorDto;
         }).collect(Collectors.toList());
 
@@ -223,6 +242,15 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getDoi(),
                 articulo.getIsbn_impreso(),
                 articulo.getIsbn_digital(),
-                autoresDto);
+                autoresDto,
+                articulo.getNombre_articulo(),
+                articulo.getEditorial(),
+                articulo.getNombre_capitulo(),
+                articulo.getObservaciones_directores(),
+                articulo.getObservaciones_gestion(),
+                articulo.getIndice_miar(),
+                articulo.getCompilado(),
+                articulo.getFinanciamiento_prodep(),
+                trimestreDto);
     }
 }

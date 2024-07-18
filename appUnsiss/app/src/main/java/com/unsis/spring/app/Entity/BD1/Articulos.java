@@ -185,7 +185,7 @@ public class Articulos {
         this.indice_miar = indice_miar;
     }
 
-    public boolean isCompilado() {
+    public boolean getCompilado() {
         return compilado;
     }
 
@@ -201,7 +201,7 @@ public class Articulos {
         this.trimestre = trimestre;
     }
 
-    public boolean isFinanciamiento_prodep() {
+    public boolean getFinanciamiento_prodep() {
         return financiamiento_prodep;
     }
 
