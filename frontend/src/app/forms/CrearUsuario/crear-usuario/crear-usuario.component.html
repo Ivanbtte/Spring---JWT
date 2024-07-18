@@ -20,6 +20,9 @@
                 <option value="INVESTIGADOR">Investigador</option>
                 <option value="COORDINADOR">Coordinador</option>
               </select>
+              <div *ngIf="userForm.value.role === 'INVESTIGADOR'||userForm.value.role === 'COORDINADOR'">
+                <app-registrar-investigador></app-registrar-investigador>
+              </div>
         </div>
         <div class="form-group">
             <label for="password">Contraseña</label>
