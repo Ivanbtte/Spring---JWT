@@ -24,4 +24,13 @@ public class CitaApaDto {
     private String isbnImpreso;
     private String isbnDigital;
     private List<AutorDto> autores;
+    private String nombreArticulo;
+    private String editorial;
+    private String nombreCapitulo;
+    private String observacionesDirectores;
+    private String observacionesGestion;
+    private String indiceMiar;
+    private Boolean compilado;
+    private Boolean financiamientoProdep;
+    private TrimestreDto trimestre;
 }
