@@ -1,6 +1,7 @@
 package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -253,4 +254,109 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getFinanciamiento_prodep(),
                 trimestreDto);
     }
+
+    // Obtiene todo
+   public List<CitaApaDto> getAllCitasApa() {
+        List<Object[]> results = articuloDao.findAllArticulosWithAutores();
+
+        if (results.isEmpty()) {
+            throw new ResourceNotFoundException("No articles found");
+        }
+
+        Map<Long, Articulos> articulosMap = new HashMap<>();
+        Map<Long, Instituto> institutoMap = new HashMap<>();
+        Map<Long, Tipo_Publicacion> tipoPublicacionMap = new HashMap<>();
+
+        for (Object[] result : results) {
+            Long articuloId = (Long) result[0];
+            Articulos articulo = articulosMap.get(articuloId);
+
+            if (articulo == null) {
+                articulo = new Articulos();
+                articulo.setId_articulo(articuloId);
+                articulo.setDoi((String) result[1]);
+                articulo.setFecha_publicacion((Date) result[2]);
+                articulo.setIsbn_digital((String) result[3]);
+                articulo.setIsbn_impreso((String) result[4]);
+                articulo.setNumero_revista((Integer) result[5]);
+                articulo.setPag_final((Integer) result[6]);
+                articulo.setPag_inicio((Integer) result[7]);
+                articulo.setTitulo_revista((String) result[8]);
+                articulo.setVolumen_revista((String) result[9]);
+
+                // Obtener los IDs de las llaves foráneas
+                Long idInstituto = (Long) result[10];
+                Long idTipoPublicacion = (Long) result[11];
+
+                // Buscar las entidades de Instituto y Tipo_Publicacion basadas en los IDs
+                Instituto instituto = institutoMap.get(idInstituto);
+                if (instituto == null) {
+                    instituto = institutoDao.findById(idInstituto)
+                            .orElseThrow(() -> new ResourceNotFoundException("Instituto not found"));
+                    institutoMap.put(idInstituto, instituto);
+                }
+
+                Tipo_Publicacion tipoPublicacion = tipoPublicacionMap.get(idTipoPublicacion);
+                if (tipoPublicacion == null) {
+                    tipoPublicacion = tipoPublicacionDao.findById(idTipoPublicacion)
+                            .orElseThrow(() -> new ResourceNotFoundException("Tipo_Publicacion not found"));
+                    tipoPublicacionMap.put(idTipoPublicacion, tipoPublicacion);
+                }
+
+                articulo.setInstituto(instituto);
+                articulo.setTipo_Publicacion(tipoPublicacion);
+                articulosMap.put(articuloId, articulo);
+            }
+
+            Autor autor = new Autor();
+            autor.setId_autor((Long) result[12]);
+            autor.setApellidoMaternoAutor((String) result[13]);
+            autor.setApellidoPaternoAutor((String) result[14]);
+            autor.setAutorUnsis((Boolean) result[15]);
+            autor.setNombre1Autor((String) result[16]);
+            autor.setNombre2Autor((String) result[17]);
+
+            articulo.getAutores().add(autor);
+        }
+
+        return articulosMap.values().stream().map(articulo -> {
+            Tipo_Publicacion tipoPublicacion = articulo.getTipo_Publicacion();
+            Instituto instituto = articulo.getInstituto();
+
+            Tipo_PublicacionDto tipoPublicacionDto = new Tipo_PublicacionDto(
+                    tipoPublicacion.getId_publicacion_tipo(),
+                    tipoPublicacion.getDescripcion_publicacion_tipo());
+
+            InstitutoDto institutoDto = new InstitutoDto(
+                    instituto.getId(),
+                    instituto.getNombre());
+
+            List<AutorDto> autoresDto = articulo.getAutores().stream().map(autor -> {
+                AutorDto autorDto = new AutorDto();
+                autorDto.setId_autor(autor.getId_autor());
+                autorDto.setApellidoMaternoAutor(autor.getApellidoMaternoAutor());
+                autorDto.setApellidoPaternoAutor(autor.getApellidoPaternoAutor());
+                autorDto.setAutorUnsis(autor.getAutorUnsis());
+                autorDto.setNombre1Autor(autor.getNombre1Autor());
+                autorDto.setNombre2Autor(autor.getNombre2Autor());
+                return autorDto;
+            }).collect(Collectors.toList());
+
+            return new CitaApaDto(
+                    articulo.getId_articulo(),
+                    tipoPublicacionDto.getDescripcion_publicacion_tipo(),
+                    institutoDto.getNombre(),
+                    articulo.getFecha_publicacion(),
+                    articulo.getTitulo_revista(),
+                    articulo.getNumero_revista(),
+                    articulo.getVolumen_revista(),
+                    articulo.getPag_inicio(),
+                    articulo.getPag_final(),
+                    articulo.getDoi(),
+                    articulo.getIsbn_impreso(),
+                    articulo.getIsbn_digital(),
+                    autoresDto);
+        }).collect(Collectors.toList());
+    }
+
 }

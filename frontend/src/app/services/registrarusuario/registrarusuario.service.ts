@@ -16,10 +16,17 @@ export class RegistrarusuarioService {
     return this.http.post<any>(this.apiUrl, user);
   }
 
-  reporte() {
+  /*reporte() {
     const headers = new HttpHeaders({
       'Accept': 'application/pdf'
     });
     return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }
+
+  reporteExe() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    return this.http.get(this.apiUrl + "/exportarExel", { headers, responseType: 'blob' });
+  }*/
 }

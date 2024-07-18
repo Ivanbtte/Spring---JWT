@@ -1,5 +1,9 @@
 package com.unsis.spring.app.Controller.BD1;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,13 +21,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lowagie.text.DocumentException;
 import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
+import com.unsis.spring.app.ReportPDF.ArticuloReportPDF;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -198,5 +206,23 @@ public class ArticuloController {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/user/exportarPDF")
+    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException {
+        response.setContentType("application/pdf");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Usuarios_" + fechaActual + ".pdf";
+
+        response.setHeader(cabecera, valor);
+
+        List<CitaApaDto> articulos = articuloService.getAllCitasApa();
+
+        ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
+        exporter.exportar(response);
     }
 }

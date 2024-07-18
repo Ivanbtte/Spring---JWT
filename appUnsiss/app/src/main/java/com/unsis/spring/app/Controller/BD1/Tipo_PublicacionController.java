@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
-import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
 import com.unsis.spring.app.Service.BD1.Tipo_PublicacionService;
 
 @RestController

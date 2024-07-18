@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lowagie.text.DocumentException;
 import com.unsis.spring.app.Auth.AuthResponse;
+import com.unsis.spring.app.ReportPDF.UserReportExcel;
 import com.unsis.spring.app.ReportPDF.UserReportPDf;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,8 +57,8 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userRequest));
     }
 
-	@GetMapping(value = "/user/exportarPDF")
-    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException{
+   /* @GetMapping(value = "/user/exportarPDF")
+    public void exportarPDFDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
         response.setContentType("application/pdf");
 
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -73,5 +74,23 @@ public class UserController {
         UserReportPDf exporter = new UserReportPDf(usuarios);
         exporter.exportar(response);
     }
+
+    @GetMapping(value = "/user/exportarExel")
+    public void exportarExelDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
+        response.setContentType("application/octet-stream");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Usuarios_" + fechaActual + ".xlsx";
+
+        response.setHeader(cabecera, valor);
+
+        List<UserDTO> usuarios = userService.getAllUsers();
+     
+        UserReportExcel exporter = new UserReportExcel(null, null, usuarios);
+        exporter.exportar(response);
+    }*/
 
 }
