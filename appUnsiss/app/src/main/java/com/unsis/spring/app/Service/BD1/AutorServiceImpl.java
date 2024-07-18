@@ -5,10 +5,8 @@ import java.util.stream.Collectors;
 import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.Repository.BD1.AutorDao;

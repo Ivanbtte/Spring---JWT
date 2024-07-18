@@ -200,7 +200,7 @@ public class ArticuloController {
     }
 
     @GetMapping(value = "/user/exportarPDF")
-    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException{
+    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
 
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -211,8 +211,8 @@ public class ArticuloController {
 
         response.setHeader(cabecera, valor);
 
-        List<ArticuloDto> articulos = articuloService.findAll();
-     
+        List<CitaApaDto> articulos = articuloService.getAllCitasApa();
+
         ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
         exporter.exportar(response);
     }

@@ -2,7 +2,11 @@ package com.unsis.spring.app.ReportPDF;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -16,13 +20,13 @@ import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import com.unsis.spring.app.DTO.ArticuloDto;
-
+import com.unsis.spring.app.DTO.AutorDto;
+import com.unsis.spring.app.DTO.CitaApaDto;
 
 public class ArticuloReportPDF {
- private List<ArticuloDto> listarArticulos;
+    private List<CitaApaDto> listarArticulos;
 
-    public ArticuloReportPDF(List<ArticuloDto> listarArticulos) {
+    public ArticuloReportPDF(List<CitaApaDto> listarArticulos) {
         super();
         this.listarArticulos = listarArticulos;
     }
@@ -37,78 +41,103 @@ public class ArticuloReportPDF {
 
         celda.setPhrase(new Phrase("ID", fuente));
         tabla.addCell(celda);
-
-        celda.setPhrase(new Phrase("Nombre", fuente));
+        celda.setPhrase(new Phrase("Tipo publicación", fuente));
         tabla.addCell(celda);
- 
-        celda.setPhrase(new Phrase("Rol", fuente));
+        celda.setPhrase(new Phrase("Fecha de publicación", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Folio", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Cita en norma APA 7ed", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Nombre del producto", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Instituto", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Financiamiento PRODEP (Si/No)", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Trimestre", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Compilado (Si/No)", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Indice MIAR", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Observaciones directores", fuente));
+        tabla.addCell(celda);
+        celda.setPhrase(new Phrase("Observaciones gestión", fuente));
         tabla.addCell(celda);
     }
-//articulos, articulo de revista indexada, capitulo del libro, libro, libro online
+
     private void escribirDatosTabla(PdfPTable tabla) {
-        String articulos="articulos";
-        String articulos_r_i="articulos revista indexada";
-        String capitulo_libro="capitulo de libro";
-        String libro="libro";
-        String libro_online="libro online";
-        for (ArticuloDto articuloDTO : listarArticulos) {
+        String articulos = "articulos";
+        String capitulo_libro = "capitulo de libro";
+        String libro = "libro";
+
+        // Dentro de este for se genera la cita APA
+        for (CitaApaDto articuloDTO : listarArticulos) {
+            tabla.addCell(String.valueOf(articuloDTO.getIdArticulo()));
             tabla.addCell(String.valueOf(articuloDTO.getTipoPublicacion()));
-            tabla.addCell(String.valueOf(articuloDTO.getInstituto()));
-            List<String> autoresList = "articuloDTO.getAutores()";
-            String autores = String.join(", ", autoresList); // Une los autores en una cadena separada por comas
+            tabla.addCell(String.valueOf("Folio"));
+            // Obtiene una lista de autores que despues separa con el uso de comas
+            List<AutorDto> autoresList = articuloDTO.getAutores();
+            String autores = autoresList.stream()
+                    .map(AutorDto::getNombre1Autor)
+                    .collect(Collectors.joining(", "));
+
             String tipo_publicacion = String.valueOf(articuloDTO.getTipoPublicacion());
             String instituto = String.valueOf(articuloDTO.getInstituto());
-            String fecha_publicacion = String.valueOf(articuloDTO.getFecha_publicacion());
-            String titulo_revista = String.valueOf(articuloDTO.getTitulo_revista());
-            String numero_revista = String.valueOf(articuloDTO.getNumero_revista());
-            String volumen_revista = String.valueOf(articuloDTO.getVolumen_revista());
-            String paginas =  String.valueOf(articuloDTO.getPag_inicio()) + "-" + String.valueOf(articuloDTO.getPag_final());
+
+            // Obtiene la fecha
+            Date fechaPublicacionDate = articuloDTO.getFechaPublicacion();
+            Calendar fechaPublicacion = Calendar.getInstance();
+            fechaPublicacion.setTime(fechaPublicacionDate);
+            int year = fechaPublicacion.get(Calendar.YEAR);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaCompleta = sdf.format(fechaPublicacion.getTime());
+            // La divide en año y en fecha completa
+            String anio = String.valueOf(year);
+            String fecha_publicacion = fechaCompleta;
+
+            String titulo_revista = String.valueOf(articuloDTO.getTituloRevista());
+            String numero_revista = String.valueOf(articuloDTO.getNumeroRevista());
+            String volumen_revista = String.valueOf(articuloDTO.getVolumenRevista());
+            String paginas = String.valueOf(articuloDTO.getPagInicio()) + "-"
+                    + String.valueOf(articuloDTO.getPagFinal());
             String doi = String.valueOf(articuloDTO.getDoi());
-            String isbn_impreso = String.valueOf(articuloDTO.getIsbn_impreso());
-            String isbn_digital = String.valueOf(articuloDTO.getIsbn_digital());
-            if(tipo_publicacion==articulos)
-            {
+            String isbn_impreso = String.valueOf(articuloDTO.getIsbnImpreso());
+            String isbn_digital = String.valueOf(articuloDTO.getIsbnDigital());
+
+            if (tipo_publicacion == articulos) {
                 String citaAPA_articulo = String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
-                autores, fecha_publicacion, "tituloArticulo", titulo_revista, 
-                volumen_revista, numero_revista, paginas, doi);
+                        autores, fecha_publicacion, "tituloArticulo", titulo_revista,
+                        volumen_revista, numero_revista, paginas, doi);
                 tabla.addCell(citaAPA_articulo);
-            } else if(tipo_publicacion==articulos_r_i)
-            {
-                String citaAPA_art_ind = String.format("%s (%s). %s. *%s, %s*(%s), %s. https://doi.org/%s",
-                    autores, fecha_publicacion, "tituloArticulo", titulo_revista, 
-                    volumen_revista, numero_revista, paginas, doi);
-                tabla.addCell(citaAPA_art_ind);
-            } else if(tipo_publicacion==capitulo_libro)
-            {
-                /*String citaAPA_cap_lib = String.format("%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
-                                                        autores, fecha_publicacion, "tituloCapitulo", editoresList, 
-                                                        tituloLibro, paginas, editorial, doi);
-                tabla.addCell(citaAPA_cap_lib);*/
-            } else if(tipo_publicacion==libro)
-            {
-               /* if (doi == null || doi.isEmpty()) {
+
+            } else if (tipo_publicacion == capitulo_libro) {
+                String citaAPA_cap_lib = String.format(
+                        "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
+                        autores, fecha_publicacion, "tituloCapitulo", "editoresList",
+                        "tituloLibro", paginas, "editorial", doi);
+                tabla.addCell(citaAPA_cap_lib);
+
+            } else if (tipo_publicacion == libro) {
+                if (doi == null || doi.isEmpty()) {
                     String citaAPA_libro = String.format("%s (%s). *%s*. %s.",
-                                            autores, "año", "tituloLibro", "editorial");
+                            autores, "año", "tituloLibro", "editorial");
                     tabla.addCell(citaAPA_libro);
                 } else {
                     String citaAPA_libro = String.format("%s (%s). *%s*. %s. https://doi.org/%s",
-                                            autores, "año", "tituloLibro", "editorial", doi);
+                            autores, "año", "tituloLibro", "editorial", doi);
                     tabla.addCell(citaAPA_libro);
-                }*/
-            } else if(tipo_publicacion==libro_online)
-            {
-               /* if (doi == null || doi.isEmpty()) {
-                    String citaAPA_libro_on = String.format("%s (%s). *%s*. %s. %s",
-                                            autores, "año", "tituloLibro", "editorial", "url");
-                    tabla.addCell(citaAPA_libro_on);
-                } else {
-                    String citaAPA_libro_on  = String.format("%s (%s). *%s*. %s. https://doi.org/%s",
-                                            autores, "año", "tituloLibro", "editorial", doi);
-                    tabla.addCell(citaAPA_libro_on);
-                }*/
+                }
             }
-            
-            
+            tabla.addCell(String.valueOf(articuloDTO.getTituloRevista()));
+            tabla.addCell(String.valueOf(articuloDTO.getInstituto()));
+            tabla.addCell(String.valueOf("Si"));
+            tabla.addCell(String.valueOf("1er Trimestr"));
+            tabla.addCell(String.valueOf("Si"));
+            tabla.addCell(String.valueOf("Ninguno"));
+            tabla.addCell(String.valueOf("Ninguno"));
+            tabla.addCell(String.valueOf("Ninguno"));
         }
     }
 
@@ -122,7 +151,7 @@ public class ArticuloReportPDF {
         fuente.setColor(Color.black);
         fuente.setSize(18);
 
-        Paragraph titulo = new Paragraph("Reporte de articulos", fuente);
+        Paragraph titulo = new Paragraph("Concentrado de publicaciones", fuente);
         titulo.setAlignment(Paragraph.ALIGN_CENTER);
         documento.add(titulo);
 
@@ -130,7 +159,7 @@ public class ArticuloReportPDF {
         tabla.setWidthPercentage(100);
         tabla.setSpacingBefore(15);
         tabla.setWidths(new float[] {
-            0.2f, 0.2f, 0.2f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f
+                0.2f, 0.2f, 0.2f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f
         });
         tabla.setWidthPercentage(100);
 

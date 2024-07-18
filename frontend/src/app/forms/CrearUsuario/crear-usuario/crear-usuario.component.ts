@@ -72,7 +72,7 @@ export class CrearUsuarioComponent implements OnInit {
     }
   }
 
-  report(){
+ /* report(){
     this.registrarusuarioService.reporte().subscribe(response => {
       const blob = new Blob([response], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
@@ -85,6 +85,20 @@ export class CrearUsuarioComponent implements OnInit {
       console.error('Error downloading the file', error);
     });
   }
+
+  reportExel() {
+    this.registrarusuarioService.reporteExe().subscribe(response => {
+      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'reporte.xlsx';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    }, error => {
+      console.error('Error downloading the file', error);
+    });
+  }*/
   
 }
 
