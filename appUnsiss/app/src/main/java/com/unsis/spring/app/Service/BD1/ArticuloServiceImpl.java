@@ -254,7 +254,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getFinanciamiento_prodep(),
                 trimestreDto);
     }
-
+/*
     // Obtiene todo
    public List<CitaApaDto> getAllCitasApa() {
         List<Object[]> results = articuloDao.findAllArticulosWithAutores();
@@ -358,5 +358,5 @@ public class ArticuloServiceImpl implements ArticuloService {
                     autoresDto);
         }).collect(Collectors.toList());
     }
-
+ */
 }

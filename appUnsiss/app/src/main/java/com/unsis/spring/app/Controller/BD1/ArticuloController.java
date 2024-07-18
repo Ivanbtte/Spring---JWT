@@ -207,7 +207,7 @@ public class ArticuloController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+/* 
     @GetMapping(value = "/user/exportarPDF")
     public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
@@ -224,5 +224,5 @@ public class ArticuloController {
 
         ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
         exporter.exportar(response);
-    }
+    }*/
 }
