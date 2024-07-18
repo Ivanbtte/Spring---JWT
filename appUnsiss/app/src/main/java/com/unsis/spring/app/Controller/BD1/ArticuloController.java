@@ -88,6 +88,15 @@ public class ArticuloController {
             currentArticulo.setIsbn_digital(articuloDto.getIsbn_digital());
             currentArticulo.setTipoPublicacion(articuloDto.getTipoPublicacion());
             currentArticulo.setInstituto(articuloDto.getInstituto());
+            currentArticulo.setNombre_articulo(articuloDto.getNombre_articulo());
+            currentArticulo.setEditorial(articuloDto.getEditorial());
+            currentArticulo.setNombre_capitulo(articuloDto.getNombre_capitulo());
+            currentArticulo.setObservaciones_directores(articuloDto.getObservaciones_directores());
+            currentArticulo.setObservaciones_gestion(articuloDto.getObservaciones_gestion());
+            currentArticulo.setIndice_miar(articuloDto.getIndice_miar());
+            currentArticulo.setCompilado(articuloDto.isCompilado());
+            currentArticulo.setTrimestre(articuloDto.getTrimestre());
+            currentArticulo.setFinanciamiento_prodep(articuloDto.isFinanciamiento_prodep());
 
             ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
 

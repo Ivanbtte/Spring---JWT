@@ -2,9 +2,7 @@ package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
 import java.util.Date;
-import java.util.Set;
 import java.util.HashSet;
-import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +12,16 @@ import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
 import com.unsis.spring.app.DTO.InstitutoDto;
 import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
+import com.unsis.spring.app.DTO.TrimestreDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
-import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.Entity.BD1.Instituto;
 import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
+import com.unsis.spring.app.Entity.BD1.Trimestre;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Repository.BD1.ArticuloDao;
 import com.unsis.spring.app.Repository.BD1.InstitutoDao;
 import com.unsis.spring.app.Repository.BD1.Tipo_PublicacionDao;
+import com.unsis.spring.app.Repository.BD1.TrimestreDao;
 
 import jakarta.transaction.Transactional;
 
@@ -38,6 +38,9 @@ public class ArticuloServiceImpl implements ArticuloService {
 
     @Autowired
     private InstitutoDao institutoDao;
+
+    @Autowired
+    private TrimestreDao trimestreDao;
 
     @Override
     @Transactional
@@ -83,6 +86,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getTipo_Publicacion().getDescripcion_publicacion_tipo());
         InstitutoDto institutoDto = new InstitutoDto(articulo.getInstituto().getId(),
                 articulo.getInstituto().getNombre());
+        TrimestreDto trimestreDto = new TrimestreDto(articulo.getTrimestre().getId_trimestre(), articulo.getTrimestre().getNombre(), articulo.getTrimestre().getFecha_inicio(), articulo.getTrimestre().getFecha_fin());
 
         return new ArticuloDto(
                 articulo.getId_articulo(),
@@ -96,7 +100,16 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articulo.getPag_final(),
                 articulo.getDoi(),
                 articulo.getIsbn_impreso(),
-                articulo.getIsbn_digital());
+                articulo.getIsbn_digital(),
+                articulo.getNombre_articulo(),
+                articulo.getEditorial(),
+                articulo.getNombre_capitulo(),
+                articulo.getObservaciones_directores(),
+                articulo.getObservaciones_gestion(),
+                articulo.getIndice_miar(),
+                articulo.isCompilado(),
+                trimestreDto,
+                articulo.isFinanciamiento_prodep());
     }
 
     @Override
@@ -104,6 +117,7 @@ public class ArticuloServiceImpl implements ArticuloService {
         Tipo_Publicacion tipoPublicacion = tipoPublicacionDao
                 .findById(articuloDto.getTipoPublicacion().getId_publicacion_tipo()).orElse(null);
         Instituto instituto = institutoDao.findById(articuloDto.getInstituto().getId()).orElse(null);
+        Trimestre trimestre = trimestreDao.findById(articuloDto.getTrimestre().getId_trimestre()).orElse(null);
 
         return new Articulos(
                 articuloDto.getId_articulo(),
@@ -118,8 +132,18 @@ public class ArticuloServiceImpl implements ArticuloService {
                 articuloDto.getDoi(),
                 articuloDto.getIsbn_impreso(),
                 articuloDto.getIsbn_digital(),
-                new HashSet<>());
+                new HashSet<>(),
+                articuloDto.getNombre_articulo(),
+                articuloDto.getEditorial(),
+                articuloDto.getNombre_capitulo(),
+                articuloDto.getObservaciones_directores(),
+                articuloDto.getObservaciones_gestion(),
+                articuloDto.getIndice_miar(),
+                articuloDto.isCompilado(),
+                trimestre,
+                articuloDto.isFinanciamiento_prodep());
     }
+
 
     @Override
     public Articulos findByIdArticulo(Long id) {

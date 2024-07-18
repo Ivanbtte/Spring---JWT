@@ -37,22 +37,26 @@ public class Articulos {
     @JoinColumn(name = "id_instituto", nullable = false)
     private Instituto instituto;
 
+    @ManyToOne
+    @JoinColumn(name = "id_trimestre", nullable = false)
+    private Trimestre trimestre;
+
     @Column(nullable = false)
     private Date fecha_publicacion;
 
-    @Column(nullable = false)
+    @Column
     private String titulo_revista;
 
-    @Column(nullable = false)
+    @Column
     private Integer numero_revista;
 
-    @Column(nullable = false)
+    @Column
     private String volumen_revista;
 
-    @Column(nullable = false)
+    @Column
     private Integer pag_inicio;
 
-    @Column(nullable = false)
+    @Column
     private Integer pag_final;
 
     @Column
@@ -73,13 +77,40 @@ public class Articulos {
 
     private Set<Autor> autores = new HashSet<>();
 
+    @Column
+    private String nombre_articulo;
+
+    @Column
+    private String editorial;
+
+    @Column
+    private String nombre_capitulo;
+
+    @Column
+    private String observaciones_directores;
+
+    @Column
+    private String observaciones_gestion;
+
+    @Column
+    private String indice_miar;
+
+    @Column(nullable = false)
+    private boolean compilado;
+
+    @Column(nullable = false)
+    private boolean financiamiento_prodep;
+
+
     // Constructor sin parámetros
     public Articulos() {}
 
     // Constructor con todos los parámetros
     public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion, String titulo_revista,
                      Integer numero_revista, String volumen_revista, Integer pag_inicio, Integer pag_final,
-                     String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores) {
+                     String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores, 
+                     String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
+                     String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre, boolean financiamiento_prodep) {
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
         this.instituto = instituto;
@@ -93,110 +124,88 @@ public class Articulos {
         this.isbn_impreso = isbn_impreso;
         this.isbn_digital = isbn_digital;
         this.autores = autores;
+        this.nombre_articulo = nombre_articulo;
+        this.editorial = editorial;
+        this.nombre_capitulo = nombre_capitulo;
+        this.observaciones_directores = observaciones_directores;
+        this.observaciones_gestion = observaciones_gestion;
+        this.indice_miar = indice_miar;
+        this.compilado = compilado;
+        this.trimestre = trimestre;
+        this.financiamiento_prodep = financiamiento_prodep;
     }
 
-    // Getters and setters
-    public Long getId_articulo() {
-        return id_articulo;
+    // Getters y setters para los nuevos campos
+
+    public String getNombre_articulo() {
+        return nombre_articulo;
     }
 
-    public void setId_articulo(Long id_articulo) {
-        this.id_articulo = id_articulo;
+    public void setNombre_articulo(String nombre_articulo) {
+        this.nombre_articulo = nombre_articulo;
     }
 
-    public Tipo_Publicacion getTipo_Publicacion() {
-        return tipo_Publicacion;
+    public String getEditorial() {
+        return editorial;
     }
 
-    public void setTipo_Publicacion(Tipo_Publicacion tipo_Publicacion) {
-        this.tipo_Publicacion = tipo_Publicacion;
+    public void setEditorial(String editorial) {
+        this.editorial = editorial;
     }
 
-    public Instituto getInstituto() {
-        return instituto;
+    public String getNombre_capitulo() {
+        return nombre_capitulo;
     }
 
-    public void setInstituto(Instituto instituto) {
-        this.instituto = instituto;
+    public void setNombre_capitulo(String nombre_capitulo) {
+        this.nombre_capitulo = nombre_capitulo;
     }
 
-    public Date getFecha_publicacion() {
-        return fecha_publicacion;
+    public String getObservaciones_directores() {
+        return observaciones_directores;
     }
 
-    public void setFecha_publicacion(Date fecha_publicacion) {
-        this.fecha_publicacion = fecha_publicacion;
+    public void setObservaciones_directores(String observaciones_directores) {
+        this.observaciones_directores = observaciones_directores;
     }
 
-    public String getTitulo_revista() {
-        return titulo_revista;
+    public String getObservaciones_gestion() {
+        return observaciones_gestion;
     }
 
-    public void setTitulo_revista(String titulo_revista) {
-        this.titulo_revista = titulo_revista;
+    public void setObservaciones_gestion(String observaciones_gestion) {
+        this.observaciones_gestion = observaciones_gestion;
     }
 
-    public Integer getNumero_revista() {
-        return numero_revista;
+    public String getIndice_miar() {
+        return indice_miar;
     }
 
-    public void setNumero_revista(Integer numero_revista) {
-        this.numero_revista = numero_revista;
+    public void setIndice_miar(String indice_miar) {
+        this.indice_miar = indice_miar;
     }
 
-    public String getVolumen_revista() {
-        return volumen_revista;
+    public boolean isCompilado() {
+        return compilado;
     }
 
-    public void setVolumen_revista(String volumen_revista) {
-        this.volumen_revista = volumen_revista;
+    public void setCompilado(boolean compilado) {
+        this.compilado = compilado;
     }
 
-    public Integer getPag_inicio() {
-        return pag_inicio;
+    public Trimestre getTrimestre() {
+        return trimestre;
     }
 
-    public void setPag_inicio(Integer pag_inicio) {
-        this.pag_inicio = pag_inicio;
+    public void setTrimestre(Trimestre trimestre) {
+        this.trimestre = trimestre;
     }
 
-    public Integer getPag_final() {
-        return pag_final;
+    public boolean isFinanciamiento_prodep() {
+        return financiamiento_prodep;
     }
 
-    public void setPag_final(Integer pag_final) {
-        this.pag_final = pag_final;
-    }
-
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
-
-    public String getIsbn_impreso() {
-        return isbn_impreso;
-    }
-
-    public void setIsbn_impreso(String isbn_impreso) {
-        this.isbn_impreso = isbn_impreso;
-    }
-
-    public String getIsbn_digital() {
-        return isbn_digital;
-    }
-
-    public void setIsbn_digital(String isbn_digital) {
-        this.isbn_digital = isbn_digital;
-    }
-
-    public Set<Autor> getAutores() {
-        return autores;
-    }
-
-    public void setAutores(Set<Autor> autores) {
-        this.autores = autores;
+    public void setFinanciamiento_prodep(boolean financiamiento_prodep) {
+        this.financiamiento_prodep = financiamiento_prodep;
     }
 }

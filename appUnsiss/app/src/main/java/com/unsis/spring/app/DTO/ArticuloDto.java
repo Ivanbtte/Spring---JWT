@@ -22,4 +22,13 @@ public class ArticuloDto {
     private String doi;
     private String isbn_impreso;
     private String isbn_digital;
+    private String nombre_articulo;
+    private String editorial;
+    private String nombre_capitulo;
+    private String observaciones_directores;
+    private String observaciones_gestion;
+    private String indice_miar;
+    private boolean compilado;
+    private TrimestreDto trimestre;
+    private boolean financiamiento_prodep;
 }
