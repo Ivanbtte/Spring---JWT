@@ -9,6 +9,7 @@ import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 })
 export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorInstituto: boolean = false;
+  filtrarPorPublicación: boolean = false;
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   selectedInstituto: string | undefined;

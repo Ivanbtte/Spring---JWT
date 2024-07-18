@@ -63,13 +63,19 @@ export class CrearUsuarioComponent implements OnInit {
 
       this.registrarusuarioService.registro(user).subscribe(
         response => {
-          console.log('Usuario registrado:', response);
-          alert('Usuario registrado exitosamente.');
+          Swal.fire({
+            icon: "success",
+            title: "¡Registro Exitoso!",
+            text: "El usuario ha sido registrado correctamente.",
+          });
           this.userForm.reset(); // Limpiar el formulario después del registro
         },
         error => {
-          console.error('Error al registrar usuario:', error);
-          alert('Error al registrar el usuario.');
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Algo salió mal!",
+          });
         }
       );
     }
