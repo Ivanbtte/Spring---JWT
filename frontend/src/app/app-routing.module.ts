@@ -9,20 +9,21 @@ import { CrearUsuarioComponent} from './forms/CrearUsuario/crear-usuario/crear-u
 import { UsuarioComponent } from './forms/usuario/usuario.component';
 import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
-
-
+import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
+import { RutasGuard } from './auth/rutas.guard';
 
 const routes: Routes = [
-  {path:'',redirectTo:'/inicio', pathMatch:'full'},
-  {path:'inicio',component:DashboardComponent},
-  {path:'iniciar-sesion',component:LoginComponent},
-  {path:'consultar-publicacion', component: ConsultarPublicacionComponent },
-  {path:'registrar-investigador', component: RegistrarInvestigadorComponent },
-  {path:'registrar-publicacion', component: RegistrarPublicacionComponent },
-  {path:'crear-usuario',component: CrearUsuarioComponent},
-  {path:'usuario', component:UsuarioComponent},
-  {path:'investigador', component:InvestigadorComponent},
-  { path: 'editar-usuario/:id', component: EditarUsuarioComponent },
+  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+  { path: 'inicio', component: DashboardComponent },
+  { path: 'iniciar-sesion', component: LoginComponent },
+  { path: 'consultar-publicacion', component: ConsultarPublicacionComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR', 'ROOT', 'ADMIN', 'COORDINADOR'] } },
+  { path: 'registrar-investigador', component: RegistrarInvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'ADMIN'] } },
+  { path: 'registrar-publicacion', component: RegistrarPublicacionComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR', 'ROOT', 'ADMIN', 'COORDINADOR'] } },
+  { path: 'crear-usuario', component: CrearUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'ADMIN'] } },
+  { path: 'usuario', component: UsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
+  { path: 'investigador', component: InvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles:  ['ROOT', 'ADMIN'] } },
+  { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
+  { path: 'no-authorized', component: NotAuthorizedComponent },
 ];
 
 @NgModule({
