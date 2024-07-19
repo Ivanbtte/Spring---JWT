@@ -57,5 +57,8 @@ export class LoginService {
   get userToken():String{
     return this.currentUserData.value;
   }
+  getUserRole(): string {
+    return sessionStorage.getItem("role") || "";  // Recuperar el rol del usuario desde el sessionStorage
+  }
 
 }
