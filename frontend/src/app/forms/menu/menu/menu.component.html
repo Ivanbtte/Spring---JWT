@@ -1,22 +1,22 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN'">
         <a class="nav-link" [routerLink]="['/usuario']">
           <i class="fa fa-users"></i> Usuarios
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN'">
         <a class="nav-link" [routerLink]="['/investigador']">
           <i class="fa fa-user-plus"></i> Investigadores
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'INVESTIGADOR'">
         <a class="nav-link" [routerLink]="['/consultar-publicacion']">
           <i class="fa fa-search"></i> Consultar Publicaciones
         </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'INVESTIGADOR'">
         <a class="nav-link" [routerLink]="['/registrar-publicacion']">
           <i class="fa fa-pencil-square-o"></i> Registrar Publicación
         </a>

@@ -22,6 +22,7 @@ export class LoginService {
     return this.http.post<any>(environment.urlHost+"auth/login",credentials).pipe(
       tap( (userData) => {
         sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("role", userData.role);
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -32,6 +33,7 @@ export class LoginService {
 
   logout():void{
     sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role");
     this.currentUserLoginOn.next(false);
   }
 
@@ -55,6 +57,9 @@ export class LoginService {
 
   get userToken():String{
     return this.currentUserData.value;
+  }
+  getUserRole(): string {
+    return sessionStorage.getItem("role") || "";  // Recuperar el rol del usuario desde el sessionStorage
   }
 
 }

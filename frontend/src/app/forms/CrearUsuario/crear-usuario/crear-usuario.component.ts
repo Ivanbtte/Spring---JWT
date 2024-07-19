@@ -80,7 +80,15 @@ export class CrearUsuarioComponent implements OnInit {
       );
     }
   }
-
+  togglePasswordVisibility() {
+    if (this.passwordFieldType === 'password') {
+      this.passwordFieldType = 'text';
+      this.passwordToggleIcon = 'fa fa-eye-slash';
+    } else {
+      this.passwordFieldType = 'password';
+      this.passwordToggleIcon = 'fa fa-eye';
+    }
+  }
  /* report(){
     this.registrarusuarioService.reporte().subscribe(response => {
       const blob = new Blob([response], { type: 'application/pdf' });
