@@ -9,11 +9,16 @@ import { Observable } from 'rxjs';
 export class RegistrarusuarioService {
 
   private apiUrl = 'http://localhost:8080/api/v1/user';
+  private apiAutorUrl = 'http://localhost:8080/api/v1/autor';
 
   constructor(private http: HttpClient) { }
 
   registro(user: registrarusuarioRequest): Observable<any> {
     return this.http.post<any>(this.apiUrl, user);
+  }
+
+  registroAutor(autor: any): Observable<any> {
+    return this.http.post<any>(this.apiAutorUrl, autor);
   }
 
   /*reporte() {

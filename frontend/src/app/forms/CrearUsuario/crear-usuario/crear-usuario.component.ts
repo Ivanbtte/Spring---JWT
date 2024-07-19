@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { AutorRequest } from 'src/app/services/registrarusuario/autor';
 import { RegistrarusuarioService } from 'src/app/services/registrarusuario/registrarusuario.service';
 import Swal from 'sweetalert2';
 
@@ -21,7 +22,13 @@ export class CrearUsuarioComponent implements OnInit {
         this.passwordValidator
       ]],
       confirmPassword: ['', [Validators.required]],
-      role: ['', [Validators.required]]  // Asegúrate de que el control role esté definido aquí
+      role: ['', [Validators.required]],  // Asegúrate de que el control role esté definido aquí
+      numeroEmpleado: [''],
+      instituto: [''],
+      nombre1: [''],
+      nombre2: [''],
+      apellidoPaterno: [''],
+      apellidoMaterno: ['']
     });
 
     this.userForm.setValidators(this.passwordMatchValidator);
@@ -58,7 +65,7 @@ export class CrearUsuarioComponent implements OnInit {
       const user = {
         username: this.userForm.value.email,
         password: this.userForm.value.password,
-        role: this.userForm.value.role.toUpperCase() // Asegúrate de que el rol esté en mayúsculas
+        role: this.userForm.value.role.toUpperCase()
       };
 
       this.registrarusuarioService.registro(user).subscribe(
@@ -68,6 +75,34 @@ export class CrearUsuarioComponent implements OnInit {
             title: "¡Registro Exitoso!",
             text: "El usuario ha sido registrado correctamente.",
           });
+
+          if (user.role === 'INVESTIGADOR' || user.role === 'COORDINADOR') {
+            const autor: AutorRequest = {
+              nombre1Autor: this.userForm.value.nombre1,
+              nombre2Autor: this.userForm.value.nombre2,
+              apellidoPaternoAutor: this.userForm.value.apellidoPaterno,
+              apellidoMaternoAutor: this.userForm.value.apellidoMaterno,
+              autorUnsis: true
+            };
+
+            this.registrarusuarioService.registroAutor(autor).subscribe(
+              autorResponse => {
+                Swal.fire({
+                  icon: "success",
+                  title: "¡Autor Registrado!",
+                  text: "El autor ha sido registrado correctamente.",
+                });
+              },
+              autorError => {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error en Registro de Autor",
+                  text: "Algo salió mal al registrar el autor.",
+                });
+              }
+            );
+          }
+
           this.userForm.reset(); // Limpiar el formulario después del registro
         },
         error => {
@@ -80,6 +115,7 @@ export class CrearUsuarioComponent implements OnInit {
       );
     }
   }
+  
   togglePasswordVisibility() {
     if (this.passwordFieldType === 'password') {
       this.passwordFieldType = 'text';
@@ -89,6 +125,34 @@ export class CrearUsuarioComponent implements OnInit {
       this.passwordToggleIcon = 'fa fa-eye';
     }
   }
+
+  updateAdditionalFields(role: string): void {
+    const isAdditionalFieldsRequired = role === 'INVESTIGADOR' || role === 'COORDINADOR';
+
+    if (isAdditionalFieldsRequired) {
+      this.userForm.get('numeroEmpleado')?.setValidators([Validators.required]);
+      this.userForm.get('instituto')?.setValidators([Validators.required]);
+      this.userForm.get('nombre1')?.setValidators([Validators.required]);
+      this.userForm.get('nombre2')?.setValidators([Validators.required]);
+      this.userForm.get('apellidoPaterno')?.setValidators([Validators.required]);
+      this.userForm.get('apellidoMaterno')?.setValidators([Validators.required]);
+    } else {
+      this.userForm.get('numeroEmpleado')?.clearValidators();
+      this.userForm.get('instituto')?.clearValidators();
+      this.userForm.get('nombre1')?.clearValidators();
+      this.userForm.get('nombre2')?.clearValidators();
+      this.userForm.get('apellidoPaterno')?.clearValidators();
+      this.userForm.get('apellidoMaterno')?.clearValidators();
+    }
+
+    this.userForm.get('numeroEmpleado')?.updateValueAndValidity();
+    this.userForm.get('instituto')?.updateValueAndValidity();
+    this.userForm.get('nombre1')?.updateValueAndValidity();
+    this.userForm.get('nombre2')?.updateValueAndValidity();
+    this.userForm.get('apellidoPaterno')?.updateValueAndValidity();
+    this.userForm.get('apellidoMaterno')?.updateValueAndValidity();
+  }
+
  /* report(){
     this.registrarusuarioService.reporte().subscribe(response => {
       const blob = new Blob([response], { type: 'application/pdf' });
