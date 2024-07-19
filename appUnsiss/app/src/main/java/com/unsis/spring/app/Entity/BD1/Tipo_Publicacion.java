@@ -30,6 +30,6 @@ public class Tipo_Publicacion {
     private String descripcion_publicacion_tipo;
 
     @OneToMany(mappedBy = "tipo_Publicacion")
-     @JsonManagedReference
+    @JsonManagedReference
     private List<Articulos> articulos;
 }

@@ -68,77 +68,24 @@ public class ArticuloReportPDF {
     }
 
     private void escribirDatosTabla(PdfPTable tabla) {
-        String articulos = "articulos";
-        String capitulo_libro = "capitulo de libro";
-        String libro = "libro";
-
-        // Dentro de este for se genera la cita APA
         for (CitaApaDto articuloDTO : listarArticulos) {
             tabla.addCell(String.valueOf(articuloDTO.getIdArticulo()));
             tabla.addCell(String.valueOf(articuloDTO.getTipoPublicacion()));
-            tabla.addCell(String.valueOf("Folio"));
-            // Obtiene una lista de autores que despues separa con el uso de comas
-            List<AutorDto> autoresList = articuloDTO.getAutores();
-            String autores = autoresList.stream()
-                    .map(AutorDto::getNombre1Autor)
-                    .collect(Collectors.joining(", "));
+            tabla.addCell(String.valueOf("Folio"));// Pendiente por agregar
 
-            String tipo_publicacion = String.valueOf(articuloDTO.getTipoPublicacion());
-            String instituto = String.valueOf(articuloDTO.getInstituto());
-
-            // Obtiene la fecha
-            Date fechaPublicacionDate = articuloDTO.getFechaPublicacion();
-            Calendar fechaPublicacion = Calendar.getInstance();
-            fechaPublicacion.setTime(fechaPublicacionDate);
-            int year = fechaPublicacion.get(Calendar.YEAR);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaCompleta = sdf.format(fechaPublicacion.getTime());
-            // La divide en año y en fecha completa
-            String anio = String.valueOf(year);
-            String fecha_publicacion = fechaCompleta;
-
-            String titulo_revista = String.valueOf(articuloDTO.getTituloRevista());
-            String numero_revista = String.valueOf(articuloDTO.getNumeroRevista());
-            String volumen_revista = String.valueOf(articuloDTO.getVolumenRevista());
-            String paginas = String.valueOf(articuloDTO.getPagInicio()) + "-"
-                    + String.valueOf(articuloDTO.getPagFinal());
-            String doi = String.valueOf(articuloDTO.getDoi());
-            String isbn_impreso = String.valueOf(articuloDTO.getIsbnImpreso());
-            String isbn_digital = String.valueOf(articuloDTO.getIsbnDigital());
-
-            if (tipo_publicacion == articulos) {
-                String citaAPA_articulo = String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
-                        autores, fecha_publicacion, "tituloArticulo", titulo_revista,
-                        volumen_revista, numero_revista, paginas, doi);
-                tabla.addCell(citaAPA_articulo);
-
-            } else if (tipo_publicacion == capitulo_libro) {
-                String citaAPA_cap_lib = String.format(
-                        "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
-                        autores, fecha_publicacion, "tituloCapitulo", "editoresList",
-                        "tituloLibro", paginas, "editorial", doi);
-                tabla.addCell(citaAPA_cap_lib);
-
-            } else if (tipo_publicacion == libro) {
-                if (doi == null || doi.isEmpty()) {
-                    String citaAPA_libro = String.format("%s (%s). *%s*. %s.",
-                            autores, "año", "tituloLibro", "editorial");
-                    tabla.addCell(citaAPA_libro);
-                } else {
-                    String citaAPA_libro = String.format("%s (%s). *%s*. %s. https://doi.org/%s",
-                            autores, "año", "tituloLibro", "editorial", doi);
-                    tabla.addCell(citaAPA_libro);
-                }
-            }
+            // Llama al método separado para generar la cita APA
+            String citaApa = generarCitaApa(articuloDTO);
+            tabla.addCell(citaApa);
             tabla.addCell(String.valueOf(articuloDTO.getTituloRevista()));
             tabla.addCell(String.valueOf(articuloDTO.getInstituto()));
-            tabla.addCell(String.valueOf("Si"));
-            tabla.addCell(String.valueOf("1er Trimestr"));
-            tabla.addCell(String.valueOf("Si"));
-            tabla.addCell(String.valueOf("Ninguno"));
-            tabla.addCell(String.valueOf("Ninguno"));
-            tabla.addCell(String.valueOf("Ninguno"));
+            tabla.addCell(String.valueOf(articuloDTO.getFinanciamientoProdep()));
+            tabla.addCell(String.valueOf(articuloDTO.getTrimestre()));
+            tabla.addCell(String.valueOf(articuloDTO.getCompilado()));
+            tabla.addCell(String.valueOf(articuloDTO.getIndiceMiar()));
+            tabla.addCell(String.valueOf(articuloDTO.getObservacionesDirectores()));
+            tabla.addCell(String.valueOf(articuloDTO.getObservacionesGestion()));
         }
+
     }
 
     public void exportar(HttpServletResponse response) throws DocumentException, IOException {
@@ -169,4 +116,77 @@ public class ArticuloReportPDF {
         documento.add(tabla);
         documento.close();
     }
+
+    public String generarCitaApa(CitaApaDto articuloDTO) {
+        String articulos = "articulos";
+        String capitulo_libro = "capitulo de libro";
+        String libro = "libro";
+
+
+        // Obtiene una lista de autores que después separa con el uso de comas
+        List<AutorDto> autoresList = articuloDTO.getAutores();
+        String autores = formatearAutores(autoresList);
+
+
+        String tipoPublicacion = String.valueOf(articuloDTO.getTipoPublicacion());
+
+
+        // Obtiene la fecha
+        Date fechaPublicacionDate = articuloDTO.getFechaPublicacion();
+        Calendar fechaPublicacion = Calendar.getInstance();
+        fechaPublicacion.setTime(fechaPublicacionDate);
+        int year = fechaPublicacion.get(Calendar.YEAR);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaCompleta = sdf.format(fechaPublicacion.getTime());
+        // La divide en año y en fecha completa
+        String anio = String.valueOf(year);
+        String fechaPublicacionStr = fechaCompleta;
+
+
+        String tituloRevista = String.valueOf(articuloDTO.getTituloRevista());
+        String numeroRevista = String.valueOf(articuloDTO.getNumeroRevista());
+        String volumenRevista = String.valueOf(articuloDTO.getVolumenRevista());
+        String paginas = String.valueOf(articuloDTO.getPagInicio()) + "-"
+                + String.valueOf(articuloDTO.getPagFinal());
+        String doi = String.valueOf(articuloDTO.getDoi());
+        String tituloArticulo = String.valueOf(articuloDTO.getTituloRevista());
+        String tituloCapitulo = String.valueOf(articuloDTO.getNombreCapitulo()) ;
+        String tituloLibro = String.valueOf(articuloDTO.getNombreArticulo());
+        String editorial = String.valueOf(articuloDTO.getEditorial());
+        String isbnImpreso = String.valueOf(articuloDTO.getIsbnImpreso());
+        String isbnDigital = String.valueOf(articuloDTO.getIsbnDigital());
+
+        if (tipoPublicacion.equals(articulos)) {
+            return String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
+                    autores, fechaPublicacionStr, tituloArticulo, tituloRevista,
+                    volumenRevista, numeroRevista, paginas, doi);
+    
+        } else if (tipoPublicacion.equals(capitulo_libro)) {
+            return String.format(
+                    "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
+                    autores, fechaPublicacionStr, tituloCapitulo, "editoresList",
+                    tituloLibro, paginas, editorial, doi);
+    
+        } else if (tipoPublicacion.equals(libro)) {
+            if (doi == null || doi.isEmpty()) {
+                return String.format("%s (%s). *%s*. %s. ISBN Impreso: %s, ISBN Digital: %s.",
+                        autores, anio, tituloLibro, editorial, isbnImpreso, isbnDigital);
+            } else {
+                return String.format("%s (%s). *%s*. %s. https://doi.org/%s. ISBN Impreso: %s, ISBN Digital: %s.",
+                        autores, anio, tituloLibro, editorial, doi, isbnImpreso, isbnDigital);
+            }
+        }
+        return "";
+    }
+
+    private String formatearAutores(List<AutorDto> autoresList) {
+        return autoresList.stream()
+                .map(autor -> String.format("%s %s, %s %s",
+                        autor.getApellidoPaternoAutor(),
+                        autor.getApellidoMaternoAutor(),
+                        autor.getNombre1Autor().charAt(0),
+                        autor.getNombre2Autor() != null ? autor.getNombre2Autor().charAt(0) + "." : ""))
+                .collect(Collectors.joining(", "));
+    }
+
 }

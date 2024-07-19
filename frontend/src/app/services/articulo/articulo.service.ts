@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -7,6 +7,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class ArticuloService {
+
+  private apiUrl = 'http://localhost:8080/api/v1/articulos';
+
   constructor(private http: HttpClient) {}
 
   getList(): Observable<any[]> {
@@ -26,5 +29,12 @@ export class ArticuloService {
       console.error('Backend retornó el código de estado ', error.status, error.error);
     }
     return throwError(()=> new Error('Algo falló. Por favor intente nuevamente.'));
+  }
+
+  reporte() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/pdf'
+    });
+    return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }
 }
