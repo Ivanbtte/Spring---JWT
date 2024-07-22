@@ -2,28 +2,27 @@ import { Injectable } from '@angular/core';
 import { registrarusuarioRequest } from './registrarusuarioRequest';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistrarusuarioService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/user';
-  private apiAutorUrl = 'http://localhost:8080/api/v1/autor';
-  private apiInvestigadorUrl = 'http://localhost:8080/api/v1/investigador';
+  private apiUrl = environment.urlApi;
 
   constructor(private http: HttpClient) { }
 
   registro(user: registrarusuarioRequest): Observable<any> {
-    return this.http.post<any>(this.apiUrl, user);
+    return this.http.post<any>(this.apiUrl+'user', user);
   }
 
   registroAutor(autor: any): Observable<any> {
-    return this.http.post<any>(this.apiAutorUrl, autor);
+    return this.http.post<any>(this.apiUrl+'autor', autor);
   }
 
   registroInvestigador(investigador: any): Observable<any> {
-    return this.http.post<any>(this.apiInvestigadorUrl, investigador);
+    return this.http.post<any>(this.apiUrl+'investigador', investigador);
   }
 
   /*reporte() {
