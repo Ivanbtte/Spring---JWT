@@ -64,4 +64,22 @@ public class UserService {
 
         return AuthResponse.builder().token(jwtService.getToken(user)).build();
     }
+
+    public UserRegistrationResponse registerUser(UserRequestRol request) {
+        User user = User.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(request.getRole()) // Usar el rol proporcionado por el usuario
+                .build();
+
+        userRepository.save(user);
+
+        return UserRegistrationResponse.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .role(user.getRole().name()) // Convertir el rol a String
+            .build();
+
+    }
+
 }

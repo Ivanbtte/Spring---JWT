@@ -48,8 +48,8 @@ public class UserController {
     }
 
     @PostMapping(value = "/user") 
-    public ResponseEntity<AuthResponse> register(@RequestBody UserRequestRol request) {
-        return ResponseEntity.ok(userService.register(request));
+    public ResponseEntity<UserRegistrationResponse> register(@RequestBody UserRequestRol request) {
+        return ResponseEntity.ok(userService.registerUser(request));
     }
 
     @PutMapping("/user/{id}")
