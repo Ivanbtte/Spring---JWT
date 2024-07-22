@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class CrearUsuarioComponent implements OnInit {
   userForm: FormGroup;
+  institutos: any[] = [];
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
   constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService) {
@@ -35,6 +36,17 @@ export class CrearUsuarioComponent implements OnInit {
     this.userForm.setValidators(this.passwordMatchValidator);
   }
   ngOnInit(): void {
+    // Obtener la lista de institutos
+    this.registrarusuarioService.getInstitutos().subscribe(
+      data => {
+        this.institutos = data;
+      },
+      error => {
+        console.error('Error al obtener la lista de institutos', error);
+      }
+    );
+
+    
   }
 
 
@@ -99,6 +111,12 @@ export class CrearUsuarioComponent implements OnInit {
                   text: "El autor ha sido registrado correctamente.",
                 });
 
+                // Obtén el ID del instituto seleccionado
+              const institutoId = this.userForm.value.instituto;
+
+              // Encuentra el instituto seleccionado en el array de institutos
+              const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
+
                 const investigador: Investigador = {
                   num_empleado: this.userForm.value.numeroEmpleado,
                   nombre_1_investigador: this.userForm.value.nombre1,
@@ -111,9 +129,9 @@ export class CrearUsuarioComponent implements OnInit {
                     role: userRole
                   },
                   instituto: {
-                    id: 1, // ID del instituto (asegúrate de que esto sea correcto)
-                    nombre: 'Informatica'
-                  },
+                    id: institutoId, // ID del instituto seleccionado
+                  nombre: institutoSeleccionado ? institutoSeleccionado.nombre : '' // Nombre del instituto seleccionado
+                },
                   autor: {
                     id_autor: autorResponse.id_autor, // ID del autor creado
                     nombre1Autor: autorResponse.nombre1Autor,

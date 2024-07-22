@@ -25,6 +25,10 @@ export class RegistrarusuarioService {
     return this.http.post<any>(this.apiUrl+'investigador', investigador);
   }
 
+  getInstitutos(): Observable<any> {
+    return this.http.get<any>(this.apiUrl+'instituto'); // Método para obtener institutos
+  }
+
   /*reporte() {
     const headers = new HttpHeaders({
       'Accept': 'application/pdf'

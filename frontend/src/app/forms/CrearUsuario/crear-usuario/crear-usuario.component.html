@@ -30,8 +30,10 @@
             </div>
             <div class="form-group">
                 <label for="instituto">Instituto</label>
-                <input type="text" class="form-control" id="instituto" formControlName="instituto" placeholder="Ingrese su instituto" required>
-            </div>
+                <select class="form-control" id="instituto" formControlName="instituto" required>
+                  <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                </select>
+              </div>
             <div class="form-group">
                 <label for="nombre1">Nombre 1</label>
                 <input type="text" class="form-control" id="nombre1" formControlName="nombre1" placeholder="Ingrese su primer nombre" required>
