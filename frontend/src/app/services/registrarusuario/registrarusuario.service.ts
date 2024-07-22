@@ -10,6 +10,7 @@ export class RegistrarusuarioService {
 
   private apiUrl = 'http://localhost:8080/api/v1/user';
   private apiAutorUrl = 'http://localhost:8080/api/v1/autor';
+  private apiInvestigadorUrl = 'http://localhost:8080/api/v1/investigador';
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +20,10 @@ export class RegistrarusuarioService {
 
   registroAutor(autor: any): Observable<any> {
     return this.http.post<any>(this.apiAutorUrl, autor);
+  }
+
+  registroInvestigador(investigador: any): Observable<any> {
+    return this.http.post<any>(this.apiInvestigadorUrl, investigador);
   }
 
   /*reporte() {

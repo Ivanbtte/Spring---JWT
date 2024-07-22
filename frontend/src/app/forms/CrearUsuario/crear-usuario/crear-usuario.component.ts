@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { AutorRequest } from 'src/app/services/registrarusuario/autor';
+import { Investigador } from 'src/app/services/registrarusuario/Investigador';
 import { RegistrarusuarioService } from 'src/app/services/registrarusuario/registrarusuario.service';
 import Swal from 'sweetalert2';
 
@@ -69,7 +70,12 @@ export class CrearUsuarioComponent implements OnInit {
       };
 
       this.registrarusuarioService.registro(user).subscribe(
-        response => {
+        userResponse => {
+          console.log('User Response:', userResponse);
+          const userId = userResponse.id;
+          const userName = userResponse.username;
+          const userRole = userResponse.role;
+
           Swal.fire({
             icon: "success",
             title: "¡Registro Exitoso!",
@@ -92,6 +98,48 @@ export class CrearUsuarioComponent implements OnInit {
                   title: "¡Autor Registrado!",
                   text: "El autor ha sido registrado correctamente.",
                 });
+
+                const investigador: Investigador = {
+                  num_empleado: this.userForm.value.numeroEmpleado,
+                  nombre_1_investigador: this.userForm.value.nombre1,
+                  nombre_2_investigador: this.userForm.value.nombre2,
+                  apellido_paterno_1_investigador: this.userForm.value.apellidoPaterno,
+                  apellido_materno_2_investigador: this.userForm.value.apellidoMaterno,
+                  user: {
+                    id: userId,
+                    username: userName,
+                    role: userRole
+                  },
+                  instituto: {
+                    id: 1, // ID del instituto (asegúrate de que esto sea correcto)
+                    nombre: 'Informatica'
+                  },
+                  autor: {
+                    id_autor: autorResponse.id_autor, // ID del autor creado
+                    nombre1Autor: autorResponse.nombre1Autor,
+                    nombre2Autor: autorResponse.nombre2Autor,
+                    apellidoPaternoAutor: autorResponse.apellidoPaternoAutor,
+                    apellidoMaternoAutor: autorResponse.apellidoMaternoAutor,
+                    autorUnsis: true
+                  }
+                };
+                this.userForm.reset(); // Limpiar el formulario después del registro
+                this.registrarusuarioService.registroInvestigador(investigador).subscribe(
+                  investigadorResponse => {
+                    Swal.fire({
+                      icon: "success",
+                      title: "¡Investigador Registrado!",
+                      text: "El investigador ha sido registrado correctamente.",
+                    });
+                  },
+                  investigadorError => {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error en Registro de Investigador",
+                      text: "Algo salió mal al registrar el investigador.",
+                    });
+                  }
+                );
               },
               autorError => {
                 Swal.fire({
@@ -103,7 +151,7 @@ export class CrearUsuarioComponent implements OnInit {
             );
           }
 
-          this.userForm.reset(); // Limpiar el formulario después del registro
+          
         },
         error => {
           Swal.fire({
@@ -112,6 +160,7 @@ export class CrearUsuarioComponent implements OnInit {
             text: "Algo salió mal!",
           });
         }
+        
       );
     }
   }
