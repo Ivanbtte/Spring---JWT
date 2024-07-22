@@ -12,6 +12,7 @@ import { InvestigadorComponent } from './forms/investigador/investigador.compone
 import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
 import { RutasGuard } from './auth/rutas.guard';
 import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
+import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -25,7 +26,8 @@ const routes: Routes = [
   { path: 'investigador', component: InvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles:  ['ROOT', 'ADMIN'] } },
   { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'no-authorized', component: NotAuthorizedComponent },
-  {path: 'catalogo',component: CatalogoComponent}
+  {path: 'catalogo',component: CatalogoComponent},
+  {path: 'registrar-catalogo', component:RegistrarCatalogoComponent}
 ];
 
 @NgModule({

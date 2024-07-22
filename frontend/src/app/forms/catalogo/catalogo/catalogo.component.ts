@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class CatalogoComponent implements OnInit {
   institutos: any[] = [];
   tiposPublicacion: any[] = [];
 
-  constructor(private catalogoService: CatalogoService) { }
+  constructor(private catalogoService: CatalogoService,  private router: Router) { }
 
   ngOnInit(): void {
     this.loadTrimestres();
@@ -22,6 +23,18 @@ export class CatalogoComponent implements OnInit {
 
   selectOption(option: string) {
     this.selectedOption = option;
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Fecha inválida';
+    }
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('es-ES', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
   }
 
   loadTrimestres(): void {
@@ -78,27 +91,19 @@ export class CatalogoComponent implements OnInit {
   }
 
   onSubmit(): void {
-    switch (this.selectedOption) {
-      case 'trimestre':
-        const nuevoTrimestre = {
-          // Definir los campos necesarios para el trimestre
-        };
-        this.registrarTrimestre(nuevoTrimestre);
-        break;
-      case 'instituto':
-        const nuevoInstituto = {
-          // Definir los campos necesarios para el instituto
-        };
-        this.registrarInstituto(nuevoInstituto);
-        break;
-      case 'tipo-publicacion':
-        const nuevoTipoPublicacion = {
-          // Definir los campos necesarios para el tipo de publicación
-        };
-        this.registrarTipoPublicacion(nuevoTipoPublicacion);
-        break;
-      default:
-        break;
+   // Redirige al componente de registro con el parámetro adecuado
+  switch (this.selectedOption) {
+    case 'trimestre':
+      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'trimestre' } });
+      break;
+    case 'instituto':
+      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'instituto' } });
+      break;
+    case 'tipo-publicacion':
+      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'tipo-publicacion' } });
+      break;
+    default:
+      break;
     }
   }
 

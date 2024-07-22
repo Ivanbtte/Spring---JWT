@@ -1,0 +1,54 @@
+<app-nav></app-nav>
+<div class="form-container" *ngIf="selectedForm">
+    <!-- Botón para regresar -->
+    <div class="btn-container">
+        <button (click)="goBack()" class="btn btn-secondary">
+            <i class="fa fa-arrow-left"></i> Regresar
+        </button>
+    </div>
+    <div *ngIf="selectedForm === 'trimestre'">
+        <h2>Registrar Trimestre</h2>
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="nombreTrimestre">Nombre:</label>
+                <input id="nombreTrimestre" name="nombre" type="text" class="form-control"
+                    [(ngModel)]="nuevoTrimestre.nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaInicio">Fecha de Inicio:</label>
+                <input id="fechaInicio" name="fecha_inicio" type="date" class="form-control"
+                    [(ngModel)]="nuevoTrimestre.fecha_inicio" required>
+            </div>
+            <div class="form-group">
+                <label for="fechaFin">Fecha de Fin:</label>
+                <input id="fechaFin" name="fecha_fin" type="date" class="form-control"
+                    [(ngModel)]="nuevoTrimestre.fecha_fin" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+
+    <div *ngIf="selectedForm === 'instituto'">
+        <h2>Registrar Instituto</h2>
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="nombreInstituto">Nombre:</label>
+                <input id="nombreInstituto" name="nombre" type="text" class="form-control"
+                    [(ngModel)]="nuevoInstituto.nombre" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+
+    <div *ngIf="selectedForm === 'tipo-publicacion'">
+        <h2>Registrar Tipo de Publicación</h2>
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="descripcionTipoPublicacion">Nombre:</label>
+                <input id="descripcionTipoPublicacion" name="descripcion" type="text" class="form-control"
+                    [(ngModel)]="nuevoTipoPublicacion.descripcion" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+</div>

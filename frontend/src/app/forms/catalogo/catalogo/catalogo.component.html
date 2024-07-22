@@ -3,13 +3,13 @@
 <div class="container">
   <div class="menu">
     <button (click)="selectOption('trimestre')">
-      <i class="fa fa-calendar"></i> Registrar trimestre
+      <i class="fa fa-calendar"></i> Trimestre
     </button>
     <button (click)="selectOption('instituto')">
-      <i class="fa fa-university"></i> Registrar instituto
+      <i class="fa fa-university"></i> Instituto
     </button>
     <button (click)="selectOption('tipo-publicacion')">
-      <i class="fa fa-book"></i> Registrar tipo de publicación
+      <i class="fa fa-book"></i> Tipo de publicación
     </button>
     <button (click)="selectOption('cargar-datos')">
       <i class="fa fa-file-excel-o"></i> Cargar datos en Excel
@@ -19,7 +19,7 @@
   <div class="form-container" *ngIf="selectedOption">
     <form (ngSubmit)="onSubmit()">
       <div *ngIf="selectedOption === 'trimestre'">
-        <h2>Registrar Trimestre</h2>
+        <h2>Trimestre</h2>
         <button type="submit" class="btn btn-primary">Registrar</button>
         <table class="table table-striped">
           <thead>
@@ -35,8 +35,8 @@
             <tr *ngFor="let trimestre of trimestres">
               <td>{{ trimestre.id_trimestre }}</td>
               <td>{{ trimestre.nombre }}</td>
-              <td>{{ trimestre.fecha_inicio }}</td>
-              <td>{{ trimestre.fecha_fin }}</td>
+              <td>{{ formatDate(trimestre.fecha_inicio) }}</td>
+              <td>{{ formatDate(trimestre.fecha_fin) }}</td>
               <td>
                 <button class="btn btn-primary" (click)="editarTrimestre(trimestre)">
                   <i class="fa fa-edit"></i> Editar
@@ -51,7 +51,7 @@
       </div>
 
       <div *ngIf="selectedOption === 'instituto'">
-        <h2>Registrar Instituto</h2>
+        <h2>Instituto</h2>
         <button type="submit" class="btn btn-primary">Registrar</button>
         <table class="table table-striped">
           <thead>
@@ -79,7 +79,7 @@
       </div>
 
       <div *ngIf="selectedOption === 'tipo-publicacion'">
-        <h2>Registrar Tipo de Publicación</h2>
+        <h2>Tipo de Publicación</h2>
         <button type="submit" class="btn btn-primary">Registrar</button>
         <table class="table table-striped">
           <thead>
