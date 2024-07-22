@@ -1,46 +1,66 @@
 .content {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 label {
-    display: block;
-    font:
-      1rem 'Fira Sans',
-      sans-serif;
-  }
-  
-  input,
-  label {
-    margin: 0.4rem 0;
-  }
-
-  .container {
-
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: block;
+  font: 1rem 'Fira Sans', sans-serif;
 }
+
+input,
+label {
+  margin: 0.4rem 0;
+}
+
+.container {
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-report {
+  color: cadetblue;
+  background-color: bisque;
+}
+
 .form-group-container-2 {
   display: flex;
-  gap: 100px; /* Añade espacio entre los elementos */
+  justify-content: space-between;
 }
+
 .form-group-container {
   display: flex;
-  gap: 20px; /* Añade espacio entre los elementos */
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .form-group {
+  margin-bottom: 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+  flex: 1 1 48%;
+  /* Adjusts width to 48% and allows wrapping */
+  height: auto;
+}
+
+.separacion {
+  margin-top: 20px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  /* Adjust the gap between cards as needed */
+}
+
+.card-body {
   display: flex;
   flex-direction: column;
-}
-
-label {
-  margin-bottom: 5px;
-}
-
-.btn-report{
-  color:cadetblue;
-  background-color: bisque;
+  align-items: flex-start;
 }

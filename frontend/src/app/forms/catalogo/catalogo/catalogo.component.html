@@ -1,0 +1,125 @@
+<app-nav></app-nav>
+<app-menu></app-menu>
+<div class="container">
+    <div class="container">
+        <div class="menu">
+            <button (click)="selectOption('trimestre')">
+                <i class="fa fa-calendar"></i> Registrar trimestre
+            </button>
+            <button (click)="selectOption('instituto')">
+                <i class="fa fa-university"></i> Registrar instituto
+            </button>
+            <button (click)="selectOption('tipo-publicacion')">
+                <i class="fa fa-book"></i> Registrar tipo de publicación
+            </button>
+            <button (click)="selectOption('cargar-datos')">
+                <i class="fa fa-file-excel-o"></i> Cargar datos en Excel
+            </button>
+        </div>
+
+        <div class="form-container" *ngIf="selectedOption">
+            <form>
+                <div *ngIf="selectedOption === 'trimestre'">
+                    <h2>Registrar Trimestre</h2>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID del trimestre</th>
+                                <th>Nombre</th>
+                                <th>Fecha inicio</th>
+                                <th>Fecha fin</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Trimestre 1</td>
+                                <td>2023-01-01</td>
+                                <td>2023-03-31</td>
+                                <td>
+                                    <button class="btn btn-primary">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-danger">
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Agrega más filas según sea necesario -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="selectedOption === 'instituto'">
+                    <h2>Registrar Instituto</h2>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID del instituto</th>
+                                <th>Nombre</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Instituto ABC</td>
+                                <td>
+                                    <button class="btn btn-primary">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-danger">
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Agrega más filas según sea necesario -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="selectedOption === 'tipo-publicacion'">
+                    <h2>Registrar Tipo de Publicación</h2>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID del tipo de publicación</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Libro</td>
+                                <td>
+                                    <button class="btn btn-primary">
+                                        <i class="fa fa-edit"></i> Editar
+                                    </button>
+                                    <button class="btn btn-danger">
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                            <!-- Agrega más filas según sea necesario -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div *ngIf="selectedOption === 'cargar-datos'">
+                    <h2>Cargar Datos en Excel</h2>
+                    <div>
+                        <label for="fileInput">Seleccionar archivo CSV</label>
+                        <input type="file" id="fileInput" class="form-control" (change)="onFileSelected($event)"
+                            accept=".csv">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cargar</button>
+                </div>
+            </form>
+        </div>
+    </div>

@@ -1,0 +1,66 @@
+.menu {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.menu button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.menu button:hover {
+    background-color: #0056b3;
+}
+.content {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    font:
+      1rem 'Fira Sans',
+      sans-serif;
+  }
+  
+  input,
+  label {
+    margin: 0.4rem 0;
+  }
+
+  .container {
+
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.form-group-container-2 {
+  display: flex;
+  gap: 100px; /* Añade espacio entre los elementos */
+}
+.form-group-container {
+  display: flex;
+  gap: 20px; /* Añade espacio entre los elementos */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+.btn-report{
+  color:cadetblue;
+  background-color: bisque;
+}
