@@ -86,7 +86,7 @@ public class InvestigadorServiceImpl implements InvestigadorService{
         if (user == null) {
             return null;
         }
-        return new UserDTO(user.getId(), user.getUsername(), user.getRole().name());
+        return new UserDTO(user.getId(), user.getUsername(), user.getRole().name(), user.isEnabled());
     }
 
     private User convertToUser(UserDTO userDto) {

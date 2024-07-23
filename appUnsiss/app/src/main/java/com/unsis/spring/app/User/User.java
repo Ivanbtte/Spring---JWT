@@ -39,6 +39,8 @@ public class User implements UserDetails{
     String password;
     @Enumerated(EnumType.STRING)
     Role role;
+    @Column(nullable = false)
+    boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -72,6 +74,6 @@ public class User implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

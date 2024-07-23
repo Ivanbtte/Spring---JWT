@@ -15,18 +15,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository; 
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-        private final JwtService jwtService;
+    private final JwtService jwtService;
 
     @Transactional
     public UserResponse updateUser(UserRequest userRequest) {
         User user = userRepository.findById(userRequest.getId())
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         user.setRole(userRequest.getRole());
         user.setUsername(userRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword())); 
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
         userRepository.save(user);
 
@@ -35,22 +35,24 @@ public class UserService {
 
     public UserDTO getUser(Integer id) {
         return userRepository.findById(id)
-            .map(user -> UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole().name())
-                .build())
-            .orElse(null);
+                .map(user -> UserDTO.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .role(user.getRole().name())
+                        .enabled(user.isEnabled())
+                        .build())
+                .orElse(null);
     }
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
-            .map(user -> UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .role(user.getRole().name())
-                .build())
-            .collect(Collectors.toList());
+                .map(user -> UserDTO.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .role(user.getRole().name())
+                        .enabled(user.isEnabled())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public AuthResponse register(UserRequestRol request) {
@@ -58,6 +60,7 @@ public class UserService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole()) // Usar el rol proporcionado por el usuario
+                .enabled(true)
                 .build();
 
         userRepository.save(user);
@@ -70,16 +73,33 @@ public class UserService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(request.getRole()) // Usar el rol proporcionado por el usuario
+                .enabled(true)
                 .build();
 
         userRepository.save(user);
 
         return UserRegistrationResponse.builder()
-            .id(user.getId())
-            .username(user.getUsername())
-            .role(user.getRole().name()) // Convertir el rol a String
-            .build();
+                .id(user.getId())
+                .username(user.getUsername())
+                .role(user.getRole().name()) // Convertir el rol a String
+                .build();
 
+    }
+
+    @Transactional
+    public void enableUser(Integer id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void disableUser(Integer id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        user.setEnabled(false);
+        userRepository.save(user);
     }
 
 }

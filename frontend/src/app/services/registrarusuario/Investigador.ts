@@ -8,6 +8,7 @@ export interface Investigador {
       id: number;
       username: string;
       role: string;
+      enabled: boolean;
     };
     instituto: {
       id: number;
