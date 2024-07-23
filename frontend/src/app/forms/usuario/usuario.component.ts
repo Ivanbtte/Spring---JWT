@@ -35,18 +35,6 @@ export class UsuarioComponent implements OnInit {
     );
   }
 
-  onCreate(): void {
-    const newUser: User = { id: 0, username: 'nuevoUsuario', role: 'user' };
-    this.userService.createUser(newUser).subscribe(
-      (data: User) => {
-        this.users.push(data);
-      },
-      (error: any) => {
-        console.error('Error al crear el usuario:', error);
-      }
-    );
-  }
-
   onEdit(user: User): void {
     const updatedUser: User = { ...user, username: 'usuarioActualizado' };
     this.userService.updateUser(user.id, updatedUser).subscribe(
@@ -70,6 +58,18 @@ export class UsuarioComponent implements OnInit {
       },
       (error: any) => {
         console.error('Error al deshabilitar el usuario:', error);
+      }
+    );
+  }
+
+  onEnable(user: User): void {
+    this.userService.enableUser(user.id).subscribe(
+      () => {
+        console.log('Usuario habilitado con éxito');
+        this.loadUsers(); // Recargar la lista de usuarios
+      },
+      (error: any) => {
+        console.error('Error al habilitar el usuario:', error);
       }
     );
   }

@@ -48,6 +48,12 @@ export class UserService {
     );
   }
 
+  enableUser(id: number): Observable<void> {
+    return this.http.put<void>(`${environment.urlApi}user/${id}/enable`, {}).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status===0){
       console.error('Se ha producido un error ', error.error);
