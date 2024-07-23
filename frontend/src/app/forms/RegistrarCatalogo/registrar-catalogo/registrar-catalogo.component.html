@@ -1,54 +1,50 @@
-<app-nav></app-nav>
-<div class="form-container" *ngIf="selectedForm">
-    <!-- Botón para regresar -->
-    <div class="btn-container">
-        <button (click)="goBack()" class="btn btn-secondary">
-            <i class="fa fa-arrow-left"></i> Regresar
-        </button>
-    </div>
-    <div *ngIf="selectedForm === 'trimestre'">
+<!-- Trimestre Form -->
+<div *ngIf="selectedForm === 'trimestre'" class="form-container">
+    <form [formGroup]="trimestreForm" (ngSubmit)="onSubmit()">
         <h2>Registrar Trimestre</h2>
-        <form (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="nombreTrimestre">Nombre:</label>
-                <input id="nombreTrimestre" name="nombre" type="text" class="form-control"
-                    [(ngModel)]="nuevoTrimestre.nombre" required>
-            </div>
-            <div class="form-group">
-                <label for="fechaInicio">Fecha de Inicio:</label>
-                <input id="fechaInicio" name="fecha_inicio" type="date" class="form-control"
-                    [(ngModel)]="nuevoTrimestre.fecha_inicio" required>
-            </div>
-            <div class="form-group">
-                <label for="fechaFin">Fecha de Fin:</label>
-                <input id="fechaFin" name="fecha_fin" type="date" class="form-control"
-                    [(ngModel)]="nuevoTrimestre.fecha_fin" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" formControlName="nombre" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha de Inicio</label>
+            <input id="fecha_inicio" type="date" formControlName="fecha_inicio" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="fecha_fin">Fecha de Fin</label>
+            <input id="fecha_fin" type="date" formControlName="fecha_fin" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Trimestre</button>
+    </form>
+</div>
 
-    <div *ngIf="selectedForm === 'instituto'">
+<!-- Instituto Form -->
+<div *ngIf="selectedForm === 'instituto'" class="form-container">
+    <form [formGroup]="institutoForm" (ngSubmit)="onSubmit()">
         <h2>Registrar Instituto</h2>
-        <form (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="nombreInstituto">Nombre:</label>
-                <input id="nombreInstituto" name="nombre" type="text" class="form-control"
-                    [(ngModel)]="nuevoInstituto.nombre" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" formControlName="nombre" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Instituto</button>
+    </form>
+</div>
 
-    <div *ngIf="selectedForm === 'tipo-publicacion'">
+<!-- Tipo Publicacion Form -->
+<div *ngIf="selectedForm === 'tipo-publicacion'" class="form-container">
+    <form [formGroup]="tipoPublicacionForm" (ngSubmit)="onSubmit()">
         <h2>Registrar Tipo de Publicación</h2>
-        <form (ngSubmit)="onSubmit()">
-            <div class="form-group">
-                <label for="descripcionTipoPublicacion">Nombre:</label>
-                <input id="descripcionTipoPublicacion" name="descripcion" type="text" class="form-control"
-                    [(ngModel)]="nuevoTipoPublicacion.descripcion" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
-    </div>
+        <div class="form-group">
+            <label for="descripcion">Nombre</label>
+            <input id="descripcion" formControlName="descripcion" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Tipo de Publicación</button>
+    </form>
+</div>
+
+<!-- Botón para regresar -->
+<div class="btn-container">
+    <button (click)="goBack()" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Regresar
+    </button>
 </div>

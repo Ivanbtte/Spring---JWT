@@ -131,39 +131,4 @@ export class CatalogoComponent implements OnInit {
     // Implementar lógica de eliminación de tipo de publicación
   }
 
-  registrarTrimestre(trimestre: any): void {
-    this.catalogoService.addTrimestre(trimestre).subscribe(
-      (response: any) => {
-        console.log('Trimestre registrado exitosamente:', response);
-        this.loadTrimestres();
-      },
-      (error: any) => {
-        console.error('Error al registrar el trimestre:', error);
-      }
-    );
-  }
-
-  registrarInstituto(instituto: any): void {
-    this.catalogoService.addInstituto(instituto).subscribe(
-      (response: any) => {
-        console.log('Instituto registrado exitosamente:', response);
-        this.loadInstitutos();
-      },
-      (error: any) => {
-        console.error('Error al registrar el instituto:', error);
-      }
-    );
-  }
-
-  registrarTipoPublicacion(tipoPublicacion: any): void {
-    this.catalogoService.addTipoPublicacion(tipoPublicacion).subscribe(
-      (response: any) => {
-        console.log('Tipo de publicación registrado exitosamente:', response);
-        this.loadTiposPublicacion();
-      },
-      (error: any) => {
-        console.error('Error al registrar el tipo de publicación:', error);
-      }
-    );
-  }
 }

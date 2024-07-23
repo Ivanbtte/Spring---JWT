@@ -2,24 +2,35 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { tipoRequest } from './tipoRequest';
+import { trimestreRequest } from './TrimestreRequest';
+import { institutoRequest } from './institutoRequest';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CatalogoService {
-
+  private apiUrlTrimestre = 'http://localhost:8080/api/v1/trimestre';
+  private apiUrlInstituto = 'http://localhost:8080/api/v1/instituto';
+  private apiUrlTipoPublicacion = 'http://localhost:8080/api/v1/tipo_Publicacion';
   private apiUrl = environment.urlApi;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
+
+  addTrimestre(trimestre: trimestreRequest): Observable<any> {
+    return this.http.post<any>(this.apiUrlTrimestre, trimestre);
+  }
+
+  addInstituto(instituto: institutoRequest): Observable<any> {
+    return this.http.post<any>(this.apiUrlInstituto, instituto);
+  }
+
+  addTipoPublicacion(tipoPublicacion: tipoRequest): Observable<any> {
+    return this.http.post<any>(this.apiUrlTipoPublicacion, tipoPublicacion);
+  }
 
   getTrimestres(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}trimestre`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  addTrimestre(trimestre: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}trimestre`, trimestre).pipe(
       catchError(this.handleError)
     );
   }
@@ -30,20 +41,8 @@ export class CatalogoService {
     );
   }
 
-  addInstituto(instituto: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}instituto`, instituto).pipe(
-      catchError(this.handleError)
-    );
-  }
-
   getTiposPublicacion(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}tipo_Publicacion`).pipe(
-      catchError(this.handleError)
-    );
-  }
-
-  addTipoPublicacion(tipoPublicacion: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}tipo_Publicacion`, tipoPublicacion).pipe(
       catchError(this.handleError)
     );
   }
