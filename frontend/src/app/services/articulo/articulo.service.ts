@@ -37,4 +37,11 @@ export class ArticuloService {
     });
     return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }
+
+  reporteExe() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    return this.http.get(this.apiUrl + "/exportarExel", { headers, responseType: 'blob' });
+  }
 }

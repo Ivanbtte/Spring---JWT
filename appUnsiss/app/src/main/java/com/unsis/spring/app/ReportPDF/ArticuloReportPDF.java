@@ -74,6 +74,7 @@ public class ArticuloReportPDF {
         for (CitaApaDto articuloDTO : listarArticulos) {
             tabla.addCell(String.valueOf(articuloDTO.getIdArticulo()));
             tabla.addCell(String.valueOf(articuloDTO.getTipoPublicacion()));
+            
             Map<String, String> fechaMap = FechaPublicacionHelper
                     .obtenerFechaPublicacion(articuloDTO.getFechaPublicacion());
             String anio = fechaMap.get("anio");
@@ -155,13 +156,13 @@ public class ArticuloReportPDF {
 
         if (tipoPublicacion.equals(articulos)) {
             return String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
-                    autores, fechaPublicacionStr, tituloArticulo, tituloRevista,
+                    autores, anio, tituloArticulo, tituloRevista,
                     volumenRevista, numeroRevista, paginas, doi);
 
         } else if (tipoPublicacion.equals(capitulo_libro)) {
             return String.format(
                     "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
-                    autores, fechaPublicacionStr, tituloCapitulo, "editoresList",
+                    autores, anio, tituloCapitulo, "editoresList",
                     tituloLibro, paginas, editorial, doi);
 
         } else if (tipoPublicacion.equals(libro)) {

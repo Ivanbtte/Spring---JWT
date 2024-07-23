@@ -23,8 +23,7 @@ public class UserReportExcel {
     public UserReportExcel(XSSFWorkbook libro, XSSFSheet hoja, List<UserDTO> listarUsuarios) {
         this.libro = libro != null ? libro : new XSSFWorkbook();
         this.hoja = hoja != null ? hoja : this.libro.createSheet("Usuarios");
-        this.listarUsuarios = listarUsuarios;
-         
+        this.listarUsuarios = listarUsuarios;       
     }
 
     private void escribirCabeceraDeTabla(){
