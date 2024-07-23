@@ -27,8 +27,11 @@
           <button class="btn btn-primary" (click)="FormEditar(user)">
             <i class="fa fa-edit"></i> Editar
           </button>
-          <button class="btn btn-danger" (click)="onDisable(user)">
+          <button *ngIf="user.enabled" class="btn btn-danger" (click)="onDisable(user)">
             <i class="fa fa-trash"></i> Dar de baja
+          </button>
+          <button *ngIf="!user.enabled" class="btn btn-success" (click)="onEnable(user)">
+            <i class="fa fa-check"></i> Habilitar
           </button>
         </td>
       </tr>

@@ -10,7 +10,10 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class EditarUsuarioComponent implements OnInit {
 
-  user: User = { id: 0, username: '', role: '' };
+  user: User = {
+    id: 0, username: '', role: '',
+    enabled: false
+  };
 
   constructor(
     private userService: UserService,
