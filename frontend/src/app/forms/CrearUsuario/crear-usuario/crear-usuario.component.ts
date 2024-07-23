@@ -126,7 +126,8 @@ export class CrearUsuarioComponent implements OnInit {
                   user: {
                     id: userId,
                     username: userName,
-                    role: userRole
+                    role: userRole,
+                    enabled: true,
                   },
                   instituto: {
                     id: institutoId, // ID del instituto seleccionado

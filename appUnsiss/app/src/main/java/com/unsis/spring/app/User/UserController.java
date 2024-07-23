@@ -57,6 +57,18 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userRequest));
     }
 
+    @PutMapping("/user/{id}/enable")
+    public ResponseEntity<Void> enableUser(@PathVariable Integer id) {
+        userService.enableUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/user/{id}/disable")
+    public ResponseEntity<Void> disableUser(@PathVariable Integer id) {
+        userService.disableUser(id);
+        return ResponseEntity.ok().build();
+    }
+
    /* @GetMapping(value = "/user/exportarPDF")
     public void exportarPDFDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
         response.setContentType("application/pdf");

@@ -27,6 +27,9 @@ public class AuthService {
     public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User user=userRepository.findByUsername(request.getUsername()).orElseThrow();
+        if (!user.isEnabled()) {
+            throw new IllegalStateException("Usuario deshabilitado");
+        }
         String token=jwtService.getToken(user);
         return AuthResponse.builder()
             .token(token)
@@ -39,6 +42,7 @@ public class AuthService {
         .username(request.getUsername())
         .password(passwordEncoder.encode( request.getPassword()))
         .role(Role.ROOT)
+        .enabled(true)
         .build();
 
         userRepository.save(user);
