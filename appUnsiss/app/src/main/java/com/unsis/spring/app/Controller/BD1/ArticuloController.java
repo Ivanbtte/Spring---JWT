@@ -26,10 +26,14 @@ import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
+import com.unsis.spring.app.Auth.AuthResponse;
+import com.unsis.spring.app.ReportPDF.ArticuloReportExcel;
 import com.unsis.spring.app.ReportPDF.ArticuloReportPDF;
+import com.unsis.spring.app.ReportPDF.UserReportExcel;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
+import com.unsis.spring.app.User.UserDTO;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -209,7 +213,7 @@ public class ArticuloController {
     }
 
     @GetMapping(value = "/articulos/exportarPDF")
-    public void exportarPDFdesuarios(HttpServletResponse response) throws DocumentException, IOException {
+    public void exportarPDFdeArticulo(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
 
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -223,6 +227,24 @@ public class ArticuloController {
         List<CitaApaDto> articulos = articuloService.getAllCitasApa();
 
         ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
+        exporter.exportar(response);
+    }
+
+    @GetMapping(value = "/articulos/exportarExel")
+    public void exportarExelDeArticulo(HttpServletResponse response) throws DocumentException, IOException {
+        response.setContentType("application/octet-stream");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Usuarios_" + fechaActual + ".xlsx";
+
+        response.setHeader(cabecera, valor);
+
+        List<CitaApaDto> usuarios = articuloService.getAllCitasApa();
+     
+        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, usuarios);
         exporter.exportar(response);
     }
 }
