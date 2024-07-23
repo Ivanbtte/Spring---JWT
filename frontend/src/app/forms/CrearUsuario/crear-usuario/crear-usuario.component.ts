@@ -15,6 +15,7 @@ export class CrearUsuarioComponent implements OnInit {
   institutos: any[] = [];
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
+  
   constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
