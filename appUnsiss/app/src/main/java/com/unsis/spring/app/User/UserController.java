@@ -73,9 +73,9 @@ public class UserController {
      
         UserReportPDf exporter = new UserReportPDf(usuarios);
         exporter.exportar(response);
-    }
+    }/* 
 
-    @GetMapping(value = "/user/exportarExel")
+  /*   @GetMapping(value = "/user/exportarExel")
     public void exportarExelDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
         response.setContentType("application/octet-stream");
 

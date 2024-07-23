@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +26,7 @@ import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
 
 public class ArticuloReportPDF {
+
     private List<CitaApaDto> listarArticulos;
 
     public ArticuloReportPDF(List<CitaApaDto> listarArticulos) {
@@ -71,6 +74,10 @@ public class ArticuloReportPDF {
         for (CitaApaDto articuloDTO : listarArticulos) {
             tabla.addCell(String.valueOf(articuloDTO.getIdArticulo()));
             tabla.addCell(String.valueOf(articuloDTO.getTipoPublicacion()));
+            Map<String, String> fechaMap = FechaPublicacionHelper
+                    .obtenerFechaPublicacion(articuloDTO.getFechaPublicacion());
+            String anio = fechaMap.get("anio");
+            tabla.addCell(String.valueOf(anio));
             tabla.addCell(String.valueOf("Folio"));// Pendiente por agregar
 
             // Llama al método separado para generar la cita APA
@@ -79,7 +86,7 @@ public class ArticuloReportPDF {
             tabla.addCell(String.valueOf(articuloDTO.getTituloRevista()));
             tabla.addCell(String.valueOf(articuloDTO.getInstituto()));
             tabla.addCell(String.valueOf(articuloDTO.getFinanciamientoProdep()));
-            tabla.addCell(String.valueOf(articuloDTO.getTrimestre()));
+            tabla.addCell(String.valueOf(articuloDTO.getTrimestre().getNombre()));
             tabla.addCell(String.valueOf(articuloDTO.getCompilado()));
             tabla.addCell(String.valueOf(articuloDTO.getIndiceMiar()));
             tabla.addCell(String.valueOf(articuloDTO.getObservacionesDirectores()));
@@ -89,7 +96,7 @@ public class ArticuloReportPDF {
     }
 
     public void exportar(HttpServletResponse response) throws DocumentException, IOException {
-        Document documento = new Document(PageSize.A4);
+        Document documento = new Document(PageSize.A4.rotate());
         PdfWriter.getInstance(documento, response.getOutputStream());
 
         documento.open();
@@ -106,7 +113,7 @@ public class ArticuloReportPDF {
         tabla.setWidthPercentage(100);
         tabla.setSpacingBefore(15);
         tabla.setWidths(new float[] {
-                0.2f, 0.2f, 0.2f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f
+            0.1f, 0.1f, 0.1f, 0.05f, 0.3f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f
         });
         tabla.setWidthPercentage(100);
 
@@ -122,26 +129,16 @@ public class ArticuloReportPDF {
         String capitulo_libro = "capitulo de libro";
         String libro = "libro";
 
-
         // Obtiene una lista de autores que después separa con el uso de comas
         List<AutorDto> autoresList = articuloDTO.getAutores();
         String autores = formatearAutores(autoresList);
 
-
         String tipoPublicacion = String.valueOf(articuloDTO.getTipoPublicacion());
 
-
-        // Obtiene la fecha
-        Date fechaPublicacionDate = articuloDTO.getFechaPublicacion();
-        Calendar fechaPublicacion = Calendar.getInstance();
-        fechaPublicacion.setTime(fechaPublicacionDate);
-        int year = fechaPublicacion.get(Calendar.YEAR);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaCompleta = sdf.format(fechaPublicacion.getTime());
-        // La divide en año y en fecha completa
-        String anio = String.valueOf(year);
-        String fechaPublicacionStr = fechaCompleta;
-
+        Map<String, String> fechaMap = FechaPublicacionHelper
+                .obtenerFechaPublicacion(articuloDTO.getFechaPublicacion());
+        String anio = fechaMap.get("anio");
+        String fechaPublicacionStr = fechaMap.get("fechaCompleta");
 
         String tituloRevista = String.valueOf(articuloDTO.getTituloRevista());
         String numeroRevista = String.valueOf(articuloDTO.getNumeroRevista());
@@ -149,8 +146,8 @@ public class ArticuloReportPDF {
         String paginas = String.valueOf(articuloDTO.getPagInicio()) + "-"
                 + String.valueOf(articuloDTO.getPagFinal());
         String doi = String.valueOf(articuloDTO.getDoi());
-        String tituloArticulo = String.valueOf(articuloDTO.getTituloRevista());
-        String tituloCapitulo = String.valueOf(articuloDTO.getNombreCapitulo()) ;
+        String tituloArticulo = String.valueOf(articuloDTO.getNombreArticulo());
+        String tituloCapitulo = String.valueOf(articuloDTO.getNombreCapitulo());
         String tituloLibro = String.valueOf(articuloDTO.getNombreArticulo());
         String editorial = String.valueOf(articuloDTO.getEditorial());
         String isbnImpreso = String.valueOf(articuloDTO.getIsbnImpreso());
@@ -160,13 +157,13 @@ public class ArticuloReportPDF {
             return String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
                     autores, fechaPublicacionStr, tituloArticulo, tituloRevista,
                     volumenRevista, numeroRevista, paginas, doi);
-    
+
         } else if (tipoPublicacion.equals(capitulo_libro)) {
             return String.format(
                     "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
                     autores, fechaPublicacionStr, tituloCapitulo, "editoresList",
                     tituloLibro, paginas, editorial, doi);
-    
+
         } else if (tipoPublicacion.equals(libro)) {
             if (doi == null || doi.isEmpty()) {
                 return String.format("%s (%s). *%s*. %s. ISBN Impreso: %s, ISBN Digital: %s.",
@@ -187,6 +184,23 @@ public class ArticuloReportPDF {
                         autor.getNombre1Autor().charAt(0),
                         autor.getNombre2Autor() != null ? autor.getNombre2Autor().charAt(0) + "." : ""))
                 .collect(Collectors.joining(", "));
+    }
+
+    public class FechaPublicacionHelper {
+        public static Map<String, String> obtenerFechaPublicacion(Date fechaPublicacionDate) {
+            Calendar fechaPublicacion = Calendar.getInstance();
+            fechaPublicacion.setTime(fechaPublicacionDate);
+
+            int year = fechaPublicacion.get(Calendar.YEAR);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaCompleta = sdf.format(fechaPublicacion.getTime());
+
+            Map<String, String> fechaMap = new HashMap<>();
+            fechaMap.put("anio", String.valueOf(year));
+            fechaMap.put("fechaCompleta", fechaCompleta);
+
+            return fechaMap;
+        }
     }
 
 }

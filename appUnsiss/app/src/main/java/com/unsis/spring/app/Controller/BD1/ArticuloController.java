@@ -208,8 +208,8 @@ public class ArticuloController {
         }
     }
 
-    @GetMapping(value = "/exportarPDF")
-    public void exportarPDFdeusuarios(HttpServletResponse response) throws DocumentException, IOException {
+    @GetMapping(value = "/articulos/exportarPDF")
+    public void exportarPDFdesuarios(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
 
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");

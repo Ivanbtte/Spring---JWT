@@ -33,7 +33,7 @@ export class ArticuloService {
 
   reporte() {
     const headers = new HttpHeaders({
-      'Accept': 'application/pdf'
+      'Accept': 'application/pdf'      
     });
     return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }

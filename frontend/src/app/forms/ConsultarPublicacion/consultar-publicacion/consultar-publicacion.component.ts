@@ -61,6 +61,7 @@ export class ConsultarPublicacionComponent implements OnInit {
 
   report(){
     this.articuloService.reporte().subscribe(response => {
+      
       const blob = new Blob([response], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
