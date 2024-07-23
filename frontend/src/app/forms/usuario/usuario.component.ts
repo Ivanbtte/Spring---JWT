@@ -62,13 +62,14 @@ export class UsuarioComponent implements OnInit {
     );
   }
 
-  onDelete(user: User): void {
-    this.userService.deleteUser(user.id).subscribe(
+  onDisable(user: User): void {
+    this.userService.disableUser(user.id).subscribe(
       () => {
-        this.users = this.users.filter(u => u.id !== user.id);
+        console.log('Usuario deshabilitado con éxito');
+        this.loadUsers(); // Recargar la lista de usuarios
       },
       (error: any) => {
-        console.error('Error al eliminar el usuario:', error);
+        console.error('Error al deshabilitar el usuario:', error);
       }
     );
   }
