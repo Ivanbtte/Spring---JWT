@@ -1,0 +1,50 @@
+<!-- Trimestre Form -->
+<div *ngIf="selectedForm === 'trimestre'" class="form-container">
+    <form [formGroup]="trimestreForm" (ngSubmit)="onSubmit()">
+        <h2>Registrar Trimestre</h2>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" formControlName="nombre" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="fecha_inicio">Fecha de Inicio</label>
+            <input id="fecha_inicio" type="date" formControlName="fecha_inicio" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="fecha_fin">Fecha de Fin</label>
+            <input id="fecha_fin" type="date" formControlName="fecha_fin" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Trimestre</button>
+    </form>
+</div>
+
+<!-- Instituto Form -->
+<div *ngIf="selectedForm === 'instituto'" class="form-container">
+    <form [formGroup]="institutoForm" (ngSubmit)="onSubmit()">
+        <h2>Registrar Instituto</h2>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" formControlName="nombre" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Instituto</button>
+    </form>
+</div>
+
+<!-- Tipo Publicacion Form -->
+<div *ngIf="selectedForm === 'tipo-publicacion'" class="form-container">
+    <form [formGroup]="tipoPublicacionForm" (ngSubmit)="onSubmit()">
+        <h2>Registrar Tipo de Publicación</h2>
+        <div class="form-group">
+            <label for="descripcion">Nombre</label>
+            <input id="descripcion" formControlName="descripcion" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Tipo de Publicación</button>
+    </form>
+</div>
+
+<!-- Botón para regresar -->
+<div class="btn-container">
+    <button (click)="goBack()" class="btn btn-secondary">
+        <i class="fa fa-arrow-left"></i> Regresar
+    </button>
+</div>

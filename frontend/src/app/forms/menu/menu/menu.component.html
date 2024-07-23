@@ -21,6 +21,11 @@
           <i class="fa fa-pencil-square-o"></i> Registrar Publicación
         </a>
       </li>
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN'">
+        <a class="nav-link" [routerLink]="['/catalogo']">
+          <i class="fa fa-table"></i> Catálogo
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

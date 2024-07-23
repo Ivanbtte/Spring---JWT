@@ -3,95 +3,100 @@
 <div class="container">
     <h3>Consultar publicaciones</h3>
 
-    <div class="form-group-container-2">
-        <div class="form-group">
-            <form (ngSubmit)="searchPublications()">
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorInstituto" [ngModelOptions]="{standalone: true}" />
-                        Filtrar por instituto
-                    </label>
-                </div>
-                <div *ngIf="filtrarPorInstituto" class="form-group-container">
+    <div class="card-container">
+        <!--Bloque Taller Izquierdo-->
+        <div class="card mt-4 altura">
+            <!--Cuadro superior I-->
+            <div class="card-body">
+                <form (ngSubmit)="searchPublications()">
                     <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="filtrarPorInstituto"
+                                [ngModelOptions]="{standalone: true}" />
+                             Filtrar por instituto  <i class="fa fa-university"></i>
+                        </label>
+                    </div>
+                    <div *ngIf="filtrarPorInstituto" class="form-group">
                         <label for="instituto">Instituto</label>
                         <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
                             <option value="">Seleccione un instituto</option>
-                            <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                            <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}
+                            </option>
                         </select>
                     </div>
-                </div>
-            </form>
-        </div>
-        <div class="form-group">
-            <form>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorProfesor" [ngModelOptions]="{standalone: true}" /> Filtrar
-                        por profesor
-                    </label>
-                </div>
-                <div *ngIf="filtrarPorProfesor" class="form-group-container">
+                </form>
+            </div>
+
+            <!--Cuadro inferior III-->
+            <div class="card-body">
+                <form>
                     <div class="form-group">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="filtrarPorProfesor"
+                                [ngModelOptions]="{standalone: true}" />
+                             Filtrar por profesor  <i class="fa fa-user"></i>
+                        </label>
+                    </div>
+                    <div *ngIf="filtrarPorProfesor" class="form-group">
                         <label for="profesor">Profesor</label>
                         <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
                             <option value="">Seleccione un profesor</option>
-                            <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor }} {{
-                                profesor.apellidoPaternoAutor }}</option>
+                            <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor
+                                }} {{ profesor.apellidoPaternoAutor }}</option>
                         </select>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="form-group-container-2">
-        <div class="form-group">
-            <form>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}" /> Filtrar
-                        por fechas
-                    </label>
-                </div>
-                <div *ngIf="filtrarPorFechas" class="form-group-container">
+
+        <!--Bloque Taller Derecho-->
+        <div class="card mt-4 altura">
+            <!--Cuadro superior II-->
+            <div class="card-body">
+                <form>
                     <div class="form-group">
-                        <label for="startDate">Fecha de Inicio</label>
-                        <input type="date" id="start" name="start" [(ngModel)]="startDate" />
+                        <label>
+                            <input type="checkbox" [(ngModel)]="filtrarPorFechas"
+                                [ngModelOptions]="{standalone: true}" />
+                             Filtrar por fechas  <i class="fa fa-calendar"></i>
+                        </label>
                     </div>
-                    <div class="form-group">
-                        <label for="endDate">Fecha Final</label>
-                        <input type="date" id="end" name="end" [(ngModel)]="endDate" />
+                    <div *ngIf="filtrarPorFechas" class="form-group-container">
+                        <div class="form-group">
+                            <label for="startDate">Fecha de Inicio</label>
+                            <input type="date" id="start" name="start" [(ngModel)]="startDate" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">Fecha Final</label>
+                            <input type="date" id="end" name="end" [(ngModel)]="endDate" class="form-control" />
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
-        <div class="form-group">
-            <form>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorTipo" [ngModelOptions]="{standalone: true}" /> Filtrar
-                        por tipo de publicación
-                    </label>
-                </div>
-                <div *ngIf="filtrarPorTipo" class="form-group-container">
+                </form>
+            </div>
+
+            <!--Cuadro inferior IV-->
+            <div class="card-body">
+                <form>
                     <div class="form-group">
-                        <label for="profesor">Tipo de publicación</label>
-                        <select class="form-control" id="publicacion" [(ngModel)]="selectedPublicacion" name="publicacion">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="filtrarPorTipo" [ngModelOptions]="{standalone: true}" />
+                             Filtrar por tipo de publicación  <i class="fa fa-file"></i>
+                        </label>
+                    </div>
+                    <div *ngIf="filtrarPorTipo" class="form-group">
+                        <label for="publicacion">Tipo de publicación</label>
+                        <select class="form-control" id="publicacion" [(ngModel)]="selectedPublicacion"
+                            name="publicacion">
                             <option value="">Seleccione un tipo de publicación</option>
-                            
+                            <!-- Opciones de tipo de publicación -->
                         </select>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-
-
-  
-   
 
     <button type="submit" class="btn btn-primary">Buscar</button>
-
 
     <table class="table table-striped">
         <thead>

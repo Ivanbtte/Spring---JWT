@@ -24,6 +24,8 @@ import { ErrorInterceptorService } from './services/auth/error-interceptor.servi
 import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { EditarInvestigadorComponent } from './forms/formsEdit/editar-investigador/editar-investigador.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
+import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
+import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-auth
     InvestigadorComponent,
     EditarUsuarioComponent,
     EditarInvestigadorComponent,
-    NotAuthorizedComponent
+    NotAuthorizedComponent,
+    CatalogoComponent,
+    RegistrarCatalogoComponent
   ],
   imports: [
     BrowserModule,
