@@ -1,6 +1,7 @@
 package com.unsis.spring.app.ReportPDF;
 
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -11,9 +12,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -33,7 +40,6 @@ public class ArticuloReportExcel {
         this.libro = libro != null ? libro : new XSSFWorkbook();
         this.hoja = hoja != null ? hoja : this.libro.createSheet("Articulos");
         this.listarArticulos = listarArticulos;
-        
     }
 
     private void escribirCabeceraDeTabla() {
@@ -43,59 +49,33 @@ public class ArticuloReportExcel {
         XSSFFont fuente = libro.createFont();
         fuente.setBold(true);
         fuente.setFontHeight(16);
+        fuente.setFontHeightInPoints((short) 12);
+        fuente.setFontName("Arial");
         estilo.setFont(fuente);
 
-        Cell celda = fila.createCell(0);
-        celda.setCellValue("ID");
-        celda.setCellStyle(estilo);
+        estilo.setBorderTop(BorderStyle.THIN);
+        estilo.setBorderBottom(BorderStyle.THIN);
+        estilo.setBorderLeft(BorderStyle.THIN);
+        estilo.setBorderRight(BorderStyle.THIN);
 
-        celda = fila.createCell(1);
-        celda.setCellValue("Tipo publicación");
-        celda.setCellStyle(estilo);
+        estilo.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        estilo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        celda = fila.createCell(2);
-        celda.setCellValue("Fecha de publicación");
-        celda.setCellStyle(estilo);
+        estilo.setAlignment(HorizontalAlignment.CENTER);
+        estilo.setVerticalAlignment(VerticalAlignment.CENTER);
 
-        celda = fila.createCell(3);
-        celda.setCellValue("Folio");
-        celda.setCellStyle(estilo);
+        estilo.setWrapText(true);
 
-        celda = fila.createCell(4);
-        celda.setCellValue("Cita en norma APA 7ed");
-        celda.setCellStyle(estilo);
+        String[] cabeceras = { "ID", "Tipo publicación", "Fecha de publicación", "Folio", "Cita en norma APA 7ed",
+                "Nombre del producto", "Instituto", "Financiamiento PRODEP (Si/No)", "Trimestre", "Compilado (Si/No)",
+                "Indice MIAR", "Observaciones directores", "Observaciones gestión" };
 
-        celda = fila.createCell(5);
-        celda.setCellValue("Nombre del producto");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(6);
-        celda.setCellValue("Instituto");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(7);
-        celda.setCellValue("Financiamiento PRODEP (Si/No)");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(8);
-        celda.setCellValue("Trimestre");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(9);
-        celda.setCellValue("Compilado (Si/No)");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(10);
-        celda.setCellValue("Indice MIAR");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(11);
-        celda.setCellValue("Observaciones directores");
-        celda.setCellStyle(estilo);
-
-        celda = fila.createCell(12);
-        celda.setCellValue("Observaciones gestión");
-        celda.setCellStyle(estilo);
+        for (int i = 0; i < cabeceras.length; i++) {
+            Cell celda = fila.createCell(i);
+            celda.setCellValue(cabeceras[i]);
+            celda.setCellStyle(estilo);
+            hoja.autoSizeColumn(i);
+        }
     }
 
     private void escribirDatosDeLaTabla() {
@@ -103,8 +83,20 @@ public class ArticuloReportExcel {
 
         CellStyle estilo = libro.createCellStyle();
         XSSFFont fuente = libro.createFont();
-        fuente.setFontHeight(16);
+        fuente.setFontHeightInPoints((short) 12);
+        fuente.setFontName("Arial");
+
+        // Aplicar la fuente al estilo
         estilo.setFont(fuente);
+        estilo.setBorderTop(BorderStyle.THIN);
+        estilo.setBorderBottom(BorderStyle.THIN);
+        estilo.setBorderLeft(BorderStyle.THIN);
+        estilo.setBorderRight(BorderStyle.THIN);
+
+        estilo.setAlignment(HorizontalAlignment.CENTER);
+        estilo.setVerticalAlignment(VerticalAlignment.CENTER);
+
+        estilo.setWrapText(true);
 
         for (CitaApaDto cita : listarArticulos) {
             Row fila = hoja.createRow(numeroFilas++);
@@ -121,7 +113,7 @@ public class ArticuloReportExcel {
 
             Map<String, String> fechaMap = FechaPublicacionHelper
                     .obtenerFechaPublicacion(cita.getFechaPublicacion());
-            String anio = fechaMap.get("anio");
+            String anio = fechaMap.get("fechaCompleta");
 
             celda = fila.createCell(2);
             celda.setCellValue(anio);
@@ -133,7 +125,7 @@ public class ArticuloReportExcel {
             hoja.autoSizeColumn(3);
             celda.setCellStyle(estilo);
 
-            String citaApa = generarCitaApa(cita);
+            RichTextString citaApa = generarCitaApa(cita, libro);
 
             celda = fila.createCell(4);
             celda.setCellValue(citaApa);
@@ -180,6 +172,7 @@ public class ArticuloReportExcel {
             hoja.autoSizeColumn(12);
             celda.setCellStyle(estilo);
         }
+
     }
 
     public void exportar(HttpServletResponse response) throws IOException {
@@ -210,9 +203,9 @@ public class ArticuloReportExcel {
         }
     }
 
-    public String generarCitaApa(CitaApaDto articuloDTO) {
+    public XSSFRichTextString generarCitaApa(CitaApaDto articuloDTO, XSSFWorkbook workbook) {
         String articulos = "articulos";
-        String capitulo_libro = "capitulo de libro";
+        String capitulo_libro = "capitulo_libro";
         String libro = "libro";
 
         // Obtiene una lista de autores que después separa con el uso de comas
@@ -239,27 +232,59 @@ public class ArticuloReportExcel {
         String isbnImpreso = String.valueOf(articuloDTO.getIsbnImpreso());
         String isbnDigital = String.valueOf(articuloDTO.getIsbnDigital());
 
+        // Crear una fuente en cursiva
+        XSSFFont italicFont = workbook.createFont();
+        italicFont.setItalic(true);
+        italicFont.setFontHeightInPoints((short) 12);
+        italicFont.setFontName("Arial");
+
+        String cita = "";
+
         if (tipoPublicacion.equals(articulos)) {
-            return String.format("%s (%s). %s. *%s*, %s(%s), %s. https://doi.org/%s",
+            cita = String.format("%s (%s). %s. %s, %s(%s), %s. https://doi.org/%s",
                     autores, anio, tituloArticulo, tituloRevista,
                     volumenRevista, numeroRevista, paginas, doi);
 
         } else if (tipoPublicacion.equals(capitulo_libro)) {
-            return String.format(
-                    "%s (%s). %s. En %s (Ed.), *%s* (pp. %s). %s. https://doi.org/%s",
+            cita = String.format(
+                    "%s (%s). %s. En %s (Ed.), %s (pp. %s). %s. https://doi.org/%s",
                     autores, anio, tituloCapitulo, "editoresList",
                     tituloLibro, paginas, editorial, doi);
 
         } else if (tipoPublicacion.equals(libro)) {
             if (doi == null || doi.isEmpty()) {
-                return String.format("%s (%s). *%s*. %s. ISBN Impreso: %s, ISBN Digital: %s.",
+                cita = String.format("%s (%s). %s. %s. ISBN Impreso: %s, ISBN Digital: %s.",
                         autores, anio, tituloLibro, editorial, isbnImpreso, isbnDigital);
             } else {
-                return String.format("%s (%s). *%s*. %s. https://doi.org/%s. ISBN Impreso: %s, ISBN Digital: %s.",
+                cita = String.format("%s (%s). %s. %s. https://doi.org/%s. ISBN Impreso: %s, ISBN Digital: %s.",
                         autores, anio, tituloLibro, editorial, doi, isbnImpreso, isbnDigital);
             }
         }
-        return "";
+
+        XSSFRichTextString richTextString = new XSSFRichTextString(cita);
+
+        richTextString = workbook.getCreationHelper().createRichTextString(cita);
+
+        if (tipoPublicacion.equals(articulos) || tipoPublicacion.equals(capitulo_libro)) {
+            // Cursiva en el título de la revista
+            int startItalic = cita.indexOf(tituloRevista);
+            int endItalic = startItalic + tituloRevista.length();
+            if (startItalic >= 0 && endItalic <= cita.length()) {
+                richTextString.applyFont(startItalic, endItalic, italicFont);
+            }
+        }
+
+        if (tipoPublicacion.equals(libro)) {
+            // Cursiva en el título del libro
+            int startItalic = cita.indexOf(tituloLibro);
+            int endItalic = startItalic + tituloLibro.length();
+            if (startItalic >= 0 && endItalic <= cita.length()) {
+                richTextString.applyFont(startItalic, endItalic, italicFont);
+            }
+        }
+
+        return richTextString;
+
     }
 
     private String formatearAutores(List<AutorDto> autoresList) {
