@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 
 @Component({
   selector: 'app-registrar-publicacion',
@@ -9,10 +10,20 @@ export class RegistrarPublicacionComponent implements OnInit {
   volumen: any;
   emision: any;
   paginas: any;
+  institutos: any[] = [];  // Agrega esta línea
 
-  constructor() { }
+  constructor(private articuloService: ArticuloService) { }
 
   ngOnInit(): void {
+    // Llama al método para obtener los institutos cuando se inicializa el componente
+    this.articuloService.getInstitutos().subscribe(
+      (data: any[]) => {
+        this.institutos = data;
+      },
+      (error) => {
+        console.error('Error al obtener institutos', error);
+      }
+    );
   }
 
   tiposPublicacion: string[] = [
@@ -67,6 +78,10 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   eliminarColaborador(index: number) {
     this.colaboradores.splice(index, 1);
+  }
+
+  noFuncion(){
+
   }
 
   agregarPublicacion() {

@@ -12,6 +12,13 @@ export class ArticuloService {
 
   constructor(private http: HttpClient) {}
 
+  // Nuevo método para obtener institutos
+  getInstitutos(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi + 'instituto').pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getList(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi+'articulo').pipe(
       catchError(this.handleError)
