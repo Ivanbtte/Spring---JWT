@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { AutorService } from 'src/app/services/autor/autor.service';
@@ -15,7 +16,7 @@ export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorTipo: boolean = false;
   selectedInstituto: string | undefined;
   selectedPublicacion: string | undefined;
-  publicacion:any[]=[];
+  publicacion: any[] = [];
   profesores: any[] = [];
   selectedProfesor: string | undefined;
   publicaciones: any[] = [];
@@ -59,9 +60,9 @@ export class ConsultarPublicacionComponent implements OnInit {
     );
   }
 
-  report(){
+  report() {
     this.articuloService.reporte().subscribe(response => {
-      
+
       const blob = new Blob([response], { type: 'application/pdf' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -74,7 +75,7 @@ export class ConsultarPublicacionComponent implements OnInit {
     });
   }
 
-  reporteExe() {
+  /*reporteExe1() {
     this.articuloService.reporteExe().subscribe(response => {
       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       const url = window.URL.createObjectURL(blob);
@@ -86,6 +87,38 @@ export class ConsultarPublicacionComponent implements OnInit {
     }, error => {
       console.error('Error downloading the file', error);
     });
+  }*/
+
+  reporteExe() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    if (this.filtrarPorInstituto && this.selectedInstituto) {
+      // Convierte selectedInstituto a número si es necesario
+      const institutoId = Number(this.selectedInstituto);
+      if (!isNaN(institutoId)) {
+        this.articuloService.reporteExeIst(institutoId).subscribe(response => {
+          this.downloadFile(response);
+        });
+      } else {
+        console.error('El ID del instituto no es válido.');
+      }
+    } else {
+      this.articuloService.reporteExe().subscribe(response => {
+        this.downloadFile(response);
+      });
+    }
+  }
+
+  private downloadFile(response: Blob) {
+    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Articulos_${new Date().toISOString()}.xlsx`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   searchPublications(): void {

@@ -18,4 +18,5 @@ public interface ArticuloService {
     public Articulos convertToEntity(ArticuloDto articuloDto);
     public CitaApaDto getCitaApaById(Long id);
     public List<CitaApaDto> getAllCitasApa();
+    public List<CitaApaDto> getAllCitasApaInstituto(Long id);
 }
