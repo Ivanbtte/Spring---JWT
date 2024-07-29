@@ -10,7 +10,10 @@ export class RegistrarPublicacionComponent implements OnInit {
   volumen: any;
   emision: any;
   paginas: any;
-  institutos: any[] = [];  // Agrega esta línea
+  institutos: any[] = [];  // Lista de institutos
+  autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
+  idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
+  idsAutor: number[] = []; // Variable para almacenar la propiedad autor.id_autor
 
   constructor(private articuloService: ArticuloService) { }
 
@@ -34,7 +37,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   tipoPublicacion: string = '';
   titulo: string = '';
   nombreRevista: string = '';
-  colaboradores: any[] = [];
+  investigadores: any[] = [];
   numVolumen: number | null = null;
   numEmision: number | null = null;
   numArticulo: number | null = null;
@@ -72,60 +75,71 @@ export class RegistrarPublicacionComponent implements OnInit {
   issnImpreso: string = ''; // ISSN versión impresa (opcional)
   issnOnline: string = ''; // ISSN versión en línea (opcional)
 
-  agregarColaborador() {
-    this.colaboradores.push({ primerNombre: '', apellido: '', rol: 'Autor' });
-  }
-
-  eliminarColaborador(index: number) {
-    this.colaboradores.splice(index, 1);
-  }
-
-  noFuncion(){
-
-  }
-
-  agregarPublicacion() {
-    // Lógica para agregar la publicación
-    console.log('Publicación agregada:', {
-      tipoPublicacion: this.tipoPublicacion,
-      titulo: this.titulo,
-      nombreRevista: this.nombreRevista,
-      colaboradores: this.colaboradores,
-      volumen: this.volumen,
-      emision: this.emision,
-      numArticulo: this.numArticulo,
-      estadoPublicacion: this.tipoPublicacion,
-      fechaPublicacion: this.fechaPublicacion,
-      paginas: this.paginas,
-      doi: this.doi,
-
-      // Datos para Libro
-      tituloLibro: this.tituloLibro,
-      lugarPublicacion: this.lugarPublicacion,
-      editorial: this.editorial,
-      fechaPublicacionLibro: this.fechaPublicacionLibro,
-      isbn: this.isbn,
-      url: this.url,
-
-      // Datos para Capítulo de Libro
-      tituloCapitulo: this.tituloCapitulo,
-      nombreLibro: this.nombreLibro,
-      edicionLibro: this.edicionLibro,
-      paginaInicial: this.paginaInicial,
-      paginaFinal: this.paginaFinal,
-      fechaPublicacionCapitulo: this.fechaPublicacionCapitulo,
-      editorialCapitulo: this.editorialCapitulo,
-      isbnCapitulo: this.isbnCapitulo,
-      urlCapitulo: this.urlCapitulo,
-
-      // Datos para Capítulo en Revista Indexada
-      tituloRevista: this.tituloRevista, // NUEVO
-      volumenRevista: this.volumenRevista, // NUEVO
-      numeroRevista: this.numeroRevista, // NUEVO
-      paginaInicioRevista: this.paginaInicioRevista, // NUEVO
-      paginaFinRevista: this.paginaFinRevista, // NUEVO
-      issnImpreso: this.issnImpreso, // NUEVO
-      issnOnline: this.issnOnline // NUEVO
+  agregarInvestigador() {
+    this.investigadores.push({ 
+      primerNombre: '', 
+      apellido: '', 
+      rol: 'Autor', 
+      agregado: false, // Bandera para verificar si el autor UNSIS ha sido agregado
+      autorUnsis: false,
+      instituto: '',
+      autorUnsisSeleccionado: ''
     });
+    this.autoresPorInstituto.push([]); 
   }
+
+  eliminarInvestigador(index: number) {
+    // Eliminar del array de IDs de autores UNSIS si el investigador tiene un autor UNSIS seleccionado
+    const investigador = this.investigadores[index];
+    if (investigador.autorUnsisSeleccionado) {
+      const autorIdIndex = this.idsAutoresUnsis.indexOf(investigador.autorUnsisSeleccionado);
+      if (autorIdIndex !== -1) {
+        this.idsAutoresUnsis.splice(autorIdIndex, 1);
+      }
+    }
+  
+    // Eliminar el investigador y sus datos relacionados
+    this.investigadores.splice(index, 1);
+    this.autoresPorInstituto.splice(index, 1);
+    console.log('IDs de autores UNSIS:', this.idsAutoresUnsis);
+  }
+  
+  onInstitutoChange(institutoId: string, investigadorIndex: number) {
+    this.articuloService.getAutoresPorInstituto(institutoId).subscribe(
+      (data: any[]) => {
+        this.autoresPorInstituto[investigadorIndex] = data;
+      },
+      (error) => {
+        console.error('Error al obtener autores por instituto', error);
+      }
+    );
+  }
+
+  guardarAutorUnsis(idAutor: number, index: number) {
+    this.idsAutoresUnsis.push(idAutor);
+    this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
+    console.log('ID de autor UNSIS guardado:', idAutor);
+    console.log('IDs de autores UNSIS:', this.idsAutoresUnsis);
+  }
+
+  agregarAutorNoUnsis(investigador: any, index: number) {
+    const nuevoAutor = {
+      nombre1Autor: investigador.primerNombre,
+      nombre2Autor: investigador.segundoNombre,
+      apellidoPaternoAutor: investigador.apellidoPaterno,
+      apellidoMaternoAutor: investigador.apellidoMaterno,
+      autorUnsis: false
+    };
+    
+    this.articuloService.agregarAutorNoUnsis(nuevoAutor).subscribe(
+      response => {
+        console.log('Autor no UNSIS agregado:', response);
+        // Aquí puedes agregar la lógica adicional que necesites después de agregar el autor no UNSIS
+      },
+      error => {
+        console.error('Error al agregar autor no UNSIS:', error);
+      }
+    );
+  }
+
 }

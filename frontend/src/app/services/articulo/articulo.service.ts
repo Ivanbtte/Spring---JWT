@@ -24,8 +24,20 @@ export class ArticuloService {
       catchError(this.handleError)
     )
   }
+
+  getAutoresPorInstituto(institutoId: string): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi+'investigador/instituto/' + institutoId);
+  }
+
   searchPublications(criteria: any): Observable<any> {
     return this.http.post<any>(environment.urlApi+'articulo', criteria);
+  }
+
+   // Nuevo método para agregar un autor no UNSIS
+   agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
+    return this.http.post<any>(environment.urlApi + 'autor', nuevoAutor).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error:HttpErrorResponse){

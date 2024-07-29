@@ -54,6 +54,12 @@ public class InvestigadorServiceImpl implements InvestigadorService{
         }
     }
 
+    @Override
+    @Transactional
+    public List<InvestigadorDto> findByInstitutoId(Long institutoId) {
+        return investigadorDao.findByInstitutoId(institutoId).stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
     private InvestigadorDto convertToDto(Investigador investigador) {
         InvestigadorDto dto = new InvestigadorDto();
         dto.setId(investigador.getId());

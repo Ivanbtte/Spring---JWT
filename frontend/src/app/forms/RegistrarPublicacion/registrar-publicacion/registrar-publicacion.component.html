@@ -1,268 +1,297 @@
 <app-nav></app-nav>
 <app-menu></app-menu>
 <div class="container">
-    <h2>Registrar</h2>
-    <form>
-        <div class="form-group highlighted-field">
-            <label for="tipoPublicacion">Tipo de publicación</label>
-            <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
-                <option>Artículo</option>
-                <option>Capítulo de libro</option>
-                <option>Libro</option>
-            </select>
+  <h2>Registrar</h2>
+  <form>
+    <div class="form-group highlighted-field">
+      <label for="tipoPublicacion">Tipo de publicación</label>
+      <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
+        <option>Artículo</option>
+        <option>Capítulo de libro</option>
+        <option>Libro</option>
+      </select>
+    </div>
+    <!-- Sección para Articulo -->
+    <div *ngIf="tipoPublicacion === 'Artículo'">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required>
+      </div>
+      <div class="form-group">
+        <label for="nombreRevista">Nombre de la revista</label>
+        <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista"
+          required>
+      </div>
+      <div class="form-group">
+        <label>Autores</label>
+        <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+          <i class="fa fa-plus"></i> Agregar persona
+        </button>
+      </div>
+
+      <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
+        <div class="card-body">
+          <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+          <div class="form-group">
+            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis"
+              name="autorUnsis{{ i }}">
+            <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
+          </div>
+
+          <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+            <div class="form-group">
+              <label for="instituto{{ i }}">Instituto</label>
+              <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                [disabled]="investigador.agregado">
+                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+              <select id="listbox{{ i }}" class="form-control" [(ngModel)]="investigador.autorUnsisSeleccionado"
+                name="listbox{{ i }}" [disabled]="investigador.agregado">
+                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">{{
+                  autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                  autor.apellido_paterno_investigador }} {{ autor.apellido_materno_investigador }}</option>
+              </select>
+            </div>
+          </div>
+          <ng-template #noAutorUnsis>
+            <div class="form-group">
+              <label for="primerNombre{{ i }}">Primer nombre:</label>
+              <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+              <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+              <input type="text" id="apellidoPaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+              <input type="text" id="apellidoMaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}">
+            </div>
+          </ng-template>
+          <br>
+          <button type="button" class="btn btn-secondary" 
+                  (click)="investigador.autorUnsis ? guardarAutorUnsis(investigador.autorUnsisSeleccionado, i) : agregarAutorNoUnsis(investigador, i)" 
+                  *ngIf="!investigador.agregado">
+            <i class="fa fa-plus"></i> Agregar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+          </button>
         </div>
-        <!-- Sección para Articulo -->
-        <div *ngIf="tipoPublicacion === 'Artículo'">
-            <div class="form-group">
-                <label for="titulo">Título</label>
-                <input type="text" id="titulo" class="form-control" [(ngModel)]="titulo" name="titulo" required>
-            </div>
-            <div class="form-group">
-                <label for="nombreRevista">Nombre de la revista</label>
-                <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista" required>
-            </div>
-            <div class="form-group">
-                <label>Colaboradores</label>
-                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
-                    <i class="fa fa-plus"></i> Agregar persona
-                </button>
-            </div>
+      </div>
 
-            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
-                <div class="card-body">
-                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
-                    <div class="form-group">
-                        <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="colaborador.autorUnsis" name="autorUnsis{{ i }}">
-                        <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
-                    </div>
-                    
-                    <div *ngIf="colaborador.autorUnsis; else noAutorUnsis">
-                        <div class="form-group">
-                            <label for="instituto{{ i }}">Instituto</label>
-                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="colaborador.instituto" name="instituto{{ i }}">
-                                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
-                            <select id="listbox{{ i }}" class="form-control" [(ngModel)]="colaborador.autorUnsisSeleccionado" name="listbox{{ i }}">
-                                <!-- Aquí irán las opciones del listbox -->
-                            </select>
-                        </div>
-                    </div>
-                    <ng-template #noAutorUnsis>
-                        <div class="form-group">
-                            <label for="primerNombre{{ i }}">Primer nombre</label>
-                            <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="apellido{{ i }}">Apellido</label>
-                            <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="rol{{ i }}">Rol</label>
-                            <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
-                                <option>Autor</option>
-                                <option>Traductor</option>
-                                <option>Editor</option>
-                            </select>
-                        </div>
-                    </ng-template>
-                    <br>
-                    <button type="button" class="btn btn-secondary" (click)="noFuncion()">
-                        <i class="fa fa-plus"></i> Agregar
-                    </button>
-                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                    </button>
-                </div>
-            </div>
-
-            <div class="form-group-container">
-                <div class="form-group">
-                    <label for="numVolumen">Número de volumen</label>
-                    <input type="number" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" />
-                </div>
-                <div class="form-group">
-                    <label for="numEmision">Número de emisión</label>
-                    <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" />
-                </div>
-                <div class="form-group">
-                    <label for="numArticulo">Número de artículo</label>
-                    <input type="number" id="numArticulo" class="form-control" [(ngModel)]="numArticulo" name="numArticulo" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="fechaPublicacion">Fecha de publicación</label>
-                <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion" name="fechaPublicacion">
-            </div>
-            <div class="form-group-container">
-                <div class="form-group">
-                    <label for="paginaInicio">Página de inicio</label>
-                    <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" />
-                </div>
-                <div class="form-group">
-                    <label for="paginaFin">Página final</label>
-                    <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="doi">DOI</label>
-                <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi">
-            </div>
-            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
-                <i class="fa fa-check"></i> Agregar
-            </button>
+      <div class="form-group-container">
+        <div class="form-group">
+          <label for="numVolumen">Número de volumen</label>
+          <input type="number" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" />
         </div>
-
-        <!-- Sección para Libro -->
-        <div *ngIf="tipoPublicacion === 'Libro'">
-            <div class="form-group">
-                <label for="tituloLibro">Título</label>
-                <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
-            </div>
-            <div class="form-group">
-                <label>Colaboradores</label>
-                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
-                    <i class="fa fa-plus"></i> Agregar persona
-                </button>
-            </div>
-
-            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
-                <div class="card-body">
-                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
-                    <div class="form-group">
-                        <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="colaborador.autorUnsis" name="autorUnsis{{ i }}">
-                        <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
-                    </div>
-                    
-                    <div *ngIf="colaborador.autorUnsis; else noAutorUnsis">
-                        <div class="form-group">
-                            <label for="instituto{{ i }}">Instituto</label>
-                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="colaborador.instituto" name="instituto{{ i }}">
-                                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
-                            <select id="listbox{{ i }}" class="form-control" [(ngModel)]="colaborador.autorUnsisSeleccionado" name="listbox{{ i }}">
-                                <!-- Aquí irán las opciones del listbox -->
-                            </select>
-                        </div>
-                    </div>
-                    <ng-template #noAutorUnsis>
-                        <div class="form-group">
-                            <label for="primerNombre{{ i }}">Primer nombre</label>
-                            <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="apellido{{ i }}">Apellido</label>
-                            <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="rol{{ i }}">Rol</label>
-                            <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
-                                <option>Autor</option>
-                                <option>Traductor</option>
-                                <option>Editor</option>
-                            </select>
-                        </div>
-                    </ng-template>
-                    <br>
-                    <button type="button" class="btn btn-secondary" (click)="noFuncion()">
-                        <i class="fa fa-plus"></i> Agregar
-                    </button>
-                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                    </button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="isbn">ISBN</label>
-                <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
-            </div>
-            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
-                <i class="fa fa-check"></i> Agregar
-            </button>
+        <div class="form-group">
+          <label for="numEmision">Número de emisión</label>
+          <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" />
         </div>
-
-        <!-- Sección para Capítulo de libro -->
-        <div *ngIf="tipoPublicacion === 'Capítulo de libro'">
-            <div class="form-group">
-                <label for="tituloCapitulo">Título del capítulo</label>
-                <input type="text" id="tituloCapitulo" class="form-control" [(ngModel)]="tituloCapitulo" name="tituloCapitulo" required>
-            </div>
-            <div class="form-group">
-                <label for="tituloLibro">Título del libro</label>
-                <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
-            </div>
-            <div class="form-group">
-                <label>Colaboradores</label>
-                <button type="button" class="btn btn-primary" (click)="agregarColaborador()">
-                    <i class="fa fa-plus"></i> Agregar persona
-                </button>
-            </div>
-
-            <div class="card mt-3" *ngFor="let colaborador of colaboradores; let i = index">
-                <div class="card-body">
-                    <h5 class="card-title">Colaborador {{ i + 1 }}</h5>
-                    <div class="form-group">
-                        <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="colaborador.autorUnsis" name="autorUnsis{{ i }}">
-                        <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
-                    </div>
-                    
-                    <div *ngIf="colaborador.autorUnsis; else noAutorUnsis">
-                        <div class="form-group">
-                            <label for="instituto{{ i }}">Instituto</label>
-                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="colaborador.instituto" name="instituto{{ i }}">
-                                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
-                            <select id="listbox{{ i }}" class="form-control" [(ngModel)]="colaborador.autorUnsisSeleccionado" name="listbox{{ i }}">
-                                <!-- Aquí irán las opciones del listbox -->
-                            </select>
-                        </div>
-                    </div>
-                    <ng-template #noAutorUnsis>
-                        <div class="form-group">
-                            <label for="primerNombre{{ i }}">Primer nombre</label>
-                            <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="colaborador.primerNombre" name="primerNombre{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="apellido{{ i }}">Apellido</label>
-                            <input type="text" id="apellido{{ i }}" class="form-control" [(ngModel)]="colaborador.apellido" name="apellido{{ i }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="rol{{ i }}">Rol</label>
-                            <select id="rol{{ i }}" class="form-control" [(ngModel)]="colaborador.rol" name="rol{{ i }}">
-                                <option>Autor</option>
-                                <option>Traductor</option>
-                                <option>Editor</option>
-                            </select>
-                        </div>
-                    </ng-template>
-                    <br>
-                    <button type="button" class="btn btn-secondary" (click)="noFuncion()">
-                        <i class="fa fa-plus"></i> Agregar
-                    </button>
-                    <button type="button" class="btn btn-danger" (click)="eliminarColaborador(i)">
-                        <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
-                    </button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="isbn">ISBN</label>
-                <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
-            </div>
-            <button type="button" class="btn btn-success" (click)="agregarPublicacion()">
-                <i class="fa fa-check"></i> Agregar
-            </button>
+        <div class="form-group">
+          <label for="numArticulo">Número de artículo</label>
+          <input type="number" id="numArticulo" class="form-control" [(ngModel)]="numArticulo" name="numArticulo" />
         </div>
-    </form>
+      </div>
+
+      <div class="form-group">
+        <label for="fechaPublicacion">Fecha de publicación</label>
+        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+          name="fechaPublicacion">
+      </div>
+      <div class="form-group-container">
+        <div class="form-group">
+          <label for="paginaInicio">Página de inicio</label>
+          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" />
+        </div>
+        <div class="form-group">
+          <label for="paginaFin">Página final</label>
+          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="doi">DOI</label>
+        <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi">
+      </div>
+      <button type="button" class="btn btn-success">
+        <i class="fa fa-check"></i> Agregar
+      </button>
+    </div>
+
+    <!-- Sección para Libro -->
+    <div *ngIf="tipoPublicacion === 'Libro'">
+      <div class="form-group">
+        <label for="tituloLibro">Título</label>
+        <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
+      </div>
+      <div class="form-group">
+        <label>Autores</label>
+        <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+          <i class="fa fa-plus"></i> Agregar persona
+        </button>
+      </div>
+
+      <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
+        <div class="card-body">
+          <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+          <div class="form-group">
+            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis"
+              name="autorUnsis{{ i }}">
+            <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
+          </div>
+
+          <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+            <div class="form-group">
+              <label for="instituto{{ i }}">Instituto</label>
+              <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                [disabled]="investigador.agregado">
+                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+              <select id="listbox{{ i }}" class="form-control" [(ngModel)]="investigador.autorUnsisSeleccionado"
+                name="listbox{{ i }}" [disabled]="investigador.agregado">
+                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">{{
+                  autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                  autor.apellido_paterno_investigador }} {{ autor.apellido_materno_investigador }}</option>
+              </select>
+            </div>
+          </div>
+          <ng-template #noAutorUnsis>
+            <div class="form-group">
+              <label for="primerNombre{{ i }}">Primer nombre:</label>
+              <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+              <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+              <input type="text" id="apellidoPaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+              <input type="text" id="apellidoMaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}">
+            </div>
+          </ng-template>
+          <br>
+          <button type="button" class="btn btn-secondary" 
+                  (click)="investigador.autorUnsis ? guardarAutorUnsis(investigador.autorUnsisSeleccionado, i) : agregarAutorNoUnsis(investigador, i)" 
+                  *ngIf="!investigador.agregado">
+            <i class="fa fa-plus"></i> Agregar
+          </button>
+          <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
+      </div>
+      <button type="button" class="btn btn-success">
+        <i class="fa fa-check"></i> Agregar
+      </button>
+    </div>
+
+    <!-- Sección para Capítulo de libro -->
+    <div *ngIf="tipoPublicacion === 'Capítulo de libro'">
+      <div class="form-group">
+        <label for="tituloCapitulo">Título del capítulo</label>
+        <input type="text" id="tituloCapitulo" class="form-control" [(ngModel)]="tituloCapitulo" name="tituloCapitulo"
+          required>
+      </div>
+      <div class="form-group">
+        <label for="tituloLibro">Título del libro</label>
+        <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
+      </div>
+      <div class="form-group">
+        <label>Autores</label>
+        <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+          <i class="fa fa-plus"></i> Agregar persona
+        </button>
+      </div>
+
+      <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
+        <div class="card-body">
+          <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+          <div class="form-group">
+            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis"
+              name="autorUnsis{{ i }}">
+            <label for="autorUnsis{{ i }}">¿Es autor UNSIS?</label>
+          </div>
+
+          <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+            <div class="form-group">
+              <label for="instituto{{ i }}">Instituto</label>
+              <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                [disabled]="investigador.agregado">
+                <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+              <select id="listbox{{ i }}" class="form-control" [(ngModel)]="investigador.autorUnsisSeleccionado"
+                name="listbox{{ i }}" [disabled]="investigador.agregado">
+                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">{{
+                  autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                  autor.apellido_paterno_investigador }} {{ autor.apellido_materno_investigador }}</option>
+              </select>
+              <button type="button" class="btn btn-secondary"
+                (click)="guardarAutorUnsis(investigador.autorUnsisSeleccionado, i)"
+                *ngIf="investigador.autorUnsis && !investigador.agregado">
+                <i class="fa fa-plus"></i> Agregar
+              </button>
+            </div>
+          </div>
+          <ng-template #noAutorUnsis>
+            <div class="form-group">
+              <label for="primerNombre{{ i }}">Primer nombre:</label>
+              <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+              <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+              <input type="text" id="apellidoPaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}">
+            </div>
+            <div class="form-group">
+              <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+              <input type="text" id="apellidoMaterno{{ i }}" class="form-control" [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}">
+            </div>
+            <button class="btn btn-primary" (click)="agregarAutorNoUnsis(investigador, i)">Agregar</button>
+          </ng-template>
+          <br>
+
+          <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
+      </div>
+      <button type="button" class="btn btn-success">
+        <i class="fa fa-check"></i> Agregar
+      </button>
+    </div>
+  </form>
 </div>

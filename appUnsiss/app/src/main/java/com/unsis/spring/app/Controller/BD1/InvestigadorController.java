@@ -103,4 +103,17 @@ public class InvestigadorController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping(value="/investigador/instituto/{institutoId}")
+    public ResponseEntity<Object> getByInstitutoId(@PathVariable Long institutoId) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            List<InvestigadorDto> investigadores = investigadorService.findByInstitutoId(institutoId);
+            return new ResponseEntity<>(investigadores, HttpStatus.OK);
+        } 
+        catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
