@@ -40,6 +40,12 @@ export class ArticuloService {
     );
   }
 
+  eliminarAutorNoUnsis(autorId: number): Observable<any> {
+    return this.http.delete(environment.urlApi+'autor/' + autorId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status==0){
       console.error('Se ha producido un error ',error.status, error.error);
