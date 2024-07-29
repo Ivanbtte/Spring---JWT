@@ -9,20 +9,27 @@ import com.unsis.spring.app.Entity.BD1.Articulos;
 
 public interface ArticuloDao extends JpaRepository<Articulos, Long> {
 
-    @Query(value = "SELECT * FROM vw_articulos_con_autores WHERE id_autor = :autorId", nativeQuery = true)
-    List<Articulos> findArticulosByAutorId(@Param("autorId") Long autorId);
+        @Query(value = "SELECT * FROM vw_articulos_con_autores WHERE id_autor = :autorId", nativeQuery = true)
+        List<Articulos> findArticulosByAutorId(@Param("autorId") Long autorId);
 
-    @Query(value = "SELECT a.*, au.* " +
-            "FROM articulos a " +
-            "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-            "JOIN autores au ON aa.id_autor = au.id_autor " +
-            "WHERE a.id_articulo = :id", nativeQuery = true)
-    List<Object[]> findArticuloWithAutoresById(@Param("id") Long id);
+        @Query(value = "SELECT a.*, au.* " +
+                        "FROM articulos a " +
+                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "JOIN autores au ON aa.id_autor = au.id_autor " +
+                        "WHERE a.id_articulo = :id", nativeQuery = true)
+        List<Object[]> findArticuloWithAutoresById(@Param("id") Long id);
 
-    @Query(value = "SELECT a.*, au.* " +
-            "FROM Articulos a " +
-            "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-            "JOIN autores au ON aa.id_autor = au.id_autor", nativeQuery = true)
-    List<Object[]> findAllArticulosWithAutores();
+        @Query(value = "SELECT a.*, au.* " +
+                        "FROM Articulos a " +
+                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "JOIN autores au ON aa.id_autor = au.id_autor", nativeQuery = true)
+        List<Object[]> findAllArticulosWithAutores();
+
+        @Query(value = "SELECT a.*, au.* " +
+                        "FROM Articulos a " +
+                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "JOIN autores au ON aa.id_autor = au.id_autor " +
+                        "WHERE a.id_instituto = :id", nativeQuery = true)
+        List<Object[]> findAllArticulosWithAutoresInstituto(@Param("id") Long id);
 
 }

@@ -243,8 +243,28 @@ public class ArticuloController {
         response.setHeader(cabecera, valor);
 
         List<CitaApaDto> usuarios = articuloService.getAllCitasApa();
-     
+
         ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, usuarios);
         exporter.exportar(response);
     }
+
+    @GetMapping(value = "/articulos/exportarExel/{id}")
+    public void exportarExelDeArticuloInstituto(@PathVariable Long id, HttpServletResponse response)
+            throws DocumentException, IOException {
+        response.setContentType("application/octet-stream");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+
+        response.setHeader(cabecera, valor);
+
+        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto(id);
+
+        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
+        exporter.exportar(response);
+    }
+
 }

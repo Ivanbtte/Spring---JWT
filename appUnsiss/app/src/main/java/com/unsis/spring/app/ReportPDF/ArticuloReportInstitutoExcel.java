@@ -1,8 +1,5 @@
 package com.unsis.spring.app.ReportPDF;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,6 +16,8 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,13 +29,13 @@ import com.unsis.spring.app.DTO.CitaApaDto;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class ArticuloReportExcel {
+public class ArticuloReportInstitutoExcel {
     private XSSFWorkbook libro;
     private XSSFSheet hoja;
 
     private List<CitaApaDto> listarArticulos;
 
-    public ArticuloReportExcel(XSSFWorkbook libro, XSSFSheet hoja, List<CitaApaDto> listarArticulos) {
+    public ArticuloReportInstitutoExcel(XSSFWorkbook libro, XSSFSheet hoja, List<CitaApaDto> listarArticulos) {
         this.libro = libro != null ? libro : new XSSFWorkbook();
         this.hoja = hoja != null ? hoja : this.libro.createSheet("Articulos");
         this.listarArticulos = listarArticulos;
@@ -97,7 +96,7 @@ public class ArticuloReportExcel {
         estilo.setVerticalAlignment(VerticalAlignment.CENTER);
 
         estilo.setWrapText(true);
-
+        
         for (CitaApaDto cita : listarArticulos) {
             Row fila = hoja.createRow(numeroFilas++);
 
