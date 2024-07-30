@@ -13,7 +13,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   institutos: any[] = [];  // Lista de institutos
   autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
   idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
-  idsAutor: number[] = []; // Variable para almacenar la propiedad autor.id_autor
+  idsAutoresNoUnsis: number[] = []; // Variable para almacenar la propiedad autor.id_autor
 
   constructor(private articuloService: ArticuloService) { }
 
@@ -76,21 +76,20 @@ export class RegistrarPublicacionComponent implements OnInit {
   issnOnline: string = ''; // ISSN versión en línea (opcional)
 
   agregarInvestigador() {
-    this.investigadores.push({ 
-      primerNombre: '', 
+    this.investigadores.push({
+      primerNombre: '',
       id_autor: '',
-      apellido: '', 
+      apellido: '',
       agregado: false, // Bandera para verificar si el autor UNSIS ha sido agregado
       autorUnsis: false,
       instituto: '',
       autorUnsisSeleccionado: ''
     });
-    this.autoresPorInstituto.push([]); 
+    this.autoresPorInstituto.push([]);
   }
 
- eliminarInvestigador(index: number) {
+  eliminarInvestigador(index: number) {
     const investigador = this.investigadores[index];
-    console.log('Investigador a eliminar:', investigador); // Añadir esta línea para revisar el objeto
 
     if (investigador.autorUnsisSeleccionado) {
       const autorIdIndex = this.idsAutoresUnsis.indexOf(investigador.autorUnsisSeleccionado);
@@ -107,6 +106,12 @@ export class RegistrarPublicacionComponent implements OnInit {
           console.log('Investigador eliminado', response);
           this.investigadores.splice(index, 1);
           this.autoresPorInstituto.splice(index, 1);
+
+          // Eliminar el ID del array idsAutoresNoUnsis
+          const autorIdIndex = this.idsAutoresNoUnsis.indexOf(autorId);
+          if (autorIdIndex !== -1) {
+            this.idsAutoresNoUnsis.splice(autorIdIndex, 1);
+          }
         },
         error => {
           console.error('Error al eliminar investigador', error);
@@ -114,9 +119,8 @@ export class RegistrarPublicacionComponent implements OnInit {
       );
     }
 
-    console.log('IDs de autores UNSIS:', this.idsAutoresUnsis);
   }
-  
+
   onInstitutoChange(institutoId: string, investigadorIndex: number) {
     this.articuloService.getAutoresPorInstituto(institutoId).subscribe(
       (data: any[]) => {
@@ -131,8 +135,6 @@ export class RegistrarPublicacionComponent implements OnInit {
   guardarAutorUnsis(idAutor: number, index: number) {
     this.idsAutoresUnsis.push(idAutor);
     this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
-    console.log('ID de autor UNSIS guardado:', idAutor);
-    console.log('IDs de autores UNSIS:', this.idsAutoresUnsis);
   }
 
   agregarAutorNoUnsis(investigador: any, index: number) {
@@ -143,11 +145,12 @@ export class RegistrarPublicacionComponent implements OnInit {
       apellidoMaternoAutor: investigador.apellidoMaterno,
       autorUnsis: false
     };
-    
+
     this.articuloService.agregarAutorNoUnsis(nuevoAutor).subscribe(
       response => {
         console.log('Autor no UNSIS agregado:', response);
         investigador.id_autor = response.id_autor;
+        this.idsAutoresNoUnsis.push(response.id_autor); // Agrega el ID al array
         // Aquí puedes agregar la lógica adicional que necesites después de agregar el autor no UNSIS
       },
       error => {
@@ -156,6 +159,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     );
 
     investigador.agregado = true;
+    
   }
 
   onAutorUnsisChange(investigador: any, index: number): void {
