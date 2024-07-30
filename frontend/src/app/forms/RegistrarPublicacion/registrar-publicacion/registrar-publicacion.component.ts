@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
+import { Articulo} from 'src/app/services/articulo/articulo';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-publicacion',
@@ -14,8 +16,9 @@ export class RegistrarPublicacionComponent implements OnInit {
   autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
   idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
   idsAutoresNoUnsis: number[] = []; // Variable para almacenar la propiedad autor.id_autor
+  
 
-  constructor(private articuloService: ArticuloService) { }
+  constructor(private articuloService: ArticuloService, private router: Router) { }
 
   ngOnInit(): void {
     // Llama al método para obtener los institutos cuando se inicializa el componente
@@ -36,14 +39,15 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   tipoPublicacion: string = '';
   titulo: string = '';
+  instituto: number = 0;
   nombreRevista: string = '';
   investigadores: any[] = [];
-  numVolumen: number | null = null;
-  numEmision: number | null = null;
-  numArticulo: number | null = null;
-  fechaPublicacion: string = '';
-  paginaInicio: number | null = null;
-  paginaFin: number | null = null;
+  numVolumen: string = '';
+  numEmision: number = 0;
+  numArticulo: number = 0;
+  fechaPublicacion: Date | undefined;
+  paginaInicio: number = 0;
+  paginaFin: number = 0;
   doi: string = '';
   estadoPublicacion: string = '';
 
@@ -166,6 +170,57 @@ export class RegistrarPublicacionComponent implements OnInit {
     if (!investigador.autorUnsis && investigador.agregado) {
       this.eliminarInvestigador(index);
     }
+  }
+
+  crearArticulo() {
+    const articulo: Articulo = {
+      tipoPublicacion: {
+        id_publicacion_tipo: 1,
+        nombre: 'Capitulo de libro'
+      },
+      instituto: {
+        id: this.instituto,
+        nombre: 'Informatica'
+      },
+      trimestre: {
+        id_trimestre: 1,
+        nombre: 'Trimestre 1',
+        fecha_inicio: new Date('2024-05-12'),
+        fecha_fin: new Date('2024-08-12')
+      },
+      fecha_publicacion: this.fechaPublicacion,
+      titulo_revista: this.nombreRevista,
+      numero_revista: this.numEmision,
+      volumen_revista: this.numVolumen,
+      pag_inicio: this.paginaInicio,
+      pag_final: this.paginaFin,
+      doi: this.doi,
+      nombre_articulo: this.titulo,
+      compilado: false,
+      financiamiento_prodep: false
+    };
+  
+    this.articuloService.crearArticulo(articulo).subscribe(response => {
+      console.log('Artículo registrado exitosamente', response);
+      this.limpiarCampos();
+      this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo
+    }, error => {
+      console.error('Error al registrar el artículo', error);
+    });
+  }
+
+  limpiarCampos() {
+    this.tipoPublicacion = '';
+    this.titulo = '';
+    this.nombreRevista = '';
+    this.instituto = 0;
+    this.investigadores = [];
+    this.numVolumen = '';
+    this.numEmision = 0;
+    this.fechaPublicacion = undefined;
+    this.paginaInicio = 0;
+    this.paginaFin = 0;
+    this.doi = '';
   }
 
 }

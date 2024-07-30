@@ -46,6 +46,13 @@ export class ArticuloService {
     );
   }
 
+  // Nuevo método para crear un artículo
+  crearArticulo(articulo: any): Observable<any> {
+    return this.http.post<any>(environment.urlApi+'articulo', articulo).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status==0){
       console.error('Se ha producido un error ',error.status, error.error);
