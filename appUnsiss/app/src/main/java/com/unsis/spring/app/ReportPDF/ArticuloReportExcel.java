@@ -102,7 +102,7 @@ public class ArticuloReportExcel {
             Row fila = hoja.createRow(numeroFilas++);
 
             Cell celda = fila.createCell(0);
-            celda.setCellValue(cita.getIdArticulo());
+            celda.setCellValue(numeroFilas-1);
             hoja.autoSizeColumn(0);
             celda.setCellStyle(estilo);
 
@@ -237,6 +237,11 @@ public class ArticuloReportExcel {
         italicFont.setFontHeightInPoints((short) 12);
         italicFont.setFontName("Arial");
 
+        // Crear una fuente normal
+        XSSFFont normalFont = workbook.createFont();
+        normalFont.setFontHeightInPoints((short) 12);
+        normalFont.setFontName("Arial");
+
         String cita = "";
 
         if (tipoPublicacion.equals(articulos)) {
@@ -262,8 +267,10 @@ public class ArticuloReportExcel {
 
         XSSFRichTextString richTextString = new XSSFRichTextString(cita);
 
-        richTextString = workbook.getCreationHelper().createRichTextString(cita);
+        // Aplicar la fuente normal a todo el texto
+        richTextString.applyFont(normalFont);
 
+        // Aplicar cursiva a las partes correspondientes
         if (tipoPublicacion.equals(articulos) || tipoPublicacion.equals(capitulo_libro)) {
             // Cursiva en el título de la revista
             int startItalic = cita.indexOf(tituloRevista);
@@ -283,7 +290,6 @@ public class ArticuloReportExcel {
         }
 
         return richTextString;
-
     }
 
     private String formatearAutores(List<AutorDto> autoresList) {

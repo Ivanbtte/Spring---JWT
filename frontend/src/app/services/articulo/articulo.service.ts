@@ -42,20 +42,27 @@ export class ArticuloService {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-    return this.http.get(this.apiUrl + "/exportarExel", { headers, responseType: 'blob' });
+    return this.http.get(this.apiUrl + "/exportarExcel_Instituto", { headers, responseType: 'blob' });
   }
 
-  reporteExeIst(id: number) {
+  reporteExe_Instituto(id: number) {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
     return this.http.get(`${this.apiUrl}/exportarExel/${id}`, { headers, responseType: 'blob' });
   }
 
-  reporteExeIstInv(institutoId: number, profesorId: number) {
+  reporteExe_Instituto_Investigador(institutoId: number, profesorId: number) {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-    return this.http.get(`${this.apiUrl}/exportarExel/${institutoId}/${profesorId}`, { headers, responseType: 'blob' });
+    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto_Investigador/${institutoId}/${profesorId}`, { headers, responseType: 'blob' });
+  }
+
+  reporteExe_Instituto_TipoPublicacion(institutoId: number, tipo_publicacionId: number) {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto_TipoPublicacion/${institutoId}/${tipo_publicacionId}`, { headers, responseType: 'blob' });
   }
 }
