@@ -60,6 +60,10 @@ export class ArticuloService {
     );
   }
 
+  agregarAutorArticulo(articuloId: number, autorId: number): Observable<any> {
+    return this.http.post(environment.urlApi+'articulo/'+articuloId+'/autores/'+autorId, {});
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status==0){
       console.error('Se ha producido un error ',error.status, error.error);

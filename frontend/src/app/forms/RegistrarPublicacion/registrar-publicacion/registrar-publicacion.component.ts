@@ -16,8 +16,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   institutos: any[] = [];
   institutosPublicacion: any[] = [];  // Lista de institutos
   autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
-  idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
-  idsAutoresNoUnsis: number[] = []; // Variable para almacenar la propiedad autor.id_autor
+  idsAutores: number[] = []; // Variable para almacenar los IDs de autores UNSIS
   selectedInstitutoPublicacion: any;
   selectedTrimestre: any;
   trimestres: any[] = [];
@@ -84,7 +83,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   agregarInvestigador() {
     this.investigadores.push({
       primerNombre: '',
-      id_autor: '',
+      id_autor: Number,
       apellido: '',
       agregado: false, // Bandera para verificar si el autor UNSIS ha sido agregado
       autorUnsis: false,
@@ -92,15 +91,16 @@ export class RegistrarPublicacionComponent implements OnInit {
       autorUnsisSeleccionado: ''
     });
     this.autoresPorInstituto.push([]);
+    console.log("Investigadores: ", this.investigadores)
   }
 
   eliminarInvestigador(index: number) {
     const investigador = this.investigadores[index];
     if (investigador.agregado==true){
       if (investigador.autorUnsisSeleccionado) {
-        const autorIdIndex = this.idsAutoresUnsis.indexOf(investigador.autorUnsisSeleccionado);
+        const autorIdIndex = this.idsAutores.indexOf(investigador.autorUnsisSeleccionado);
         if (autorIdIndex !== -1) {
-          this.idsAutoresUnsis.splice(autorIdIndex, 1);
+          this.idsAutores.splice(autorIdIndex, 1);
         }
         // Eliminar el investigador y sus datos relacionados
         this.investigadores.splice(index, 1);
@@ -114,9 +114,9 @@ export class RegistrarPublicacionComponent implements OnInit {
             this.autoresPorInstituto.splice(index, 1);
   
             // Eliminar el ID del array idsAutoresNoUnsis
-            const autorIdIndex = this.idsAutoresNoUnsis.indexOf(autorId);
+            const autorIdIndex = this.idsAutores.indexOf(autorId);
             if (autorIdIndex !== -1) {
-              this.idsAutoresNoUnsis.splice(autorIdIndex, 1);
+              this.idsAutores.splice(autorIdIndex, 1);
             }
           },
           error => {
@@ -130,6 +130,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       this.investigadores.splice(index, 1);
       this.autoresPorInstituto.splice(index, 1);
     }
+    console.log("ID de autores: ", this.idsAutores);
 
   }
 
@@ -145,8 +146,10 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   guardarAutorUnsis(idAutor: number, index: number) {
-    this.idsAutoresUnsis.push(idAutor);
+    this.idsAutores.push(idAutor);
     this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
+    this.investigadores[index].id_autor = idAutor;
+    console.log("ID de autores: ", this.idsAutores);
   }
 
   agregarAutorNoUnsis(investigador: any, index: number) {
@@ -162,7 +165,8 @@ export class RegistrarPublicacionComponent implements OnInit {
       response => {
         console.log('Autor no UNSIS agregado:', response);
         investigador.id_autor = response.id_autor;
-        this.idsAutoresNoUnsis.push(response.id_autor); // Agrega el ID al array
+        this.idsAutores.push(response.id_autor); // Agrega el ID al array
+        console.log("ID de autores: ", this.idsAutores);
         // Aquí puedes agregar la lógica adicional que necesites después de agregar el autor no UNSIS
       },
       error => {
@@ -208,11 +212,24 @@ export class RegistrarPublicacionComponent implements OnInit {
       compilado: this.compilado,
       financiamiento_prodep: this.prodep
     };
-  
+
     this.articuloService.crearArticulo(articulo).subscribe(response => {
       console.log('Artículo registrado exitosamente', response);
-      this.limpiarCampos();
-      this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo
+      const articuloId = response.id_articulo;
+      this.idsAutores.forEach((autorId, index) => {
+        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+          response => {
+            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+            if (index === this.idsAutores.length - 1) {
+              this.limpiarCampos();
+              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+            }
+          },
+          error => {
+            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+          }
+        );
+      });
     }, error => {
       console.error('Error al registrar el artículo', error);
     });
