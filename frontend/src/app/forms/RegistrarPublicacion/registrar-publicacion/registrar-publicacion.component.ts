@@ -91,33 +91,39 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   eliminarInvestigador(index: number) {
     const investigador = this.investigadores[index];
-
-    if (investigador.autorUnsisSeleccionado) {
-      const autorIdIndex = this.idsAutoresUnsis.indexOf(investigador.autorUnsisSeleccionado);
-      if (autorIdIndex !== -1) {
-        this.idsAutoresUnsis.splice(autorIdIndex, 1);
+    if (investigador.agregado==true){
+      if (investigador.autorUnsisSeleccionado) {
+        const autorIdIndex = this.idsAutoresUnsis.indexOf(investigador.autorUnsisSeleccionado);
+        if (autorIdIndex !== -1) {
+          this.idsAutoresUnsis.splice(autorIdIndex, 1);
+        }
+        // Eliminar el investigador y sus datos relacionados
+        this.investigadores.splice(index, 1);
+        this.autoresPorInstituto.splice(index, 1);
+      } else {
+        const autorId = investigador.id_autor; // Asegúrate de que `idAutor` sea el ID correcto
+        this.articuloService.eliminarAutorNoUnsis(autorId).subscribe(
+          response => {
+            console.log('Investigador eliminado', response);
+            this.investigadores.splice(index, 1);
+            this.autoresPorInstituto.splice(index, 1);
+  
+            // Eliminar el ID del array idsAutoresNoUnsis
+            const autorIdIndex = this.idsAutoresNoUnsis.indexOf(autorId);
+            if (autorIdIndex !== -1) {
+              this.idsAutoresNoUnsis.splice(autorIdIndex, 1);
+            }
+          },
+          error => {
+            console.error('Error al eliminar investigador', error);
+          }
+        );
       }
+    }
+    else {
       // Eliminar el investigador y sus datos relacionados
       this.investigadores.splice(index, 1);
       this.autoresPorInstituto.splice(index, 1);
-    } else {
-      const autorId = investigador.id_autor; // Asegúrate de que `idAutor` sea el ID correcto
-      this.articuloService.eliminarAutorNoUnsis(autorId).subscribe(
-        response => {
-          console.log('Investigador eliminado', response);
-          this.investigadores.splice(index, 1);
-          this.autoresPorInstituto.splice(index, 1);
-
-          // Eliminar el ID del array idsAutoresNoUnsis
-          const autorIdIndex = this.idsAutoresNoUnsis.indexOf(autorId);
-          if (autorIdIndex !== -1) {
-            this.idsAutoresNoUnsis.splice(autorIdIndex, 1);
-          }
-        },
-        error => {
-          console.error('Error al eliminar investigador', error);
-        }
-      );
     }
 
   }
