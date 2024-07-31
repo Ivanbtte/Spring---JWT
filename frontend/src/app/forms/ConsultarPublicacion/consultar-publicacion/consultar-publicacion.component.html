@@ -80,10 +80,9 @@
                     </div>
                     <div *ngIf="filtrarPorTipo" class="form-group">
                         <label for="publicacion">Tipo de publicación</label>
-                        <select class="form-control" id="publicacion" [(ngModel)]="selectedPublicacion"
-                            name="publicacion">
+                        <select class="form-control" id="tipo_publicacion" [(ngModel)]="selectedTipoPublicacion" name="publicacion">
                             <option value="">Seleccione un tipo de publicación</option>
-                            <!-- Opciones de tipo de publicación -->
+                            <option *ngFor="let tipo_publicacion of tipo_publicaciones" [value]="tipo_publicacion.id_publicacion_tipo">{{ tipo_publicacion.descripcion_publicacion_tipo }}</option>
                         </select>
                     </div>
                 </form>
