@@ -4,7 +4,7 @@ export interface Articulo {
     nombre: string;
   };
   instituto: {
-    id: number;
+    id: number | undefined;
     nombre: string;
   };
   trimestre: {

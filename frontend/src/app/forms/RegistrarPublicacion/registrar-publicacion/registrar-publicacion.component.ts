@@ -9,13 +9,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./registrar-publicacion.component.css']
 })
 export class RegistrarPublicacionComponent implements OnInit {
-  volumen: any;
-  emision: any;
-  paginas: any;
-  institutos: any[] = [];  // Lista de institutos
+
+  investigadores: any[] = []; // Lista de investigadores
+  institutos: any[] = [];
+  institutosPublicacion: any[] = [];  // Lista de institutos
   autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
   idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
   idsAutoresNoUnsis: number[] = []; // Variable para almacenar la propiedad autor.id_autor
+  selectedInstitutoPublicacion: any;
   
 
   constructor(private articuloService: ArticuloService, private router: Router) { }
@@ -25,6 +26,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     this.articuloService.getInstitutos().subscribe(
       (data: any[]) => {
         this.institutos = data;
+        this.institutosPublicacion = data;
       },
       (error) => {
         console.error('Error al obtener institutos', error);
@@ -32,24 +34,16 @@ export class RegistrarPublicacionComponent implements OnInit {
     );
   }
 
-  tiposPublicacion: string[] = [
-    'Artículo', 'Artículo en revista indexada', 'Artículo en revista online', 'Capítulo de libro', 'Libro'
-  ];
-  rolesColaboradores: string[] = ['Autor', 'Traductor', 'Editor'];
-
-  tipoPublicacion: string = '';
+  tipoPublicacion: string = ''; //Borrar posiblemente
   titulo: string = '';
   instituto: number = 0;
   nombreRevista: string = '';
-  investigadores: any[] = [];
   numVolumen: string = '';
   numEmision: number = 0;
-  numArticulo: number = 0;
   fechaPublicacion: Date | undefined;
   paginaInicio: number = 0;
   paginaFin: number = 0;
   doi: string = '';
-  estadoPublicacion: string = '';
 
   // Datos adicionales para Libro
   tituloLibro: string = '';
@@ -69,15 +63,6 @@ export class RegistrarPublicacionComponent implements OnInit {
   editorialCapitulo: string = '';
   isbnCapitulo: string = '';
   urlCapitulo: string = '';
-
-  // NUEVOS CAMPOS PARA CAPÍTULO EN REVISTA INDEXADA
-  tituloRevista: string = ''; // Título de la Revista
-  volumenRevista: string = ''; // Volumen de la Revista
-  numeroRevista: string = ''; // Número de la Revista
-  paginaInicioRevista: string = ''; // Página de inicio
-  paginaFinRevista: string = ''; // Página final
-  issnImpreso: string = ''; // ISSN versión impresa (opcional)
-  issnOnline: string = ''; // ISSN versión en línea (opcional)
 
   agregarInvestigador() {
     this.investigadores.push({
@@ -173,14 +158,15 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   crearArticulo() {
+    console.log("este es el id ", this.selectedInstitutoPublicacion);
     const articulo: Articulo = {
       tipoPublicacion: {
         id_publicacion_tipo: 1,
-        nombre: 'Capitulo de libro'
+        nombre: 'Artículo'
       },
       instituto: {
-        id: this.instituto,
-        nombre: 'Informatica'
+        id: this.selectedInstitutoPublicacion,
+        nombre: ''
       },
       trimestre: {
         id_trimestre: 1,

@@ -23,9 +23,10 @@
           required>
       </div>
       <div class="form-group">
-        <label for="nombreRevista">Instituto de la publicación</label>
-        <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="instituto" name="nombreRevista"
-          required>
+        <label for="institutoPublicacion">Instituto de la publicación</label>
+        <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion" name="institutoPublicacion">
+          <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">{{ instituto.nombre }}</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Autores</label>
