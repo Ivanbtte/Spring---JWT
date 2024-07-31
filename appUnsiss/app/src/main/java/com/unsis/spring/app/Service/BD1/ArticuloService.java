@@ -31,6 +31,8 @@ public interface ArticuloService {
 
     public List<CitaApaDto> getAllCitasApaInstituto(Long id);
 
-    public List<CitaApaDto> getdAllArticulosWithAutoresInstitutoInvestigador(Long idInstituto, Long idInvestigador);
+    public List<CitaApaDto> getAllCitasApaInstituto_Investigador(Long idInstituto, Long idInvestigador);
+
+    public List<CitaApaDto> getAllCitasApaInstituto_TipoPublicacion(Long idInstituto, Long id_TipoPublicacion);
 
 }

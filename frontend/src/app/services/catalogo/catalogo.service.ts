@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { tipoRequest } from './tipoRequest';
-import { trimestreRequest } from './TrimestreRequest';
+import { trimestreRequest } from './trimestreRequest';
 import { institutoRequest } from './institutoRequest';
 
 @Injectable({

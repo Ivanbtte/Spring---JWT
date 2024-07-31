@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { AutorService } from 'src/app/services/autor/autor.service';
+import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 @Component({
   selector: 'app-consultar-publicacion',
@@ -14,21 +15,27 @@ export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   filtrarPorTipo: boolean = false;
+
   selectedInstituto: number | null = null;
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
+  selectedTipoPublicacion: number | null = null;
+
   publicacion: any[] = [];
-  profesores: any[] = [];
+  tipo_publicaciones: any[] = [];//En uso
+  profesores: any[] = [];//En uso
   publicaciones: any[] = [];
   startDate: string = '';
   endDate: string = '';
-  articulos: any[] = [];
-  institutos: any[] = [];
+  articulos: any[] = [];//En uso
+  institutos: any[] = [];//En uso
+
 
   constructor(
     private articuloService: ArticuloService,
     private autorService: AutorService,
-    private institutoService: InstitutoService
+    private institutoService: InstitutoService,
+    private catalogoService: CatalogoService
   ) { }
 
   ngOnInit(): void {
@@ -53,45 +60,58 @@ export class ConsultarPublicacionComponent implements OnInit {
     this.autorService.getList().subscribe(
       (data: any[]) => {
         this.profesores = data;
-        console.log('Profesores cargados:', this.profesores);
       },
       (error: any) => {
         console.error('Error al obtener los profesores:', error);
       }
     );
+
+    this.catalogoService.getTiposPublicacion().subscribe(
+      (data: any[]) => {
+        this.tipo_publicaciones = data;
+        console.log(data);
+      },
+      (error: any) => {
+        console.error('Error al obtener los tipos de publicaciones', error);
+      })
   }
 
   reporteExe() {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-    console.log('Filtrar por Instituto:', this.filtrarPorInstituto);
-    console.log('Instituto seleccionado:', this.selectedInstituto);
-    console.log('Filtrar por Profesor:', this.filtrarPorProfesor);
-    console.log('Profesor seleccionado:', this.selectedProfesor);
-    if (this.filtrarPorInstituto && this.selectedInstituto !== null && this.filtrarPorProfesor && this.selectedProfesor !== null) {
-      const institutoId = this.selectedInstituto;
-      const profesorId = this.selectedProfesor;
-      console.log(`Instituto ID: ${institutoId}, Profesor ID (antes de la conversión): ${this.selectedProfesor}`);
-      console.log(`Profesor ID (después de la conversión): ${profesorId}`);
 
-      if (!isNaN(institutoId) && !isNaN(profesorId)) {
-        console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
-        this.articuloService.reporteExeIstInv(institutoId, profesorId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del instituto o del profesor no es válido.');
-      }
-    } else if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
+    if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
       const institutoId = this.selectedInstituto;
-      if (!isNaN(institutoId)) {
-        console.log(`Instituto ID: ${institutoId}`);
-        this.articuloService.reporteExeIst(institutoId).subscribe(response => {
-          this.downloadFile(response);
-        });
+
+      if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
+        const profesorId = this.selectedProfesor;
+        if (!isNaN(institutoId) && !isNaN(profesorId)) {
+          console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
+          this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
+            this.downloadFile(response);
+          });
+        } else {
+          console.error('El ID del instituto o del profesor no es válido.');
+        }
+      } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
+        const tipo_publicacionId = this.selectedTipoPublicacion;
+        if (!isNaN(institutoId) && !isNaN(tipo_publicacionId)) {
+          console.log(`Instituto ID: ${institutoId}, Tipo_Publicacion ID: ${tipo_publicacionId}`);
+          this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipo_publicacionId).subscribe(response => {
+            this.downloadFile(response);
+          });
+        } else {
+          console.error('El ID del instituto o del tipo de publicación no es válido.');
+        }
       } else {
-        console.error('El ID del instituto no es válido.');
+        if (!isNaN(institutoId)) {
+          this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
+            this.downloadFile(response);
+          });
+        } else {
+          console.error('El ID del instituto no es válido.');
+        }
       }
     } else {
       console.log('Generando reporte general');
@@ -100,8 +120,6 @@ export class ConsultarPublicacionComponent implements OnInit {
       });
     }
   }
-
-
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);
