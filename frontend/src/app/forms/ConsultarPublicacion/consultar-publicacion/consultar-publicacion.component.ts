@@ -10,15 +10,15 @@ import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 })
 export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorInstituto: boolean = false;
-  filtrarPorPublicación: boolean = false;
+  filtrarPorPublicacion: boolean = false;
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   filtrarPorTipo: boolean = false;
-  selectedInstituto: string | undefined;
+  selectedInstituto: number | null = null;
   selectedPublicacion: string | undefined;
+  selectedProfesor: number | null = null;
   publicacion: any[] = [];
   profesores: any[] = [];
-  selectedProfesor: string | undefined;
   publicaciones: any[] = [];
   startDate: string = '';
   endDate: string = '';
@@ -53,6 +53,7 @@ export class ConsultarPublicacionComponent implements OnInit {
     this.autorService.getList().subscribe(
       (data: any[]) => {
         this.profesores = data;
+        console.log('Profesores cargados:', this.profesores);
       },
       (error: any) => {
         console.error('Error al obtener los profesores:', error);
@@ -60,44 +61,32 @@ export class ConsultarPublicacionComponent implements OnInit {
     );
   }
 
-  report() {
-    this.articuloService.reporte().subscribe(response => {
-
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.pdf';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }
-
-  /*reporteExe1() {
-    this.articuloService.reporteExe().subscribe(response => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.xlsx';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }*/
-
   reporteExe() {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
+    console.log('Filtrar por Instituto:', this.filtrarPorInstituto);
+    console.log('Instituto seleccionado:', this.selectedInstituto);
+    console.log('Filtrar por Profesor:', this.filtrarPorProfesor);
+    console.log('Profesor seleccionado:', this.selectedProfesor);
+    if (this.filtrarPorInstituto && this.selectedInstituto !== null && this.filtrarPorProfesor && this.selectedProfesor !== null) {
+      const institutoId = this.selectedInstituto;
+      const profesorId = this.selectedProfesor;
+      console.log(`Instituto ID: ${institutoId}, Profesor ID (antes de la conversión): ${this.selectedProfesor}`);
+      console.log(`Profesor ID (después de la conversión): ${profesorId}`);
 
-    if (this.filtrarPorInstituto && this.selectedInstituto) {
-      // Convierte selectedInstituto a número si es necesario
-      const institutoId = Number(this.selectedInstituto);
+      if (!isNaN(institutoId) && !isNaN(profesorId)) {
+        console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
+        this.articuloService.reporteExeIstInv(institutoId, profesorId).subscribe(response => {
+          this.downloadFile(response);
+        });
+      } else {
+        console.error('El ID del instituto o del profesor no es válido.');
+      }
+    } else if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
+      const institutoId = this.selectedInstituto;
       if (!isNaN(institutoId)) {
+        console.log(`Instituto ID: ${institutoId}`);
         this.articuloService.reporteExeIst(institutoId).subscribe(response => {
           this.downloadFile(response);
         });
@@ -105,11 +94,13 @@ export class ConsultarPublicacionComponent implements OnInit {
         console.error('El ID del instituto no es válido.');
       }
     } else {
+      console.log('Generando reporte general');
       this.articuloService.reporteExe().subscribe(response => {
         this.downloadFile(response);
       });
     }
   }
+
 
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -144,4 +135,5 @@ export class ConsultarPublicacionComponent implements OnInit {
     // Lógica para dar de baja el artículo, por ejemplo mostrar un mensaje de confirmación.
     console.log('Dar de baja artículo:', articulo);
   }
+
 }

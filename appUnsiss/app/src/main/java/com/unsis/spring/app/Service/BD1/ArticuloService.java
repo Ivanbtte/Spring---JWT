@@ -8,15 +8,29 @@ import com.unsis.spring.app.Entity.BD1.Articulos;
 
 public interface ArticuloService {
     public List<ArticuloDto> findAll();
+
     public ArticuloDto save(ArticuloDto articuloDto);
+
     public Articulos saveArticulo(Articulos articulo);
+
     public ArticuloDto findById(Long id);
+
     public Articulos findByIdArticulo(Long id);
+
     public void delete(Long id);
+
     public List<Articulos> findArticulosByAutorId(Long autorId);
+
     public ArticuloDto convertToDto(Articulos articulo);
+
     public Articulos convertToEntity(ArticuloDto articuloDto);
+
     public CitaApaDto getCitaApaById(Long id);
+
     public List<CitaApaDto> getAllCitasApa();
+
     public List<CitaApaDto> getAllCitasApaInstituto(Long id);
+
+    public List<CitaApaDto> getdAllArticulosWithAutoresInstitutoInvestigador(Long idInstituto, Long idInvestigador);
+
 }
