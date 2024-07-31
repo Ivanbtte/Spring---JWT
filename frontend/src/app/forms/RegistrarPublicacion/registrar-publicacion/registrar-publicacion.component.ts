@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 })
 export class RegistrarPublicacionComponent implements OnInit {
 
+  [key: string]: any;
+
   investigadores: any[] = []; // Lista de investigadores
   institutos: any[] = [];
   institutosPublicacion: any[] = [];  // Lista de institutos
@@ -19,6 +21,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   selectedInstitutoPublicacion: any;
   selectedTrimestre: any;
   trimestres: any[] = [];
+
   
 
   constructor(private articuloService: ArticuloService, private router: Router) { }
@@ -56,6 +59,8 @@ export class RegistrarPublicacionComponent implements OnInit {
   paginaInicio: number = 0;
   paginaFin: number = 0;
   doi: string = '';
+  compilado: boolean=false;
+  prodep: boolean=false;
 
   // Datos adicionales para Libro
   tituloLibro: string = '';
@@ -200,8 +205,8 @@ export class RegistrarPublicacionComponent implements OnInit {
       pag_final: this.paginaFin,
       doi: this.doi,
       nombre_articulo: this.titulo,
-      compilado: false,
-      financiamiento_prodep: false
+      compilado: this.compilado,
+      financiamiento_prodep: this.prodep
     };
   
     this.articuloService.crearArticulo(articulo).subscribe(response => {
@@ -225,6 +230,11 @@ export class RegistrarPublicacionComponent implements OnInit {
     this.paginaInicio = 0;
     this.paginaFin = 0;
     this.doi = '';
+  }
+
+  onCheckboxChange(event: Event, field: string) {
+    const input = event.target as HTMLInputElement;
+    this[field] = input.checked;
   }
 
 }
