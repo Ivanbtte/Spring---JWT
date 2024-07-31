@@ -10,5 +10,5 @@ public interface InvestigadorService {
     public InvestigadorDto save(InvestigadorDto investigadorDto);
     public InvestigadorDto findById(Long id);
     public void delete(Long id);
-    
+    public List<InvestigadorDto> findByInstitutoId(Long institutoId); // Nuevo método
 }

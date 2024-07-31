@@ -12,18 +12,61 @@ export class ArticuloService {
 
   constructor(private http: HttpClient) { }
 
+  // Nuevo método para obtener institutos
+  getInstitutos(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi + 'instituto').pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Método para obtener trimestres
+  getTrimestres(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi + 'trimestre').pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getList(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi + 'articulo').pipe(
       catchError(this.handleError)
     )
   }
+
+  getAutoresPorInstituto(institutoId: string): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi+'investigador/instituto/' + institutoId);
+  }
+
   searchPublications(criteria: any): Observable<any> {
     return this.http.post<any>(environment.urlApi + 'articulo', criteria);
   }
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.status == 0) {
-      console.error('Se ha producido un error ', error.status, error.error);
+   // Nuevo método para agregar un autor no UNSIS
+   agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
+    return this.http.post<any>(environment.urlApi + 'autor', nuevoAutor).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  eliminarAutorNoUnsis(autorId: number): Observable<any> {
+    return this.http.delete(environment.urlApi+'autor/' + autorId).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // Nuevo método para crear un artículo
+  crearArticulo(articulo: any): Observable<any> {
+    return this.http.post<any>(environment.urlApi+'articulo', articulo).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  agregarAutorArticulo(articuloId: number, autorId: number): Observable<any> {
+    return this.http.post(environment.urlApi+'articulo/'+articuloId+'/autores/'+autorId, {});
+  }
+
+  private handleError(error:HttpErrorResponse){
+    if(error.status==0){
+      console.error('Se ha producido un error ',error.status, error.error);
     }
     else {
       console.error('Backend retornó el código de estado ', error.status, error.error);
