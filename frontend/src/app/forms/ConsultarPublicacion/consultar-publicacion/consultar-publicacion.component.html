@@ -13,7 +13,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorInstituto"
                                 [ngModelOptions]="{standalone: true}" />
-                             Filtrar por instituto  <i class="fa fa-university"></i>
+                            Filtrar por instituto <i class="fa fa-university"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorInstituto" class="form-group">
@@ -28,24 +28,19 @@
             </div>
 
             <!--Cuadro inferior III-->
-            <div class="card-body">
-                <form>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" [(ngModel)]="filtrarPorProfesor"
-                                [ngModelOptions]="{standalone: true}" />
-                             Filtrar por profesor  <i class="fa fa-user"></i>
-                        </label>
-                    </div>
-                    <div *ngIf="filtrarPorProfesor" class="form-group">
-                        <label for="profesor">Profesor</label>
-                        <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
-                            <option value="">Seleccione un profesor</option>
-                            <option *ngFor="let profesor of profesores" [value]="profesor.id">{{ profesor.nombre1Autor
-                                }} {{ profesor.apellidoPaternoAutor }}</option>
-                        </select>
-                    </div>
-                </form>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" [(ngModel)]="filtrarPorProfesor" [ngModelOptions]="{standalone: true}" />
+                    Filtrar por profesor <i class="fa fa-user"></i>
+                </label>
+            </div>
+            <div *ngIf="filtrarPorProfesor" class="form-group">
+                <label for="profesor">Profesor</label>
+                <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
+                    <option value="">Seleccione un profesor</option>
+                    <option *ngFor="let profesor of profesores" [value]="profesor.id_autor">{{ profesor.nombre1Autor }}
+                        {{ profesor.nombre2Autor }} {{ profesor.apellidoPaternoAutor }}</option>
+                </select>
             </div>
         </div>
 
@@ -58,7 +53,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorFechas"
                                 [ngModelOptions]="{standalone: true}" />
-                             Filtrar por fechas  <i class="fa fa-calendar"></i>
+                            Filtrar por fechas <i class="fa fa-calendar"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorFechas" class="form-group-container">
@@ -80,7 +75,7 @@
                     <div class="form-group">
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorTipo" [ngModelOptions]="{standalone: true}" />
-                             Filtrar por tipo de publicación  <i class="fa fa-file"></i>
+                            Filtrar por tipo de publicación <i class="fa fa-file"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorTipo" class="form-group">
@@ -124,8 +119,6 @@
         </tbody>
     </table>
 
-    <button (click)="report()">Download PDF</button>
-
     <button (click)="reporteExe()">Download Exel</button>
-    
+
 </div>
