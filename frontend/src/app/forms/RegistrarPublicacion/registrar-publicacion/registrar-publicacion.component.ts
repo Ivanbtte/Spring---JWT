@@ -17,6 +17,8 @@ export class RegistrarPublicacionComponent implements OnInit {
   idsAutoresUnsis: number[] = []; // Variable para almacenar los IDs de autores UNSIS
   idsAutoresNoUnsis: number[] = []; // Variable para almacenar la propiedad autor.id_autor
   selectedInstitutoPublicacion: any;
+  selectedTrimestre: any;
+  trimestres: any[] = [];
   
 
   constructor(private articuloService: ArticuloService, private router: Router) { }
@@ -30,6 +32,16 @@ export class RegistrarPublicacionComponent implements OnInit {
       },
       (error) => {
         console.error('Error al obtener institutos', error);
+      }
+    );
+
+    // Llama al método para obtener los trimestres cuando se inicializa el componente
+    this.articuloService.getTrimestres().subscribe(
+      (data: any[]) => {
+        this.trimestres = data;
+      },
+      (error) => {
+        console.error('Error al obtener trimestres', error);
       }
     );
   }
@@ -169,10 +181,10 @@ export class RegistrarPublicacionComponent implements OnInit {
         nombre: ''
       },
       trimestre: {
-        id_trimestre: 1,
-        nombre: 'Trimestre 1',
-        fecha_inicio: new Date('2024-05-12'),
-        fecha_fin: new Date('2024-08-12')
+        id_trimestre: this.selectedTrimestre,
+        nombre: '',
+        fecha_inicio: new Date('2024-05-12'), //fecha falsa
+        fecha_fin: new Date('2024-08-12') //fecha falsa
       },
       fecha_publicacion: this.fechaPublicacion,
       titulo_revista: this.nombreRevista,

@@ -19,6 +19,13 @@ export class ArticuloService {
     );
   }
 
+  // Método para obtener trimestres
+  getTrimestres(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi + 'trimestre').pipe(
+      catchError(this.handleError)
+    );
+  }
+
   getList(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi+'articulo').pipe(
       catchError(this.handleError)
