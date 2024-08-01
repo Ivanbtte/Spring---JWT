@@ -76,7 +76,7 @@ export class ConsultarPublicacionComponent implements OnInit {
       })
   }
 
-  reporteExe() {
+  /*reporteExe1() {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
@@ -86,6 +86,7 @@ export class ConsultarPublicacionComponent implements OnInit {
 
       if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
         const profesorId = this.selectedProfesor;
+
         if (!isNaN(institutoId) && !isNaN(profesorId)) {
           console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
           this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
@@ -94,8 +95,10 @@ export class ConsultarPublicacionComponent implements OnInit {
         } else {
           console.error('El ID del instituto o del profesor no es válido.');
         }
+
       } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
         const tipo_publicacionId = this.selectedTipoPublicacion;
+
         if (!isNaN(institutoId) && !isNaN(tipo_publicacionId)) {
           console.log(`Instituto ID: ${institutoId}, Tipo_Publicacion ID: ${tipo_publicacionId}`);
           this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipo_publicacionId).subscribe(response => {
@@ -104,6 +107,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         } else {
           console.error('El ID del instituto o del tipo de publicación no es válido.');
         }
+
       } else {
         if (!isNaN(institutoId)) {
           this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
@@ -119,7 +123,68 @@ export class ConsultarPublicacionComponent implements OnInit {
         this.downloadFile(response);
       });
     }
+  }*/
+
+  reporteExe() {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
+      const institutoId = this.selectedInstituto;
+
+      if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
+        const profesorId = this.selectedProfesor;
+
+        if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
+          const tipoPublicacionId = this.selectedTipoPublicacion;
+
+          if (!isNaN(institutoId) && !isNaN(profesorId) && !isNaN(tipoPublicacionId)) {
+            console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
+            this.articuloService.reporteExe_Instituto_Investigador_TipoPublicacion(institutoId, profesorId, tipoPublicacionId).subscribe(response => {
+              this.downloadFile(response);
+            });
+          } else {
+            console.error('El ID del instituto, del profesor, o del tipo de publicación no es válido.');
+          }
+
+        } else if (!isNaN(institutoId) && !isNaN(profesorId)) {
+          console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
+          this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
+            this.downloadFile(response);
+          });
+        } else {
+          console.error('El ID del instituto o del profesor no es válido.');
+        }
+
+      } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
+        const tipoPublicacionId = this.selectedTipoPublicacion;
+
+        if (!isNaN(institutoId) && !isNaN(tipoPublicacionId)) {
+          console.log(`Instituto ID: ${institutoId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
+          this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipoPublicacionId).subscribe(response => {
+            this.downloadFile(response);
+          });
+        } else {
+          console.error('El ID del instituto o del tipo de publicación no es válido.');
+        }
+
+      } else if (!isNaN(institutoId)) {
+        this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
+          this.downloadFile(response);
+        });
+      } else {
+        console.error('El ID del instituto no es válido.');
+      }
+    } else {
+      console.log('Generando reporte general');
+      this.articuloService.reporteExe().subscribe(response => {
+        this.downloadFile(response);
+      });
+    }
   }
+
+
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);

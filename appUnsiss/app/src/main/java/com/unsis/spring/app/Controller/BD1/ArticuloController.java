@@ -301,10 +301,32 @@ public class ArticuloController {
 
         response.setHeader(cabecera, valor);
 
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_TipoPublicacion(idInstituto, id_TipoPublicacion);
+        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_TipoPublicacion(idInstituto,
+                id_TipoPublicacion);
 
         ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
         exporter.exportar(response);
     }
 
+    @GetMapping(value = "/articulos/exportarExcel_Instituto_Investigador_TipoPublicacion/{idInstituto}/{idInvestigador}/{id_TipoPublicacion}")
+    public void exportarExelDeArticuloInstituto_Investigador_TipoPublicacion(@PathVariable Long idInstituto,
+            @PathVariable Long idInvestigador, @PathVariable Long id_TipoPublicacion, HttpServletResponse response)
+            throws DocumentException, IOException {
+        response.setContentType("application/octet-stream");
+
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String fechaActual = dateFormatter.format(new Date());
+
+        String cabecera = "Content-Disposition";
+        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+
+        response.setHeader(cabecera, valor);
+
+        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_Investigador_TipoPublicacion(idInstituto,
+                idInvestigador,
+                id_TipoPublicacion);
+
+        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
+        exporter.exportar(response);
+    }
 }
