@@ -65,4 +65,12 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         @Param("idInvestigador") Long id_Investigador,
                         @Param("id_TipoPublicacion") Long id_TipoPublicacion);
 
+        @Query(value = "SELECT a.*, au.* " +
+                        "FROM Articulos a " +
+                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "JOIN autores au ON aa.id_autor = au.id_Autor " +
+                        "WHERE au.id_autor = :id_Autor", nativeQuery = true)
+        List<Object[]> findAllArticulosWithAutoresByProfesor(
+                        @Param("id_Autor") Long id_Autor);
+
 }
