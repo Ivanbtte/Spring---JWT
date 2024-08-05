@@ -7,8 +7,8 @@
       <label for="tipoPublicacion">Tipo de publicación</label>
       <select id="tipoPublicacion" class="form-control" [(ngModel)]="tipoPublicacion" name="tipoPublicacion">
         <option>Artículo</option>
-        <option>Capítulo de libro</option>
         <option>Libro</option>
+        <option>Capítulo de libro</option>
       </select>
     </div>
     <!-- Sección para Articulo -->
@@ -128,6 +128,10 @@
         <label for="doi">DOI</label>
         <input type="text" id="doi" class="form-control" [(ngModel)]="doi" name="doi">
       </div>
+      <div class="form-group">
+        <label for="doi">Indice MIAR</label>
+        <input type="text" id="miar" class="form-control" [(ngModel)]="miar" name="miar">
+      </div>
 
       <div class="form-group">
         <label>Compilado</label>
@@ -148,6 +152,16 @@
       <div class="form-group">
         <label for="tituloLibro">Título</label>
         <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
+      </div>
+      <div class="form-group">
+        <label for="tituloLibro">Editorial</label>
+        <input type="text" id="editorialLibro" class="form-control" [(ngModel)]="editorialLibro" name="editorialLibro" required>
+      </div>
+      <div class="form-group">
+        <label for="institutoPublicacion">Instituto de la publicación</label>
+        <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion" name="institutoPublicacion">
+          <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">{{ instituto.nombre }}</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Autores</label>
@@ -214,10 +228,38 @@
       </div>
 
       <div class="form-group">
-        <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
+        <label for="trimestre">Trimestre</label>
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+          <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
+        </select>
       </div>
-      <button type="button" class="btn btn-success">
+      <div class="form-group">
+        <label for="fechaPublicacion">Fecha de publicación</label>
+        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+          name="fechaPublicacion">
+      </div>
+      <div class="form-group">
+        <label for="isbn">ISBN impreso</label>
+        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
+      </div>
+      <div class="form-group">
+        <label for="isbn">ISBN digital</label>
+        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
+      </div>
+      <div class="form-group">
+        <label for="doi">Indice MIAR</label>
+        <input type="text" id="miar" class="form-control" [(ngModel)]="miar" name="miar">
+      </div>
+
+      <div class="form-group">
+        <label>Compilado</label>
+        <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
+      </div>
+      <div class="form-group">
+        <label>Financiamiento Prodep</label>
+        <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+      </div>
+      <button type="button" class="btn btn-success" (click)="crearLibro()">
         <i class="fa fa-check"></i> Registrar
       </button>
     </div>
@@ -299,7 +341,7 @@
 
       <div class="form-group">
         <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" class="form-control" [(ngModel)]="isbn" name="isbn">
+        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
       </div>
       <button type="button" class="btn btn-success">
         <i class="fa fa-check"></i> Registrar
