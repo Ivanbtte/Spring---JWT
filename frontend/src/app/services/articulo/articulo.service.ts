@@ -96,6 +96,13 @@ export class ArticuloService {
     return this.http.get(`${this.apiUrl}/exportarExcel_Instituto/${id}`, { headers, responseType: 'blob' });
   }
 
+  reporteExe_Profesor(id: number) {
+    const headers = new HttpHeaders({
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+    return this.http.get(`${this.apiUrl}/exportarExcel_Profesor/${id}`, { headers, responseType: 'blob' });
+  }
+
   reporteExe_Instituto_Investigador(institutoId: number, profesorId: number) {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
