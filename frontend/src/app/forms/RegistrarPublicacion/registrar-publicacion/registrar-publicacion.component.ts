@@ -58,15 +58,18 @@ export class RegistrarPublicacionComponent implements OnInit {
   paginaInicio: number = 0;
   paginaFin: number = 0;
   doi: string = '';
+  miar: string = '';
   compilado: boolean=false;
   prodep: boolean=false;
 
   // Datos adicionales para Libro
   tituloLibro: string = '';
+  editorialLibro: string='';
   lugarPublicacion: string = '';
   editorial: string = '';
   fechaPublicacionLibro: string = '';
-  isbn: string = '';
+  isbnImpreso: string = '';
+  isbnDigital: string = '';
   url: string = '';
 
   // Datos adicionales para Capítulo de Libro
@@ -209,6 +212,56 @@ export class RegistrarPublicacionComponent implements OnInit {
       pag_final: this.paginaFin,
       doi: this.doi,
       nombre_articulo: this.titulo,
+      indice_miar: this.miar,
+      compilado: this.compilado,
+      financiamiento_prodep: this.prodep
+    };
+
+    this.articuloService.crearArticulo(articulo).subscribe(response => {
+      console.log('Artículo registrado exitosamente', response);
+      const articuloId = response.id_articulo;
+      this.idsAutores.forEach((autorId, index) => {
+        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+          response => {
+            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+            if (index === this.idsAutores.length - 1) {
+              this.limpiarCampos();
+              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+            }
+          },
+          error => {
+            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+          }
+        );
+      });
+    }, error => {
+      console.error('Error al registrar el artículo', error);
+    });
+  }
+
+  crearLibro() {
+    console.log("este es el id ", this.selectedInstitutoPublicacion);
+    const articulo: Articulo = {
+      tipoPublicacion: {
+        id_publicacion_tipo: 3,
+        nombre: 'Libro'
+      },
+      instituto: {
+        id: this.selectedInstitutoPublicacion,
+        nombre: ''
+      },
+      trimestre: {
+        id_trimestre: this.selectedTrimestre,
+        nombre: '',
+        fecha_inicio: new Date('2024-05-12'), //fecha falsa
+        fecha_fin: new Date('2024-08-12') //fecha falsa
+      },
+      fecha_publicacion: this.fechaPublicacion,
+      nombre_articulo: this.tituloLibro,
+      editorial: this.editorialLibro,
+      isbn_digital:this.isbnDigital,
+      isbn_impreso:this.isbnImpreso,
+      indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep
     };
@@ -247,6 +300,11 @@ export class RegistrarPublicacionComponent implements OnInit {
     this.paginaInicio = 0;
     this.paginaFin = 0;
     this.doi = '';
+    this.isbnDigital = '';
+    this.isbnImpreso = '';
+    this.miar = '';
+    this.tituloLibro = '';
+    this.editorialLibro = '';
   }
 
   onCheckboxChange(event: Event, field: string) {
