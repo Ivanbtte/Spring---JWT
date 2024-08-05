@@ -294,7 +294,7 @@ public class ArticuloReportExcel {
 
     private String formatearAutores(List<AutorDto> autoresList) {
         return autoresList.stream()
-                .map(autor -> String.format("%s %s, %s %s",
+                .map(autor -> String.format("%s-%s, %s %s",
                         autor.getApellidoPaternoAutor(),
                         autor.getApellidoMaternoAutor(),
                         autor.getNombre1Autor().charAt(0),
