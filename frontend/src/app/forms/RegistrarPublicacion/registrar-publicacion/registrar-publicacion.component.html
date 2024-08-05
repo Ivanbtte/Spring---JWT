@@ -267,13 +267,22 @@
     <!-- Sección para Capítulo de libro -->
     <div *ngIf="tipoPublicacion === 'Capítulo de libro'">
       <div class="form-group">
-        <label for="tituloCapitulo">Título del capítulo</label>
-        <input type="text" id="tituloCapitulo" class="form-control" [(ngModel)]="tituloCapitulo" name="tituloCapitulo"
-          required>
+        <label for="tituloCapitulo">Título del Capítulo</label>
+        <input type="text" id="tituloCapitulo" class="form-control" [(ngModel)]="tituloCapitulo" name="tituloCapitulo" required>
       </div>
       <div class="form-group">
-        <label for="tituloLibro">Título del libro</label>
+        <label for="tituloLibro">Título del Libro</label>
         <input type="text" id="tituloLibro" class="form-control" [(ngModel)]="tituloLibro" name="tituloLibro" required>
+      </div>
+      <div class="form-group">
+        <label for="tituloLibro">Editorial</label>
+        <input type="text" id="editorialCapitulo" class="form-control" [(ngModel)]="editorialCapitulo" name="editorialCapitulo" required>
+      </div>
+      <div class="form-group">
+        <label for="institutoPublicacion">Instituto de la publicación</label>
+        <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion" name="institutoPublicacion">
+          <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">{{ instituto.nombre }}</option>
+        </select>
       </div>
       <div class="form-group">
         <label>Autores</label>
@@ -340,10 +349,48 @@
       </div>
 
       <div class="form-group">
-        <label for="isbn">ISBN</label>
+        <label for="trimestre">Trimestre</label>
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+          <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="fechaPublicacion">Fecha de publicación</label>
+        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+          name="fechaPublicacion">
+      </div>
+      <div class="form-group-container">
+        <div class="form-group">
+          <label for="paginaInicio">Página de inicio</label>
+          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio" />
+        </div>
+        <div class="form-group">
+          <label for="paginaFin">Página final</label>
+          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="isbn">ISBN impreso</label>
+        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
+      </div>
+      <div class="form-group">
+        <label for="isbn">ISBN digital</label>
         <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
       </div>
-      <button type="button" class="btn btn-success">
+      <div class="form-group">
+        <label for="doi">Indice MIAR</label>
+        <input type="text" id="miar" class="form-control" [(ngModel)]="miar" name="miar">
+      </div>
+
+      <div class="form-group">
+        <label>Compilado</label>
+        <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
+      </div>
+      <div class="form-group">
+        <label>Financiamiento Prodep</label>
+        <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+      </div>
+      <button type="button" class="btn btn-success" (click)="crearCapitulo()">
         <i class="fa fa-check"></i> Registrar
       </button>
     </div>

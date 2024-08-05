@@ -288,6 +288,58 @@ export class RegistrarPublicacionComponent implements OnInit {
     });
   }
 
+  crearCapitulo() {
+    console.log("este es el id ", this.selectedInstitutoPublicacion);
+    const articulo: Articulo = {
+      tipoPublicacion: {
+        id_publicacion_tipo: 2,
+        nombre: 'capitulo'
+      },
+      instituto: {
+        id: this.selectedInstitutoPublicacion,
+        nombre: ''
+      },
+      trimestre: {
+        id_trimestre: this.selectedTrimestre,
+        nombre: '',
+        fecha_inicio: new Date('2024-05-12'), //fecha falsa
+        fecha_fin: new Date('2024-08-12') //fecha falsa
+      },
+      fecha_publicacion: this.fechaPublicacion,
+      nombre_capitulo: this.tituloCapitulo,
+      nombre_articulo: this.tituloLibro,
+      editorial: this.editorialCapitulo,
+      pag_inicio: this.paginaInicio,
+      pag_final: this.paginaFin,
+      isbn_digital:this.isbnDigital,
+      isbn_impreso:this.isbnImpreso,
+      indice_miar: this.miar,
+      compilado: this.compilado,
+      financiamiento_prodep: this.prodep
+    };
+
+    this.articuloService.crearArticulo(articulo).subscribe(response => {
+      console.log('Artículo registrado exitosamente', response);
+      const articuloId = response.id_articulo;
+      this.idsAutores.forEach((autorId, index) => {
+        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+          response => {
+            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+            if (index === this.idsAutores.length - 1) {
+              this.limpiarCampos();
+              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+            }
+          },
+          error => {
+            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+          }
+        );
+      });
+    }, error => {
+      console.error('Error al registrar el artículo', error);
+    });
+  }
+
   limpiarCampos() {
     this.tipoPublicacion = '';
     this.titulo = '';
