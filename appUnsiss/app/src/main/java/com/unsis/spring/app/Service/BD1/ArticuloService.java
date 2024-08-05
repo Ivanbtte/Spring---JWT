@@ -37,4 +37,6 @@ public interface ArticuloService {
 
     public List<CitaApaDto> getAllCitasApaInstituto_Investigador_TipoPublicacion(Long idInstituto, Long idInvestigador, Long id_TipoPublicacion);
 
+    List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo);
+
 }

@@ -3,6 +3,8 @@ package com.unsis.spring.app.Controller.BD1;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -329,4 +331,38 @@ public class ArticuloController {
         ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
         exporter.exportar(response);
     }
+
+    @PostMapping(value = "/articulosfiltro")
+    public ResponseEntity<Object> getFilteredArticulos(@RequestBody SearchCriteria criteria) {
+        Map<String, Object> map = new HashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+            System.out.println("Criterios de búsqueda: " + criteria);
+
+            if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
+                LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
+                LocalDate fechaFin = LocalDate.parse(criteria.getFechaFin(), formatter);
+
+                if (fechaInicio.isAfter(fechaFin)) {
+                    map.put("message", "La fecha de inicio no puede ser después de la fecha final.");
+                    return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            List<Object[]> articulos = articuloService.findFilteredArticulos(
+                    criteria.getInstitutoId(),
+                    criteria.getAutorId(),
+                    criteria.getFechaInicio(),
+                    criteria.getFechaFin(),
+                    criteria.getTipo());
+
+            return new ResponseEntity<>(articulos, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

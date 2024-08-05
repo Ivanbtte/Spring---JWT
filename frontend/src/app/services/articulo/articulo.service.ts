@@ -37,9 +37,8 @@ export class ArticuloService {
   }
 
   searchPublications(criteria: any): Observable<any> {
-    return this.http.post<any>(environment.urlApi + 'articulo', criteria);
+    return this.http.post<any>(environment.urlApi + 'articulosfiltro', criteria);
   }
-
    // Nuevo método para agregar un autor no UNSIS
    agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
     return this.http.post<any>(environment.urlApi + 'autor', nuevoAutor).pipe(

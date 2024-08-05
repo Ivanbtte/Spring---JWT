@@ -90,7 +90,9 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Buscar</button>
+   <!-- Botón de búsqueda -->
+    <button type="button" class="btn btn-primary" (click)="searchPublications()">Buscar</button>
+
 
     <table class="table table-striped">
         <thead>
@@ -102,10 +104,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let articulo of articulos; trackBy: trackById">
+            <tr *ngFor="let articulo of articulosFiltrados; trackBy: trackById">
                 <td>{{articulo.id_articulo}}</td>
                 <td>{{articulo.titulo_revista}}</td>
-                <td>{{articulo.fecha_publicacion}}</td>
+                <td>{{formatDate(articulo.fecha_publicacion)}}</td>
                 <td>
                     <button class="btn btn-primary" (click)="editarArticulo(articulo)">
                         <i class="fa fa-edit"></i> Editar
