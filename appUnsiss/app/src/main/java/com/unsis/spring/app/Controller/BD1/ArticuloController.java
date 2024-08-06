@@ -338,7 +338,6 @@ public class ArticuloController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try {
-            System.out.println("Criterios de búsqueda: " + criteria);
 
             if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
                 LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
@@ -356,7 +355,6 @@ public class ArticuloController {
                     criteria.getFechaInicio(),
                     criteria.getFechaFin(),
                     criteria.getTipo());
-
             return new ResponseEntity<>(articulos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

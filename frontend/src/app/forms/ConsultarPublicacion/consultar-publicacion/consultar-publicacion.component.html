@@ -20,7 +20,7 @@
                         <label for="instituto">Instituto</label>
                         <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
                             <option value="">Seleccione un instituto</option>
-                            <option *ngFor="let instituto of institutos" [value]="instituto.id">{{instituto.id}} {{ instituto.nombre }}
+                            <option *ngFor="let instituto of institutos" [value]="instituto.id"> {{ instituto.nombre }}
                             </option>
                         </select>
                     </div>
@@ -52,7 +52,7 @@
                             <label for="profesor">Profesor</label>
                             <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
                               <option value="">Seleccione un profesor</option>
-                              <option *ngFor="let profesor of profesoresFiltrados" [value]="profesor.id">{{profesor.id}}{{ profesor.nombre_1_investigador }} {{ profesor.nombre_2_investigador }} {{ profesor.apellido_paterno_1_investigador }} {{ profesor.apellido_materno_2_investigador }}</option>
+                              <option *ngFor="let profesor of profesoresFiltrados" [value]="profesor.id">{{ profesor.nombre_1_investigador }} {{ profesor.nombre_2_investigador }} {{ profesor.apellido_paterno_1_investigador }} {{ profesor.apellido_materno_2_investigador }}</option>
                             </select>
                           </div>
                         </div>

@@ -207,10 +207,10 @@ export class ConsultarPublicacionComponent implements OnInit {
   searchPublications(): void {
     const searchCriteria = {
       institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
-      investigadorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+      autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
       fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null,
       fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null,
-      tipoPublicacionId: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
     };
   
     console.log("Criterios de búsqueda enviados:", searchCriteria);
@@ -266,12 +266,10 @@ export class ConsultarPublicacionComponent implements OnInit {
   }
 
   onInstituteChange(): void {
- //   console.log('Instituto seleccionado para filtrar publicaciones:', this.selectedInstituto);
     this.getInvestigadorByInstitute();
   }
 
   onInstituteForProfessorChange(): void {
-    //console.log('Instituto seleccionado para filtrar profesores:', this.selectedInstituteForProfessor);
     this.getInvestigadorByInstitute();
   }
 
@@ -279,11 +277,9 @@ export class ConsultarPublicacionComponent implements OnInit {
     if (this.selectedInstituteForProfessor) {
       this.investigadorService.getInvestigadorByInstitute(this.selectedInstituteForProfessor).subscribe(
         data => {
-          console.log('Datos obtenidos del backend de profesores filtrados:', data);
           this.profesores = data;
           this.profesoresFiltrados = this.profesores;
         },
-      //  error => console.error('Error al obtener investigadores por instituto:', error)
       );
     } else {
       this.profesores = [];
@@ -297,7 +293,6 @@ export class ConsultarPublicacionComponent implements OnInit {
       this.investigadorService.getInvestigadorByInstitute(this.selectedInstituto).subscribe(
         data => {
           this.profesoresFiltrados = data;
-         // console.log('Profesores filtrados obtenidos del backend:', this.profesoresFiltrados);
         },
         error => console.error('Error al obtener los investigadores por instituto:', error)
       );
@@ -305,7 +300,6 @@ export class ConsultarPublicacionComponent implements OnInit {
       this.investigadorService.getInvestigadores().subscribe(
         data => {
           this.profesoresFiltrados = data;
-          console.log('Todos los investigadores obtenidos del backend:', this.profesoresFiltrados);
         },
         error => console.error('Error al obtener los investigadores:', error)
       );
