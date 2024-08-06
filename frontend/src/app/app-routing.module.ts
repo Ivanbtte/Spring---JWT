@@ -13,6 +13,7 @@ import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-auth
 import { RutasGuard } from './auth/rutas.guard';
 import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
 import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
+import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -27,7 +28,8 @@ const routes: Routes = [
   { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'no-authorized', component: NotAuthorizedComponent },
   {path: 'catalogo',component: CatalogoComponent},
-  {path: 'registrar-catalogo', component:RegistrarCatalogoComponent}
+  {path: 'registrar-catalogo', component:RegistrarCatalogoComponent},
+  {path: 'upload', component:UploadFilesComponent}
 ];
 
 @NgModule({
