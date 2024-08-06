@@ -788,7 +788,7 @@ public class ArticuloServiceImpl implements ArticuloService {
         }
 
         public List<CitaApaDto> getAllCitasApaProfesor(Long id_autor) {
-                List<Object[]> results = articuloDao.findAllArticulosWithAutoresByProfesor(
+                List<Object[]> results = articuloDao.findAllArticulosWithAutoresByAutorId(
                                 id_autor);
 
                 if (results.isEmpty()) {
