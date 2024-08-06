@@ -22,6 +22,7 @@ export class ConsultarPublicacionComponent implements OnInit {
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
   selectedTipoPublicacion: number | null = null;
+  selectedInstituteForProfessor:  number | null = null;
 
   publicacion: any[] = [];
   tipo_publicaciones: any[] = [];//En uso
@@ -33,7 +34,9 @@ export class ConsultarPublicacionComponent implements OnInit {
   institutos: any[] = [];//En uso
   articulosFiltrados: any[] = [];
   investigadores: any[] = [];
-  selectedInvestigador: any;
+  selectedInvestigador: any[] = [];
+  profesoresFiltrados: any[] = [];
+  dataService: any;
 
 
   constructor(
@@ -262,27 +265,77 @@ export class ConsultarPublicacionComponent implements OnInit {
     return `${day}-${month}-${year}`;
   }
 
-  onFilterChange(): void {
-    this.searchPublications(); // Llama a la búsqueda para actualizar la tabla
+  onInstituteChange(): void {
+ //   console.log('Instituto seleccionado para filtrar publicaciones:', this.selectedInstituto);
+    this.getInvestigadorByInstitute();
+  }
 
+  onInstituteForProfessorChange(): void {
+    //console.log('Instituto seleccionado para filtrar profesores:', this.selectedInstituteForProfessor);
+    this.getInvestigadorByInstitute();
+  }
+
+  getInvestigadorByInstitute(): void {
+    if (this.selectedInstituteForProfessor) {
+      this.investigadorService.getInvestigadorByInstitute(this.selectedInstituteForProfessor).subscribe(
+        data => {
+          console.log('Datos obtenidos del backend de profesores filtrados:', data);
+          this.profesores = data;
+          this.profesoresFiltrados = this.profesores;
+        },
+      //  error => console.error('Error al obtener investigadores por instituto:', error)
+      );
+    } else {
+      this.profesores = [];
+      this.profesoresFiltrados = [];
+      console.log('No se seleccionó ningún instituto, lista de profesores vacía');
+    }
+  }
+
+  onFilterChange(): void {
     if (this.filtrarPorInstituto && this.selectedInstituto) {
       this.investigadorService.getInvestigadorByInstitute(this.selectedInstituto).subscribe(
-        (data: Investigador[]) => {
-          this.investigadores = data;
+        data => {
+          this.profesoresFiltrados = data;
+         // console.log('Profesores filtrados obtenidos del backend:', this.profesoresFiltrados);
         },
-        (error: any) => {
-          console.error('Error al obtener los investigadores por instituto:', error);
-        }
+        error => console.error('Error al obtener los investigadores por instituto:', error)
       );
     } else {
       this.investigadorService.getInvestigadores().subscribe(
-        (data: Investigador[]) => {
-          this.investigadores = data;
+        data => {
+          this.profesoresFiltrados = data;
+          console.log('Todos los investigadores obtenidos del backend:', this.profesoresFiltrados);
         },
-        (error: any) => {
-          console.error('Error al obtener los investigadores:', error);
-        }
+        error => console.error('Error al obtener los investigadores:', error)
       );
+    }
+  }
+  onCheckboxChange(filter: string): void {
+    switch (filter) {
+      case 'instituto':
+        if (!this.filtrarPorInstituto) {
+          this.selectedInstituto = null;
+        }
+        break;
+      case 'profesor':
+        if (!this.filtrarPorProfesor) {
+          this.selectedInstituteForProfessor = null;
+          this.selectedProfesor = null;
+          this.profesoresFiltrados = [];
+        }
+        break;
+      case 'fechas':
+        if (!this.filtrarPorFechas) {
+          this.startDate = '';
+          this.endDate = '';
+        }
+        break;
+      case 'tipo':
+        if (!this.filtrarPorTipo) {
+          this.selectedTipoPublicacion = null;
+        }
+        break;
     }
   }
 }
