@@ -893,4 +893,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                 return new ArrayList<>(articulosMap.values());
         }
 
+        @Override
+        public List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo) {
+            return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo);
+        }
 }

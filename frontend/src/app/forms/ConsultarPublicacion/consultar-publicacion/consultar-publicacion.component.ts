@@ -1,9 +1,11 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
+import { Investigador } from 'src/app/services/auth/investigador';
 import { AutorService } from 'src/app/services/autor/autor.service';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { InstitutoService } from 'src/app/services/instituto/instituto.service';
+import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
 @Component({
   selector: 'app-consultar-publicacion',
   templateUrl: './consultar-publicacion.component.html',
@@ -20,6 +22,7 @@ export class ConsultarPublicacionComponent implements OnInit {
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
   selectedTipoPublicacion: number | null = null;
+  selectedInstituteForProfessor:  number | null = null;
 
   publicacion: any[] = [];
   tipo_publicaciones: any[] = [];//En uso
@@ -29,13 +32,19 @@ export class ConsultarPublicacionComponent implements OnInit {
   endDate: string = '';
   articulos: any[] = [];//En uso
   institutos: any[] = [];//En uso
+  articulosFiltrados: any[] = [];
+  investigadores: any[] = [];
+  selectedInvestigador: any[] = [];
+  profesoresFiltrados: any[] = [];
+  dataService: any;
 
 
   constructor(
     private articuloService: ArticuloService,
     private autorService: AutorService,
     private institutoService: InstitutoService,
-    private catalogoService: CatalogoService
+    private catalogoService: CatalogoService,
+    private investigadorService: InvestigadorService
   ) { }
 
   ngOnInit(): void {
@@ -218,13 +227,38 @@ export class ConsultarPublicacionComponent implements OnInit {
 
   searchPublications(): void {
     const searchCriteria = {
-      instituto: this.selectedInstituto,
+      institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+      autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+      fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null,
+      fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null,
+      tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
     };
-
+  
+    console.log("Criterios de búsqueda enviados:", searchCriteria);
+  
     this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-      this.publicaciones = data;
+      console.log("Datos recibidos del backend:", data);
+      this.articulosFiltrados = this.convertirDatos(data);
+    }, error => {
+      console.error('Error al buscar publicaciones:', error);
     });
   }
+  
+
+  convertirDatos(data: any[]): any[] {
+    return data.map(arr => {
+      return {
+        propiedad1: arr[0],
+        propiedad2: arr[1],
+        id_articulo: arr[2],
+        // Añade todas las demás propiedades mapeadas aquí
+        titulo_revista: arr[15],
+        fecha_publicacion: arr[5]
+        // Sigue mapeando todas las propiedades necesarias
+      };
+    });
+  }
+  
 
   trackById(index: number, articulo: any): number {
     return articulo.id;
@@ -240,4 +274,83 @@ export class ConsultarPublicacionComponent implements OnInit {
     console.log('Dar de baja artículo:', articulo);
   }
 
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return 'Fecha inválida';
+    }
+
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = date.toLocaleString('es-ES', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+
+  onInstituteChange(): void {
+    this.getInvestigadorByInstitute();
+  }
+
+  onInstituteForProfessorChange(): void {
+    this.getInvestigadorByInstitute();
+  }
+
+  getInvestigadorByInstitute(): void {
+    if (this.selectedInstituteForProfessor) {
+      this.investigadorService.getInvestigadorByInstitute(this.selectedInstituteForProfessor).subscribe(
+        data => {
+          this.profesores = data;
+          this.profesoresFiltrados = this.profesores;
+        },
+      );
+    } else {
+      this.profesores = [];
+      this.profesoresFiltrados = [];
+      console.log('No se seleccionó ningún instituto, lista de profesores vacía');
+    }
+  }
+
+  onFilterChange(): void {
+    if (this.filtrarPorInstituto && this.selectedInstituto) {
+      this.investigadorService.getInvestigadorByInstitute(this.selectedInstituto).subscribe(
+        data => {
+          this.profesoresFiltrados = data;
+        },
+        error => console.error('Error al obtener los investigadores por instituto:', error)
+      );
+    } else {
+      this.investigadorService.getInvestigadores().subscribe(
+        data => {
+          this.profesoresFiltrados = data;
+        },
+        error => console.error('Error al obtener los investigadores:', error)
+      );
+    }
+  }
+  onCheckboxChange(filter: string): void {
+    switch (filter) {
+      case 'instituto':
+        if (!this.filtrarPorInstituto) {
+          this.selectedInstituto = null;
+        }
+        break;
+      case 'profesor':
+        if (!this.filtrarPorProfesor) {
+          this.selectedInstituteForProfessor = null;
+          this.selectedProfesor = null;
+          this.profesoresFiltrados = [];
+        }
+        break;
+      case 'fechas':
+        if (!this.filtrarPorFechas) {
+          this.startDate = '';
+          this.endDate = '';
+        }
+        break;
+      case 'tipo':
+        if (!this.filtrarPorTipo) {
+          this.selectedTipoPublicacion = null;
+        }
+        break;
+    }
+  }
 }

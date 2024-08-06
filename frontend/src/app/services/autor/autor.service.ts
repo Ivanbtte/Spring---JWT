@@ -11,10 +11,6 @@ export class AutorService {
   constructor(private http: HttpClient) {}
 
 
-  getProfessorsByInstitute(): Observable<any> {
-    return this.http.get<any>(environment.urlApi+`autor`);
-  }
-
   getList(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi+'autor').pipe(
       catchError(this.handleError)

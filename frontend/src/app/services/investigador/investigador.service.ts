@@ -42,13 +42,20 @@ export class InvestigadorService {
     );
   }
 
-  private handleError(error:HttpErrorResponse){
-    if(error.status==0){
-      console.error('Se ha producido un error ',error.status, error.error);
+  private handleError(error: HttpErrorResponse) {
+    if (error.status == 0) {
+      console.error('Se ha producido un error ', error.status, error.error);
     }
-    else{
+    else {
       console.error('Backend retornó el código de estado ', error.status, error.error);
     }
-    return throwError(()=> new Error('Algo falló. Por favor intente nuevamente.'));
+    return throwError(() => new Error('Algo falló. Por favor intente nuevamente.'));
   }
+
+  getInvestigadorByInstitute(id: number): Observable<Investigador[]> {
+    console.log('Llamando al backend para obtener investigadores del instituto con ID:', id);
+    return this.http.get<Investigador[]>(`${environment.urlApi}investigador/instituto/${id}`).pipe(
+      catchError(this.handleError)
+    );
+  }  
 }
