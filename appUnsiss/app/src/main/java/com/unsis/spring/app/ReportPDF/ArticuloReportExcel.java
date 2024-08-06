@@ -102,7 +102,7 @@ public class ArticuloReportExcel {
             Row fila = hoja.createRow(numeroFilas++);
 
             Cell celda = fila.createCell(0);
-            celda.setCellValue(numeroFilas-1);
+            celda.setCellValue(numeroFilas - 1);
             hoja.autoSizeColumn(0);
             celda.setCellStyle(estilo);
 
@@ -143,7 +143,9 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(7);
-            celda.setCellValue(cita.getFinanciamientoProdep());
+            boolean financiamientoProdep = cita.getFinanciamientoProdep();
+            String financiamientoProdepStr = financiamientoProdep ? "Sí" : "No";
+            celda.setCellValue(financiamientoProdepStr);
             hoja.autoSizeColumn(7);
             celda.setCellStyle(estilo);
 
@@ -153,7 +155,9 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(9);
-            celda.setCellValue(cita.getCompilado());
+            boolean compilado = cita.getCompilado();
+            String compiladoStr = compilado ? "Sí" : "No";
+            celda.setCellValue(compiladoStr);
             hoja.autoSizeColumn(9);
             celda.setCellStyle(estilo);
 
@@ -216,7 +220,7 @@ public class ArticuloReportExcel {
         Map<String, String> fechaMap = FechaPublicacionHelper
                 .obtenerFechaPublicacion(articuloDTO.getFechaPublicacion());
         String anio = fechaMap.get("anio");
-        String fechaPublicacionStr = fechaMap.get("fechaCompleta");
+        // String fechaPublicacionStr = fechaMap.get("fechaCompleta");
 
         String tituloRevista = String.valueOf(articuloDTO.getTituloRevista());
         String numeroRevista = String.valueOf(articuloDTO.getNumeroRevista());
@@ -241,6 +245,11 @@ public class ArticuloReportExcel {
         XSSFFont normalFont = workbook.createFont();
         normalFont.setFontHeightInPoints((short) 12);
         normalFont.setFontName("Arial");
+
+        XSSFFont boldFont = workbook.createFont();
+        boldFont.setBold(true);
+        boldFont.setFontHeightInPoints((short) 12);
+        boldFont.setFontName("Arial");
 
         String cita = "";
 
@@ -269,6 +278,26 @@ public class ArticuloReportExcel {
 
         // Aplicar la fuente normal a todo el texto
         richTextString.applyFont(normalFont);
+
+        // Aplicar negrita a los apellidos
+        for (AutorDto autor : autoresList) {
+            if (autor.getAutorUnsis()) {
+                String apellidoPaterno = autor.getApellidoPaternoAutor();
+                String apellidoMaterno = autor.getApellidoMaternoAutor();
+
+                int startApellidoPaterno = cita.indexOf(apellidoPaterno);
+                int endApellidoPaterno = startApellidoPaterno + apellidoPaterno.length();
+                if (startApellidoPaterno >= 0 && endApellidoPaterno <= cita.length()) {
+                    richTextString.applyFont(startApellidoPaterno, endApellidoPaterno, boldFont);
+                }
+
+                int startApellidoMaterno = cita.indexOf(apellidoMaterno);
+                int endApellidoMaterno = startApellidoMaterno + apellidoMaterno.length();
+                if (startApellidoMaterno >= 0 && endApellidoMaterno <= cita.length()) {
+                    richTextString.applyFont(startApellidoMaterno, endApellidoMaterno, boldFont);
+                }
+            }
+        }
 
         // Aplicar cursiva a las partes correspondientes
         if (tipoPublicacion.equals(articulos) || tipoPublicacion.equals(capitulo_libro)) {

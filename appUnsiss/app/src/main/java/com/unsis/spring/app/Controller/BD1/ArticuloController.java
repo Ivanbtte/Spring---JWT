@@ -234,11 +234,11 @@ public class ArticuloController {
     public void exportarExelDeArticulo(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Usuarios_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=General_" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
@@ -253,11 +253,11 @@ public class ArticuloController {
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Intituto_" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
@@ -272,11 +272,11 @@ public class ArticuloController {
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Profesor" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
@@ -292,11 +292,11 @@ public class ArticuloController {
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Instituto_Investigador_" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
@@ -312,11 +312,11 @@ public class ArticuloController {
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Instituto_Tipo_Publicacion" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
@@ -333,11 +333,11 @@ public class ArticuloController {
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
 
         String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".xlsx";
+        String valor = "attachment; filename=Instituto_Investigador_Tipo_Publicacion" + fechaActual + ".xlsx";
 
         response.setHeader(cabecera, valor);
 
