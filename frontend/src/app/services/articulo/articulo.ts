@@ -13,6 +13,12 @@ export interface Articulo {
     fecha_inicio: Date;
     fecha_fin: Date;
   };
+  fileMetadata: {
+    id: number;
+    fileName: string;
+    filePath: string;
+    fileType: string;
+  };
   fecha_publicacion: Date | undefined;
   titulo_revista?: string;
   numero_revista?: number;
