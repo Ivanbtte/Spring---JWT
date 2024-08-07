@@ -26,6 +26,7 @@ import { EditarInvestigadorComponent } from './forms/formsEdit/editar-investigad
 import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
 import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
 import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
+import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-
     EditarInvestigadorComponent,
     NotAuthorizedComponent,
     CatalogoComponent,
-    RegistrarCatalogoComponent
+    RegistrarCatalogoComponent,
+    UploadFilesComponent
   ],
   imports: [
     BrowserModule,
