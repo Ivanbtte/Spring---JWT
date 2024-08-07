@@ -16,12 +16,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name="articulos")
+@Table(name = "articulos")
 public class Articulos {
 
     @Id
@@ -40,6 +41,11 @@ public class Articulos {
     @ManyToOne
     @JoinColumn(name = "id_trimestre", nullable = false)
     private Trimestre trimestre;
+
+    // Nueva relación uno a uno con FileMetadata
+    @OneToOne
+    @JoinColumn(name = "file_metadata_id")
+    private FileMetadata fileMetadata;
 
     @Column(nullable = false)
     private Date fecha_publicacion;
@@ -69,11 +75,7 @@ public class Articulos {
     private String isbn_digital;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "articulo_autor",
-        joinColumns = @JoinColumn(name = "id_articulo"),
-        inverseJoinColumns = @JoinColumn(name = "id_autor")
-    )
+    @JoinTable(name = "articulo_autor", joinColumns = @JoinColumn(name = "id_articulo"), inverseJoinColumns = @JoinColumn(name = "id_autor"))
 
     private Set<Autor> autores = new HashSet<>();
 
@@ -101,16 +103,17 @@ public class Articulos {
     @Column(nullable = false)
     private boolean financiamiento_prodep;
 
-
     // Constructor sin parámetros
-    public Articulos() {}
+    public Articulos() {
+    }
 
     // Constructor con todos los parámetros
-    public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion, String titulo_revista,
-                     Integer numero_revista, String volumen_revista, Integer pag_inicio, Integer pag_final,
-                     String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores, 
-                     String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
-                     String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre, boolean financiamiento_prodep) {
+    public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion,
+            String titulo_revista, Integer numero_revista, String volumen_revista, Integer pag_inicio,
+            Integer pag_final, String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores,
+            String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
+            String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre,
+            boolean financiamiento_prodep, FileMetadata fileMetadata) {
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
         this.instituto = instituto;
@@ -133,6 +136,7 @@ public class Articulos {
         this.compilado = compilado;
         this.trimestre = trimestre;
         this.financiamiento_prodep = financiamiento_prodep;
+        this.fileMetadata = fileMetadata;
     }
 
     // Getters y setters para los nuevos campos
@@ -195,6 +199,14 @@ public class Articulos {
 
     public Trimestre getTrimestre() {
         return trimestre;
+    }
+
+    public FileMetadata getFileMetadata() {
+        return fileMetadata;
+    }
+
+    public void setFileMetadata(FileMetadata fileMetadata) {
+        this.fileMetadata = fileMetadata;
     }
 
     public void setTrimestre(Trimestre trimestre) {

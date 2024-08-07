@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 
 import java.util.Date;
 
+import com.unsis.spring.app.Entity.BD1.FileMetadata;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,4 +33,5 @@ public class ArticuloDto {
     private boolean compilado;
     private TrimestreDto trimestre;
     private boolean financiamiento_prodep;
+    private FileMetadata fileMetadata;
 }

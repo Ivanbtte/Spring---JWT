@@ -17,11 +17,13 @@ import com.unsis.spring.app.DTO.InstitutoDto;
 import com.unsis.spring.app.DTO.Tipo_PublicacionDto;
 import com.unsis.spring.app.DTO.TrimestreDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
+import com.unsis.spring.app.Entity.BD1.FileMetadata;
 import com.unsis.spring.app.Entity.BD1.Instituto;
 import com.unsis.spring.app.Entity.BD1.Tipo_Publicacion;
 import com.unsis.spring.app.Entity.BD1.Trimestre;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Repository.BD1.ArticuloDao;
+import com.unsis.spring.app.Repository.BD1.FileMetadataRepository;
 import com.unsis.spring.app.Repository.BD1.InstitutoDao;
 import com.unsis.spring.app.Repository.BD1.Tipo_PublicacionDao;
 import com.unsis.spring.app.Repository.BD1.TrimestreDao;
@@ -44,6 +46,9 @@ public class ArticuloServiceImpl implements ArticuloService {
 
         @Autowired
         private TrimestreDao trimestreDao;
+
+        @Autowired
+        private FileMetadataRepository fileMetadataRepository;
 
         @Override
         @Transactional
@@ -92,6 +97,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                 TrimestreDto trimestreDto = new TrimestreDto(articulo.getTrimestre().getId_trimestre(),
                                 articulo.getTrimestre().getNombre(), articulo.getTrimestre().getFecha_inicio(),
                                 articulo.getTrimestre().getFecha_fin());
+                FileMetadata fileMetadata = new FileMetadata(articulo.getFileMetadata().getId(),
+                                articulo.getFileMetadata().getFileName(), articulo.getFileMetadata().getFilePath(),
+                                articulo.getFileMetadata().getFileType());                
 
                 return new ArticuloDto(
                                 articulo.getId_articulo(),
@@ -114,7 +122,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.getIndice_miar(),
                                 articulo.getCompilado(),
                                 trimestreDto,
-                                articulo.getFinanciamiento_prodep());
+                                articulo.getFinanciamiento_prodep(),
+                                fileMetadata);
         }
 
         @Override
@@ -123,6 +132,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 .findById(articuloDto.getTipoPublicacion().getId_publicacion_tipo()).orElse(null);
                 Instituto instituto = institutoDao.findById(articuloDto.getInstituto().getId()).orElse(null);
                 Trimestre trimestre = trimestreDao.findById(articuloDto.getTrimestre().getId_trimestre()).orElse(null);
+                FileMetadata fileMetadata = fileMetadataRepository.findById(articuloDto.getFileMetadata().getId()).orElse(null);
 
                 return new Articulos(
                                 articuloDto.getId_articulo(),
@@ -146,7 +156,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articuloDto.getIndice_miar(),
                                 articuloDto.isCompilado(),
                                 trimestre,
-                                articuloDto.isFinanciamiento_prodep());
+                                articuloDto.isFinanciamiento_prodep(),
+                                fileMetadata);
         }
 
         @Override

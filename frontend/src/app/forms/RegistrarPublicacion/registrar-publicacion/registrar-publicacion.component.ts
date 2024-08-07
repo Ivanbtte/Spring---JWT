@@ -204,6 +204,12 @@ export class RegistrarPublicacionComponent implements OnInit {
         fecha_inicio: new Date('2024-05-12'), //fecha falsa
         fecha_fin: new Date('2024-08-12') //fecha falsa
       },
+      fileMetadata: {
+        id: 1,
+        fileName: '',
+        filePath: '',
+        fileType: ''
+      },
       fecha_publicacion: this.fechaPublicacion,
       titulo_revista: this.nombreRevista,
       numero_revista: this.numEmision,
@@ -256,6 +262,12 @@ export class RegistrarPublicacionComponent implements OnInit {
         fecha_inicio: new Date('2024-05-12'), //fecha falsa
         fecha_fin: new Date('2024-08-12') //fecha falsa
       },
+      fileMetadata: {
+        id: 1,
+        fileName: '',
+        filePath: '',
+        fileType: ''
+      },
       fecha_publicacion: this.fechaPublicacion,
       nombre_articulo: this.tituloLibro,
       editorial: this.editorialLibro,
@@ -305,17 +317,23 @@ export class RegistrarPublicacionComponent implements OnInit {
         fecha_inicio: new Date('2024-05-12'), //fecha falsa
         fecha_fin: new Date('2024-08-12') //fecha falsa
       },
+      fileMetadata: {
+        id: 1,
+        fileName: '',
+        filePath: '',
+        fileType: ''
+      },
       fecha_publicacion: this.fechaPublicacion,
       nombre_capitulo: this.tituloCapitulo,
       nombre_articulo: this.tituloLibro,
       editorial: this.editorialCapitulo,
       pag_inicio: this.paginaInicio,
       pag_final: this.paginaFin,
-      isbn_digital:this.isbnDigital,
-      isbn_impreso:this.isbnImpreso,
+      isbn_digital: this.isbnDigital,
+      isbn_impreso: this.isbnImpreso,
       indice_miar: this.miar,
       compilado: this.compilado,
-      financiamiento_prodep: this.prodep
+      financiamiento_prodep: this.prodep,
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {

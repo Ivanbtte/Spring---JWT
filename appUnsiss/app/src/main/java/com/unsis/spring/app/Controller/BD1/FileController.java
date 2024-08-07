@@ -32,6 +32,12 @@ public class FileController {
             logger.error("No file selected for upload.");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        if (!file.getContentType().equals("application/pdf")) {
+            logger.error("Invalid file type: " + file.getContentType());
+            return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+
         logger.info("File received: " + file.getOriginalFilename());
         FileMetadata metadata = fileService.saveFile(file);
         return new ResponseEntity<>(metadata, HttpStatus.OK);
