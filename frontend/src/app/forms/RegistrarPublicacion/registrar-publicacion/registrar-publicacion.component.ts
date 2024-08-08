@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Articulo} from 'src/app/services/articulo/articulo';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registrar-publicacion',
@@ -187,7 +188,80 @@ export class RegistrarPublicacionComponent implements OnInit {
     }
   }
 
+  capitalize(text: string): string {
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+  validarCampos(): boolean {
+    // Validar campos obligatorios
+    if (!this.titulo.trim()) {
+      Swal.fire('Error', 'El título del artículo es obligatorio', 'error');
+      return false;
+    }
+    if (!this.nombreRevista.trim()) {
+      Swal.fire('Error', 'El nombre de la revista es obligatorio', 'error');
+      return false;
+    }
+    if (!this.selectedInstitutoPublicacion) {
+      Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
+      return false;
+    }
+    if (!this.fechaPublicacion) {
+      Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
+      return false;
+    }
+    if (!this.selectedTrimestre) {
+      Swal.fire('Error', 'El trimestre es obligatorio', 'error');
+      return false;
+    }
+    const numVolumen = Number(this.numVolumen);
+    if (numVolumen <= 0 || !Number.isInteger(numVolumen)) {
+      Swal.fire('Error', 'El número de volumen debe ser un número positivo', 'error');
+      return false;
+    }
+    if (!this.numEmision || this.numEmision <= 0) {
+      Swal.fire('Error', 'El número de emisión debe ser un número positivo', 'error');
+      return false;
+    }
+    if (!this.paginaInicio || this.paginaInicio <= 0) {
+      Swal.fire('Error', 'La página de inicio debe ser un número positivo', 'error');
+      return false;
+    }
+    if (!this.paginaFin || this.paginaFin <= this.paginaInicio) {
+      Swal.fire('Error', 'La página final debe ser mayor a la página de inicio', 'error');
+      return false;
+    }
+    if (!this.doi.trim()) {
+      Swal.fire('Error', 'El DOI es obligatorio', 'error');
+      return false;
+    }
+
+    // Validar investigadores no UNSIS
+    for (const investigador of this.investigadores) {
+      if (!investigador.autorUnsis) {
+        if (!this.validarNombre(investigador.primerNombre)) {
+          Swal.fire('Error', 'El primer nombre del investigador no UNSIS es obligatorio y debe comenzar con una letra mayúscula', 'error');
+          return false;
+        }
+        if (!this.validarNombre(investigador.apellidoPaterno)) {
+          Swal.fire('Error', 'El apellido paterno del investigador no UNSIS es obligatorio y debe comenzar con una letra mayúscula', 'error');
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  validarNombre(nombre: string): boolean {
+    const regex = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/;
+    return regex.test(nombre.trim());
+  }
+
+
   crearArticulo() {
+    if (!this.validarCampos()) {
+      return;
+    }
     console.log("este es el id ", this.selectedInstitutoPublicacion);
     const articulo: Articulo = {
       tipoPublicacion: {
@@ -218,7 +292,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
-      console.log('Artículo registrado exitosamente', response);
+      Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
       const articuloId = response.id_articulo;
       this.idsAutores.forEach((autorId, index) => {
         this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
@@ -235,7 +309,7 @@ export class RegistrarPublicacionComponent implements OnInit {
         );
       });
     }, error => {
-      console.error('Error al registrar el artículo', error);
+      Swal.fire('Error', 'Error al registrar el artículo', 'error');
     });
   }
 
@@ -364,4 +438,40 @@ export class RegistrarPublicacionComponent implements OnInit {
     this[field] = input.checked;
   }
 
+
+  onKeyPress(event: KeyboardEvent, field: string): void {
+    const charCode = event.charCode;
+    const char = String.fromCharCode(charCode);
+    // Verifica si el carácter es una letra o espacio.
+    if (!/^[a-zA-Z]$/.test(char)) { 
+      // Prevenir la entrada del carácter no permitido.
+      event.preventDefault();
+    }
+  }
+
+  onInput(event: Event, field: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let valor = inputElement.value;
+    // Elimina caracteres no permitidos
+    valor = valor.replace(/[^a-zA-Z]/g, '');
+      // Convertir a mayúscula la primera letra y el resto a minúsculas
+  valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
+    // Asigna el valor limpio de nuevo al campo de entrada
+    inputElement.value = valor;
+    // Actualiza el modelo ngModel si es necesario
+    this[field] = valor;
+  }
+  onKeyPressNumber(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    const char = String.fromCharCode(charCode);
+  
+    // Verifica si el carácter es un número (0-9)
+    if (!/^\d$/.test(char)) {
+      // Prevenir la entrada de caracteres no permitidos
+      event.preventDefault();
+    }
+  }
+
 }
+
+
