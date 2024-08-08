@@ -34,4 +34,6 @@ public class ArticuloDto {
     private TrimestreDto trimestre;
     private boolean financiamiento_prodep;
     private FileMetadata fileMetadata;
+    private boolean aceptado_director;
+    private boolean aceptado_gestion;
 }

@@ -120,10 +120,12 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.getObservaciones_directores(),
                                 articulo.getObservaciones_gestion(),
                                 articulo.getIndice_miar(),
-                                articulo.getCompilado(),
+                                articulo.isCompilado(),
                                 trimestreDto,
-                                articulo.getFinanciamiento_prodep(),
-                                fileMetadata);
+                                articulo.isFinanciamiento_prodep(),
+                                fileMetadata,
+                                articulo.isAceptado_director(),
+                                articulo.isAceptado_gestion());
         }
 
         @Override
@@ -157,7 +159,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articuloDto.isCompilado(),
                                 trimestre,
                                 articuloDto.isFinanciamiento_prodep(),
-                                fileMetadata);
+                                fileMetadata,
+                                articuloDto.isAceptado_director(),
+                                articuloDto.isAceptado_gestion());
         }
 
         @Override
@@ -264,8 +268,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.getObservaciones_directores(),
                                 articulo.getObservaciones_gestion(),
                                 articulo.getIndice_miar(),
-                                articulo.getCompilado(),
-                                articulo.getFinanciamiento_prodep(),
+                                articulo.isCompilado(),
+                                articulo.isFinanciamiento_prodep(),
                                 trimestreDto);
         }
 
@@ -353,8 +357,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
@@ -458,8 +462,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
@@ -564,8 +568,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
@@ -670,8 +674,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
@@ -777,8 +781,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
@@ -883,8 +887,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getObservaciones_directores(),
                                                 articulo.getObservaciones_gestion(),
                                                 articulo.getIndice_miar(),
-                                                articulo.getCompilado(),
-                                                articulo.getFinanciamiento_prodep(),
+                                                articulo.isCompilado(),
+                                                articulo.isFinanciamiento_prodep(),
                                                 trimestreDto);
 
                                 articulosMap.put(articuloId, citaApaDto);
