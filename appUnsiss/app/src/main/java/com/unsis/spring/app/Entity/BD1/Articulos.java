@@ -19,8 +19,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "articulos")
 public class Articulos {
@@ -103,9 +105,11 @@ public class Articulos {
     @Column(nullable = false)
     private boolean financiamiento_prodep;
 
-    // Constructor sin parámetros
-    public Articulos() {
-    }
+    @Column(nullable = false)
+    private boolean aceptado_director;
+
+    @Column(nullable = false)
+    private boolean aceptado_gestion;
 
     // Constructor con todos los parámetros
     public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion,
@@ -113,7 +117,7 @@ public class Articulos {
             Integer pag_final, String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores,
             String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
             String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre,
-            boolean financiamiento_prodep, FileMetadata fileMetadata) {
+            boolean financiamiento_prodep, FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion) {
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
         this.instituto = instituto;
@@ -137,87 +141,8 @@ public class Articulos {
         this.trimestre = trimestre;
         this.financiamiento_prodep = financiamiento_prodep;
         this.fileMetadata = fileMetadata;
+        this.aceptado_director = aceptado_director;
+        this.aceptado_gestion = aceptado_gestion;
     }
 
-    // Getters y setters para los nuevos campos
-
-    public String getNombre_articulo() {
-        return nombre_articulo;
-    }
-
-    public void setNombre_articulo(String nombre_articulo) {
-        this.nombre_articulo = nombre_articulo;
-    }
-
-    public String getEditorial() {
-        return editorial;
-    }
-
-    public void setEditorial(String editorial) {
-        this.editorial = editorial;
-    }
-
-    public String getNombre_capitulo() {
-        return nombre_capitulo;
-    }
-
-    public void setNombre_capitulo(String nombre_capitulo) {
-        this.nombre_capitulo = nombre_capitulo;
-    }
-
-    public String getObservaciones_directores() {
-        return observaciones_directores;
-    }
-
-    public void setObservaciones_directores(String observaciones_directores) {
-        this.observaciones_directores = observaciones_directores;
-    }
-
-    public String getObservaciones_gestion() {
-        return observaciones_gestion;
-    }
-
-    public void setObservaciones_gestion(String observaciones_gestion) {
-        this.observaciones_gestion = observaciones_gestion;
-    }
-
-    public String getIndice_miar() {
-        return indice_miar;
-    }
-
-    public void setIndice_miar(String indice_miar) {
-        this.indice_miar = indice_miar;
-    }
-
-    public boolean getCompilado() {
-        return compilado;
-    }
-
-    public void setCompilado(boolean compilado) {
-        this.compilado = compilado;
-    }
-
-    public Trimestre getTrimestre() {
-        return trimestre;
-    }
-
-    public FileMetadata getFileMetadata() {
-        return fileMetadata;
-    }
-
-    public void setFileMetadata(FileMetadata fileMetadata) {
-        this.fileMetadata = fileMetadata;
-    }
-
-    public void setTrimestre(Trimestre trimestre) {
-        this.trimestre = trimestre;
-    }
-
-    public boolean getFinanciamiento_prodep() {
-        return financiamiento_prodep;
-    }
-
-    public void setFinanciamiento_prodep(boolean financiamiento_prodep) {
-        this.financiamiento_prodep = financiamiento_prodep;
-    }
 }

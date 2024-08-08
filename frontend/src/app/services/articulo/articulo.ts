@@ -36,4 +36,6 @@ export interface Articulo {
   indice_miar?: string;
   compilado: boolean;
   financiamiento_prodep: boolean;
+  aceptado_director: boolean;
+  aceptado_gestion: boolean;
 }
