@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
-import { Articulo} from 'src/app/services/articulo/articulo';
+import { Articulo } from 'src/app/services/articulo/articulo';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -22,7 +22,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   selectedTrimestre: any;
   trimestres: any[] = [];
 
-  
+
 
   constructor(private articuloService: ArticuloService, private router: Router) { }
 
@@ -60,12 +60,12 @@ export class RegistrarPublicacionComponent implements OnInit {
   paginaFin: number = 0;
   doi: string = '';
   miar: string = '';
-  compilado: boolean=false;
-  prodep: boolean=false;
+  compilado: boolean = false;
+  prodep: boolean = false;
 
   // Datos adicionales para Libro
   tituloLibro: string = '';
-  editorialLibro: string='';
+  editorialLibro: string = '';
   lugarPublicacion: string = '';
   editorial: string = '';
   fechaPublicacionLibro: string = '';
@@ -85,6 +85,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   urlCapitulo: string = '';
 
   agregarInvestigador() {
+    
     this.investigadores.push({
       primerNombre: '',
       id_autor: Number,
@@ -100,7 +101,7 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   eliminarInvestigador(index: number) {
     const investigador = this.investigadores[index];
-    if (investigador.agregado==true){
+    if (investigador.agregado == true) {
       if (investigador.autorUnsisSeleccionado) {
         const autorIdIndex = this.idsAutores.indexOf(investigador.autorUnsisSeleccionado);
         if (autorIdIndex !== -1) {
@@ -116,7 +117,7 @@ export class RegistrarPublicacionComponent implements OnInit {
             console.log('Investigador eliminado', response);
             this.investigadores.splice(index, 1);
             this.autoresPorInstituto.splice(index, 1);
-  
+
             // Eliminar el ID del array idsAutoresNoUnsis
             const autorIdIndex = this.idsAutores.indexOf(autorId);
             if (autorIdIndex !== -1) {
@@ -150,13 +151,28 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   guardarAutorUnsis(idAutor: number, index: number) {
+
+        // Validar que ambos campos estén seleccionados
+        const investigador = this.investigadores[index];
+        if (!investigador.instituto || !investigador.autorUnsisSeleccionado) {
+            Swal.fire('Error', 'Debe seleccionar un instituto y un autor antes de continuar', 'error');
+            return;
+        }
     this.idsAutores.push(idAutor);
     this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
     this.investigadores[index].id_autor = idAutor;
     console.log("ID de autores: ", this.idsAutores);
   }
 
+  validarRegistroAutores(): boolean {
+    return this.investigadores.some(investigador => investigador.agregado);
+  }
   agregarAutorNoUnsis(investigador: any, index: number) {
+        // Validar que nombre1Autor y apellidoPaternoAutor no estén vacíos
+        if (!investigador.primerNombre || !investigador.apellidoPaterno) {
+          Swal.fire('Error', 'El primer nombre y el apellido paterno son obligatorios', 'error');
+          return;
+      }
     const nuevoAutor = {
       nombre1Autor: investigador.primerNombre,
       nombre2Autor: investigador.segundoNombre,
@@ -179,7 +195,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     );
 
     investigador.agregado = true;
-    
+
   }
 
   onAutorUnsisChange(investigador: any, index: number): void {
@@ -262,6 +278,10 @@ export class RegistrarPublicacionComponent implements OnInit {
     if (!this.validarCampos()) {
       return;
     }
+    if (!this.validarRegistroAutores()) {
+      Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
+      return;
+    }
     console.log("este es el id ", this.selectedInstitutoPublicacion);
     const articulo: Articulo = {
       tipoPublicacion: {
@@ -333,8 +353,8 @@ export class RegistrarPublicacionComponent implements OnInit {
       fecha_publicacion: this.fechaPublicacion,
       nombre_articulo: this.tituloLibro,
       editorial: this.editorialLibro,
-      isbn_digital:this.isbnDigital,
-      isbn_impreso:this.isbnImpreso,
+      isbn_digital: this.isbnDigital,
+      isbn_impreso: this.isbnImpreso,
       indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep
@@ -385,8 +405,8 @@ export class RegistrarPublicacionComponent implements OnInit {
       editorial: this.editorialCapitulo,
       pag_inicio: this.paginaInicio,
       pag_final: this.paginaFin,
-      isbn_digital:this.isbnDigital,
-      isbn_impreso:this.isbnImpreso,
+      isbn_digital: this.isbnDigital,
+      isbn_impreso: this.isbnImpreso,
       indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep
@@ -443,7 +463,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     const charCode = event.charCode;
     const char = String.fromCharCode(charCode);
     // Verifica si el carácter es una letra o espacio.
-    if (!/^[a-zA-Z]$/.test(char)) { 
+    if (!/^[a-zA-Z]$/.test(char)) {
       // Prevenir la entrada del carácter no permitido.
       event.preventDefault();
     }
@@ -454,8 +474,8 @@ export class RegistrarPublicacionComponent implements OnInit {
     let valor = inputElement.value;
     // Elimina caracteres no permitidos
     valor = valor.replace(/[^a-zA-Z]/g, '');
-      // Convertir a mayúscula la primera letra y el resto a minúsculas
-  valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
+    // Convertir a mayúscula la primera letra y el resto a minúsculas
+    valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
     // Asigna el valor limpio de nuevo al campo de entrada
     inputElement.value = valor;
     // Actualiza el modelo ngModel si es necesario
@@ -464,7 +484,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   onKeyPressNumber(event: KeyboardEvent): void {
     const charCode = event.charCode;
     const char = String.fromCharCode(charCode);
-  
+
     // Verifica si el carácter es un número (0-9)
     if (!/^\d$/.test(char)) {
       // Prevenir la entrada de caracteres no permitidos
