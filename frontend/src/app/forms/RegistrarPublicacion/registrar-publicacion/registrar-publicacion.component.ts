@@ -268,10 +268,83 @@ export class RegistrarPublicacionComponent implements OnInit {
     return true;
   }
 
-  validarNombre(nombre: string): boolean {
-    const regex = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+$/;
-    return regex.test(nombre.trim());
+
+  ValidarLibro(): boolean {
+    // Validar campos obligatorios
+    if (!this.tituloLibro || !this.tituloLibro.trim()) {
+      Swal.fire('Error', 'El título del libro es obligatorio', 'error');
+      return false;
+    }
+  
+    if (!this.editorialLibro || !this.editorialLibro.trim()) {
+      Swal.fire('Error', 'La editorial del libro es obligatoria', 'error');
+      return false;
+    }
+  
+    if (!this.selectedInstitutoPublicacion) {
+      Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
+      return false;
+    }
+  
+    if (!this.selectedTrimestre) {
+      Swal.fire('Error', 'El trimestre es obligatorio', 'error');
+      return false;
+    }
+
+    if (!this.fechaPublicacion) {
+      Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
+      return false;
+    }
+  
+    // Validar que al menos uno de los ISBN esté presente
+    if (!this.isbnImpreso && !this.isbnDigital) {
+      Swal.fire('Error', 'Debe proporcionar al menos un ISBN (impreso o digital)', 'error');
+      return false;
+    }
+    return true;
   }
+
+  validarCap():boolean{
+    if (!this.tituloCapitulo) {
+      Swal.fire('Error', 'El título del capítulo es obligatorio.', 'error');
+      return  false;
+    }
+    if (!this.tituloLibro) {
+      Swal.fire('Error', 'El título del libro es obligatorio.', 'error');
+      return false;
+    }
+    if (!this.editorialCapitulo) {
+      Swal.fire('Error', 'La editorial es obligatoria.', 'error');
+      return false;
+    }
+    if (!this.selectedInstitutoPublicacion) {
+      Swal.fire('Error', 'El instituto de afiliación es obligatorio.', 'error');
+      return false;
+    }
+    if (!this.selectedTrimestre) {
+      Swal.fire('Error', 'El trimestre es obligatorio.', 'error');
+      return false;
+    }
+    if (!this.fechaPublicacion) {
+      Swal.fire('Error', 'La fecha de publicación es obligatoria.', 'error');
+      return false;
+    }
+    if (this.paginaFin < this.paginaInicio) {
+      Swal.fire('Error', 'La página final debe ser mayor o igual a la página de inicio.', 'error');
+      return false;
+    }
+    if (!this.isbnImpreso && !this.isbnDigital) {
+      Swal.fire('Error', 'Debes proporcionar al menos un ISBN (impreso o digital).', 'error');
+      return false;
+    }
+    return true;
+  }
+
+
+  validarNombre(nombre: string): boolean {
+    const regex = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ'´]*$/;
+    return regex.test(nombre.trim());
+}
 
 
   crearArticulo() {
@@ -282,7 +355,6 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    console.log("este es el id ", this.selectedInstitutoPublicacion);
     const articulo: Articulo = {
       tipoPublicacion: {
         id_publicacion_tipo: 1,
@@ -334,7 +406,13 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   crearLibro() {
-    console.log("este es el id ", this.selectedInstitutoPublicacion);
+    if (!this.ValidarLibro()) {
+      return;
+    }
+    if (!this.validarRegistroAutores()) {
+      Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
+      return;
+    }
     const articulo: Articulo = {
       tipoPublicacion: {
         id_publicacion_tipo: 3,
@@ -361,7 +439,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
-      console.log('Artículo registrado exitosamente', response);
+      Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
       const articuloId = response.id_articulo;
       this.idsAutores.forEach((autorId, index) => {
         this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
@@ -383,7 +461,13 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   crearCapitulo() {
-    console.log("este es el id ", this.selectedInstitutoPublicacion);
+    if (!this.validarCap()) {
+      return;
+    }
+    if (!this.validarRegistroAutores()) {
+      Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
+      return;
+    }
     const articulo: Articulo = {
       tipoPublicacion: {
         id_publicacion_tipo: 2,
@@ -413,7 +497,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
-      console.log('Artículo registrado exitosamente', response);
+      Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
       const articuloId = response.id_articulo;
       this.idsAutores.forEach((autorId, index) => {
         this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
@@ -430,7 +514,7 @@ export class RegistrarPublicacionComponent implements OnInit {
         );
       });
     }, error => {
-      console.error('Error al registrar el artículo', error);
+      console.error('Error al registrar el capitulo ', error);
     });
   }
 
@@ -462,8 +546,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   onKeyPress(event: KeyboardEvent, field: string): void {
     const charCode = event.charCode;
     const char = String.fromCharCode(charCode);
-    // Verifica si el carácter es una letra o espacio.
-    if (!/^[a-zA-Z]$/.test(char)) {
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ'´]$/.test(char)) {
       // Prevenir la entrada del carácter no permitido.
       event.preventDefault();
     }
@@ -473,7 +556,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     let valor = inputElement.value;
     // Elimina caracteres no permitidos
-    valor = valor.replace(/[^a-zA-Z]/g, '');
+    valor = valor.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ'´]/g, '');
     // Convertir a mayúscula la primera letra y el resto a minúsculas
     valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
     // Asigna el valor limpio de nuevo al campo de entrada
