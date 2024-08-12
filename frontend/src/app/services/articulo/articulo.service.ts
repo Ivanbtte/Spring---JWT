@@ -63,6 +63,10 @@ export class ArticuloService {
     return this.http.post(environment.urlApi+'articulo/'+articuloId+'/autores/'+autorId, {});
   }
 
+  getArticuloById(id: number): Observable<any> {
+    return this.http.get<any>(environment.urlApi+'articulo/'+id);
+  }
+
   private handleError(error:HttpErrorResponse){
     if(error.status==0){
       console.error('Se ha producido un error ',error.status, error.error);
