@@ -25,8 +25,12 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
         user.setRole(userRequest.getRole());
-        user.setUsername(userRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        if (userRequest.getUsername() != null) {
+            user.setUsername(userRequest.getUsername());
+        } // Solo actualizar la contraseña si está presente en la solicitud
+        if (userRequest.getPassword() != null && !userRequest.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
 
         userRepository.save(user);
 
@@ -89,7 +93,7 @@ public class UserService {
     @Transactional
     public void enableUser(Integer id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         user.setEnabled(true);
         userRepository.save(user);
     }
@@ -97,7 +101,7 @@ public class UserService {
     @Transactional
     public void disableUser(Integer id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
         user.setEnabled(false);
         userRepository.save(user);
     }

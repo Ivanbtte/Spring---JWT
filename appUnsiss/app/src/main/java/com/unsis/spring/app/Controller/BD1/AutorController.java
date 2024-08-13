@@ -27,77 +27,73 @@ import com.unsis.spring.app.Service.BD1.AutorService;
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1")
 public class AutorController {
-    
+
     @Autowired
     private AutorService autorService;
 
     @Autowired
     private ArticuloService articuloService;
 
-    @GetMapping(value="/autor")
-	public ResponseEntity<Object> get(){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			List<AutorDto> list  = autorService.findAll();
-			return new ResponseEntity<Object>(list,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+    @GetMapping(value = "/autor")
+    public ResponseEntity<Object> get() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<AutorDto> list = autorService.findAll();
+            return new ResponseEntity<Object>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-     @GetMapping(value="/autor/{id}")
-     public ResponseEntity<Object> getById(@PathVariable Long id){ 
-         try {
-            AutorDto data  = autorService.findById(id);
-             return new ResponseEntity<Object>(data,HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             Map<String, Object> map = new HashMap<String, Object>();
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
+    @GetMapping(value = "/autor/{id}")
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        try {
+            AutorDto data = autorService.findById(id);
+            return new ResponseEntity<Object>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-      @PostMapping(value="/autor")
-	public ResponseEntity<Object> create(@RequestBody AutorDto autorDto){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			AutorDto res = autorService.save(autorDto);  
-			return new ResponseEntity<Object>(res,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+    @PostMapping(value = "/autor")
+    public ResponseEntity<Object> create(@RequestBody AutorDto autorDto) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            AutorDto res = autorService.save(autorDto);
+            return new ResponseEntity<Object>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-     @PutMapping("/autor/{id}")
-     public ResponseEntity<Object> update(@RequestBody AutorDto autorDto, @PathVariable Long id){ 
-         Map<String, Object> map = new HashMap<String, Object>();
-         try {
-             
-			AutorDto currentrAutor = autorService.findById(id);
-             
+    @PutMapping("/autor/{id}")
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody AutorDto autorDto) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+
+            AutorDto currentrAutor = autorService.findById(id);
+
             currentrAutor.setNombre1Autor(autorDto.getNombre1Autor());
             currentrAutor.setNombre2Autor(autorDto.getNombre2Autor());
             currentrAutor.setApellidoPaternoAutor(autorDto.getApellidoPaternoAutor());
             currentrAutor.setApellidoMaternoAutor(autorDto.getApellidoMaternoAutor());
             currentrAutor.setAutorUnsis(autorDto.getAutorUnsis());
-             
-			AutorDto updatedAutor = autorService.save(currentrAutor);
-             
-            return new ResponseEntity<Object>(updatedAutor,HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
 
-      @DeleteMapping("/autor/{id}")
-      public ResponseEntity<Object> delete(@PathVariable Long id) {
+            AutorDto updatedAutor = autorService.save(currentrAutor);
+
+            return new ResponseEntity<Object>(updatedAutor, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/autor/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>();
         try {
             autorService.delete(id);
@@ -109,7 +105,7 @@ public class AutorController {
         }
     }
 
-	 @PostMapping("/autor/{id}/articulos/{articuloId}")
+    @PostMapping("/autor/{id}/articulos/{articuloId}")
     public ResponseEntity<Object> addArticuloToAutor(@PathVariable Long id, @PathVariable Long articuloId) {
         Map<String, Object> map = new HashMap<>();
         try {

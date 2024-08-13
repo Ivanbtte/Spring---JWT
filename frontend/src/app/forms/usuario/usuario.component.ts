@@ -12,15 +12,18 @@ export class UsuarioComponent implements OnInit {
 
   users: User[] = [];
 
-  constructor(private userService: UserService,private router: Router) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadUsers();
   }
+
   FormCrear() {
     this.router.navigate(['/crear-usuario']);
   }
+
   FormEditar(user: User): void {
+    console.log("Llevando a editar : ", user.id);
     this.router.navigate(['/editar-usuario/', user.id]);
   }
 
@@ -33,6 +36,19 @@ export class UsuarioComponent implements OnInit {
         console.error('Error al obtener los usuarios:', error);
       }
     );
+  }
+
+  getRoleText(role: string): string {
+    switch (role) {
+      case 'ADMIN':
+        return 'Administrador';
+      case 'INVESTIGADOR':
+        return 'Investigador';
+      case 'COORDINADOR':
+        return 'Director';
+      default:
+        return 'Desconocido';
+    }
   }
 
   onEdit(user: User): void {

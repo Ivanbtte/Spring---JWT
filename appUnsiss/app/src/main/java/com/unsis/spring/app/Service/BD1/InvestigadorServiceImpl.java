@@ -17,12 +17,13 @@ import com.unsis.spring.app.User.Role;
 import com.unsis.spring.app.User.User;
 import com.unsis.spring.app.User.UserDTO;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class InvestigadorServiceImpl implements InvestigadorService{
-    
-   @Autowired
+public class InvestigadorServiceImpl implements InvestigadorService {
+
+    @Autowired
     private InvestigadorDao investigadorDao;
 
     @Override
@@ -57,34 +58,67 @@ public class InvestigadorServiceImpl implements InvestigadorService{
     @Override
     @Transactional
     public List<InvestigadorDto> findByInstitutoId(Long institutoId) {
-        return investigadorDao.findByInstitutoId(institutoId).stream().map(this::convertToDto).collect(Collectors.toList());
+        return investigadorDao.findByInstitutoId(institutoId).stream().map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private InvestigadorDto convertToDto(Investigador investigador) {
         InvestigadorDto dto = new InvestigadorDto();
         dto.setId(investigador.getId());
-        dto.setNum_empleado(investigador.getNum_empleado());
-        dto.setNombre_1_investigador(investigador.getNombre_1_investigador());
-        dto.setNombre_2_investigador(investigador.getNombre_2_investigador());
-        dto.setApellido_paterno_1_investigador(investigador.getApellido_paterno_1_investigador());
-        dto.setApellido_materno_2_investigador(investigador.getApellido_materno_2_investigador());
-        dto.setUser(convertToUserDto(investigador.getUser())); // Conversión aquí
-        dto.setInstituto(convertToInstitutoDto(investigador.getInstituto()));
-        dto.setAutor(convertToAutorDto(investigador.getAutor()));
+        if (investigador.getNum_empleado() != null) {
+            dto.setNum_empleado(investigador.getNum_empleado());
+        }
+        if (investigador.getNombre_1_investigador() != null) {
+            dto.setNombre_1_investigador(investigador.getNombre_1_investigador());
+        }
+        if (investigador.getNombre_2_investigador() != null) {
+            dto.setNombre_2_investigador(investigador.getNombre_2_investigador());
+        }
+        if (investigador.getApellido_paterno_1_investigador() != null) {
+            dto.setApellido_paterno_1_investigador(investigador.getApellido_paterno_1_investigador());
+        }
+        if (investigador.getApellido_materno_2_investigador() != null) {
+            dto.setApellido_materno_2_investigador(investigador.getApellido_materno_2_investigador());
+        }
+        if (investigador.getUser() != null) {
+            dto.setUser(convertToUserDto(investigador.getUser()));
+        }
+        if (investigador.getInstituto() != null) {
+            dto.setInstituto(convertToInstitutoDto(investigador.getInstituto()));
+        }
+        if (investigador.getAutor() != null) {
+            dto.setAutor(convertToAutorDto(investigador.getAutor()));
+        }
         return dto;
     }
 
     private Investigador convertToEntity(InvestigadorDto dto) {
         Investigador investigador = new Investigador();
         investigador.setId(dto.getId());
-        investigador.setNum_empleado(dto.getNum_empleado());
-        investigador.setNombre_1_investigador(dto.getNombre_1_investigador());
-        investigador.setNombre_2_investigador(dto.getNombre_2_investigador());
-        investigador.setApellido_paterno_1_investigador(dto.getApellido_paterno_1_investigador());
-        investigador.setApellido_materno_2_investigador(dto.getApellido_materno_2_investigador());
-        investigador.setUser(convertToUser(dto.getUser()));
-        investigador.setInstituto(convertToInstituto(dto.getInstituto()));
-        investigador.setAutor(convertToAutor(dto.getAutor()));
+        if (dto.getNum_empleado() != null) {
+            investigador.setNum_empleado(dto.getNum_empleado());
+        }
+        if (dto.getNombre_1_investigador() != null) {
+            investigador.setNombre_1_investigador(dto.getNombre_1_investigador());
+        }
+        if (dto.getNombre_2_investigador() != null) {
+            investigador.setNombre_2_investigador(dto.getNombre_2_investigador());
+        }
+        if (dto.getApellido_paterno_1_investigador() != null) {
+            investigador.setApellido_paterno_1_investigador(dto.getApellido_paterno_1_investigador());
+        }
+        if (dto.getApellido_materno_2_investigador() != null) {
+            investigador.setApellido_materno_2_investigador(dto.getApellido_materno_2_investigador());
+        }
+        if (dto.getUser() != null) {
+            investigador.setUser(convertToUser(dto.getUser()));
+        }
+        if (dto.getInstituto() != null) {
+            investigador.setInstituto(convertToInstituto(dto.getInstituto()));
+        }
+        if (dto.getAutor() != null) {
+            investigador.setAutor(convertToAutor(dto.getAutor()));
+        }
         return investigador;
     }
 
@@ -119,8 +153,8 @@ public class InvestigadorServiceImpl implements InvestigadorService{
 
     private AutorDto convertToAutorDto(Autor autor) {
         return new AutorDto(autor.getId_autor(), autor.getNombre1Autor(), autor.getNombre2Autor(),
-            autor.getApellidoPaternoAutor(), autor.getApellidoMaternoAutor(),
-            autor.getAutorUnsis()); // Assuming articulos are null for now
+                autor.getApellidoPaternoAutor(), autor.getApellidoMaternoAutor(),
+                autor.getAutorUnsis()); // Assuming articulos are null for now
     }
 
     private Autor convertToAutor(AutorDto autorDto) {
@@ -134,4 +168,21 @@ public class InvestigadorServiceImpl implements InvestigadorService{
         // Assuming articulos are not set for now
         return autor;
     }
+
+    @Override
+    public InvestigadorDto findByIdUser(Long userId) {
+        // Usamos la consulta para obtener una lista de Investigadores asociados al
+        // usuario
+        List<Investigador> investigadores = investigadorDao.findByUser(userId);
+
+        // Nos aseguramos de que hay al menos un investigador en la lista
+        if (investigadores.isEmpty()) {
+            throw new EntityNotFoundException("No se encontró investigador para el ID de usuario: " + userId);
+        }
+
+        // Convertimos el primer investigador de la lista a InvestigadorDto
+        Investigador investigador = investigadores.get(0);
+        return convertToDto(investigador);
+    }
+
 }

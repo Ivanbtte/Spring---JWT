@@ -6,9 +6,16 @@ import com.unsis.spring.app.DTO.InvestigadorDto;
 
 public interface InvestigadorService {
 
-   public List<InvestigadorDto> findAll();
+    public List<InvestigadorDto> findAll();
+
     public InvestigadorDto save(InvestigadorDto investigadorDto);
+
     public InvestigadorDto findById(Long id);
+
+    public InvestigadorDto findByIdUser(Long id);
+
     public void delete(Long id);
+
     public List<InvestigadorDto> findByInstitutoId(Long institutoId); // Nuevo método
+
 }

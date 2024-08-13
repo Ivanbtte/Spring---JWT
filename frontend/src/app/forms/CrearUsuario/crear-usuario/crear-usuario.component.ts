@@ -15,7 +15,7 @@ export class CrearUsuarioComponent implements OnInit {
   institutos: any[] = [];
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
-  
+
   constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -36,6 +36,7 @@ export class CrearUsuarioComponent implements OnInit {
 
     this.userForm.setValidators(this.passwordMatchValidator);
   }
+
   ngOnInit(): void {
     // Obtener la lista de institutos
     this.registrarusuarioService.getInstitutos().subscribe(
@@ -47,9 +48,8 @@ export class CrearUsuarioComponent implements OnInit {
       }
     );
 
-    
-  }
 
+  }
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -113,10 +113,10 @@ export class CrearUsuarioComponent implements OnInit {
                 });
 
                 // Obtén el ID del instituto seleccionado
-              const institutoId = this.userForm.value.instituto;
+                const institutoId = this.userForm.value.instituto;
 
-              // Encuentra el instituto seleccionado en el array de institutos
-              const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
+                // Encuentra el instituto seleccionado en el array de institutos
+                const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
 
                 const investigador: Investigador = {
                   num_empleado: this.userForm.value.numeroEmpleado,
@@ -132,8 +132,8 @@ export class CrearUsuarioComponent implements OnInit {
                   },
                   instituto: {
                     id: institutoId, // ID del instituto seleccionado
-                  nombre: institutoSeleccionado ? institutoSeleccionado.nombre : '' // Nombre del instituto seleccionado
-                },
+                    nombre: institutoSeleccionado ? institutoSeleccionado.nombre : '' // Nombre del instituto seleccionado
+                  },
                   autor: {
                     id_autor: autorResponse.id_autor, // ID del autor creado
                     nombre1Autor: autorResponse.nombre1Autor,
@@ -171,7 +171,7 @@ export class CrearUsuarioComponent implements OnInit {
             );
           }
 
-          
+
         },
         error => {
           Swal.fire({
@@ -180,11 +180,11 @@ export class CrearUsuarioComponent implements OnInit {
             text: "Algo salió mal!",
           });
         }
-        
+
       );
     }
   }
-  
+
   togglePasswordVisibility() {
     if (this.passwordFieldType === 'password') {
       this.passwordFieldType = 'text';
@@ -222,34 +222,34 @@ export class CrearUsuarioComponent implements OnInit {
     this.userForm.get('apellidoMaterno')?.updateValueAndValidity();
   }
 
- /* report(){
-    this.registrarusuarioService.reporte().subscribe(response => {
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.pdf';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }
+  /* report(){
+     this.registrarusuarioService.reporte().subscribe(response => {
+       const blob = new Blob([response], { type: 'application/pdf' });
+       const url = window.URL.createObjectURL(blob);
+       const link = document.createElement('a');
+       link.href = url;
+       link.download = 'reporte.pdf';
+       link.click();
+       window.URL.revokeObjectURL(url);
+     }, error => {
+       console.error('Error downloading the file', error);
+     });
+   }
+ 
+   reportExel() {
+     this.registrarusuarioService.reporteExe().subscribe(response => {
+       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+       const url = window.URL.createObjectURL(blob);
+       const link = document.createElement('a');
+       link.href = url;
+       link.download = 'reporte.xlsx';
+       link.click();
+       window.URL.revokeObjectURL(url);
+     }, error => {
+       console.error('Error downloading the file', error);
+     });
+   }*/
 
-  reportExel() {
-    this.registrarusuarioService.reporteExe().subscribe(response => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.xlsx';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }*/
-  
 }
 
 
