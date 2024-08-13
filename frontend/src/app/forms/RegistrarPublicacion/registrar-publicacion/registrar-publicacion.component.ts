@@ -359,7 +359,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       return;
     }
 
-    this.fileService.uploadFile(this.selectedFile).subscribe({
+    this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
         this.file = response.id;
@@ -437,7 +437,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    this.fileService.uploadFile(this.selectedFile).subscribe({
+    this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
         this.file = response.id;
@@ -510,7 +510,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    this.fileService.uploadFile(this.selectedFile).subscribe({
+    this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
         this.file = response.id;
