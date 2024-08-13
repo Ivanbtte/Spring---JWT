@@ -25,7 +25,6 @@ export class InvestigadorComponent implements OnInit {
     this.investigadorService.getInvestigadores().subscribe(
       (data: Investigador[]) => {
         this.investigadores = data;
-        console.info("Se supone que se deben mostrar los datos");
       },
       (error) => {
         console.error('Error al obtener los investigadores:', error);
@@ -38,7 +37,8 @@ export class InvestigadorComponent implements OnInit {
   }
 
   onEdit(investigador: Investigador): void {
-    this.router.navigate(['/edit-investigador', investigador.id]);
+    console.log("Llevando a editar : ", investigador.id); 
+    this.router.navigate(['/editar-investigador', investigador.id]);
   }
 
   onDelete(investigador: Investigador): void {

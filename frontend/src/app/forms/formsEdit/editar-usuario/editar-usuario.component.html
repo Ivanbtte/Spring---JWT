@@ -1,28 +1,75 @@
 <app-nav></app-nav>
 <app-menu></app-menu>
 <div class="container">
-    <h3>Editar Usuario</h3>
-    <form (ngSubmit)="onSave()">
-      <div class="form-group">
-        <label for="username">Nombre de Usuario</label>
-        <input
-          type="text"
-          class="form-control"
-          id="username"
-          [(ngModel)]="user.username"
-          name="username"
-          required
-        />
+  <h3>Editar Usuario</h3>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <!-- Campo de Selección de Rol (Visible para todos los roles) -->
+    <div class="form-group">
+      <label for="role">Rol: </label>
+      <select id="role" formControlName="role" class="form-control" required
+        (change)="updateAdditionalFields(userForm.value.role)">
+        <option value="">Selecciona un rol</option>
+        <option value="INVESTIGADOR">Investigador</option>
+        <option value="COORDINADOR">Director</option>
+      </select>
+      <div *ngIf="userForm.get('role')?.invalid && userForm.get('role')?.touched" class="text-danger">
+        Por favor seleccione un rol.
       </div>
+    </div>
+
+    <!-- Campos adicionales para INVESTIGADOR y COORDINADOR -->
+    <div *ngIf="userForm.value.role === 'INVESTIGADOR' || userForm.value.role === 'COORDINADOR'">
       <div class="form-group">
-        <label for="role">Rol</label>
-        <select class="form-control" id="role" [(ngModel)]="user.role" name="role">
-          <option value="ADMIN">Administrador</option>
-          <option value="INVESTIGADOR">Investigador</option>
-          <option value="COORDINADOR">Coordinador</option>
+        <label for="instituto">Instituto:</label>
+        <select id="instituto" formControlName="instituto" class="form-control"
+          [required]="userForm.value.role !== 'ADMIN'">
+          <option value="">Selecciona un instituto</option>
+          <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
         </select>
+        <div *ngIf="userForm.get('instituto')?.invalid && userForm.get('instituto')?.touched" class="text-danger">
+          Por favor seleccione un instituto.
+        </div>
       </div>
-      <button type="submit" class="btn btn-primary">Guardar</button>
-    </form>
-  </div>
-  
+
+      <div class="form-group">
+        <label for="nombre1">Primer nombre:</label>
+        <input type="text" id="nombre1" formControlName="nombre1" class="form-control"
+          placeholder="Ingrese el primer nombre" [required]="userForm.value.role !== 'ADMIN'">
+        <div *ngIf="userForm.get('nombre1')?.invalid && userForm.get('nombre1')?.touched" class="text-danger">
+          Por favor ingrese un primer nombre.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nombre2">Segundo nombre:</label>
+        <input type="text" id="nombre2" formControlName="nombre2" class="form-control"
+          placeholder="Ingrese el segundo nombre">
+        <div *ngIf="userForm.get('nombre2')?.invalid && userForm.get('nombre2')?.touched" class="text-danger">
+          Por favor ingrese un segundo nombre válido.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="apellidoPaterno">Apellido Paterno:</label>
+        <input type="text" id="apellidoPaterno" formControlName="apellidoPaterno" class="form-control"
+          placeholder="Ingrese el apellido paterno" [required]="userForm.value.role !== 'ADMIN'">
+        <div *ngIf="userForm.get('apellidoPaterno')?.invalid && userForm.get('apellidoPaterno')?.touched"
+          class="text-danger">
+          Por favor ingrese un apellido paterno.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="apellidoMaterno">Apellido Materno:</label>
+        <input type="text" id="apellidoMaterno" formControlName="apellidoMaterno" class="form-control"
+          placeholder="Ingrese el apellido materno" [required]="userForm.value.role !== 'ADMIN'">
+        <div *ngIf="userForm.get('apellidoMaterno')?.invalid && userForm.get('apellidoMaterno')?.touched"
+          class="text-danger">
+          Por favor ingrese un apellido materno.
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" >Actualizar Usuario</button>
+  </form>
+</div>
