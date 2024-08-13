@@ -36,4 +36,5 @@ public class ArticuloDto {
     private FileMetadata fileMetadata;
     private boolean aceptado_director;
     private boolean aceptado_gestion;
+    private Integer estatus;
 }

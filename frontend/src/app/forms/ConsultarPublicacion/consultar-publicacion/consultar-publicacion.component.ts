@@ -1,5 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Investigador } from 'src/app/services/auth/investigador';
 import { AutorService } from 'src/app/services/autor/autor.service';
@@ -44,7 +45,8 @@ export class ConsultarPublicacionComponent implements OnInit {
     private autorService: AutorService,
     private institutoService: InstitutoService,
     private catalogoService: CatalogoService,
-    private investigadorService: InvestigadorService
+    private investigadorService: InvestigadorService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -250,8 +252,9 @@ export class ConsultarPublicacionComponent implements OnInit {
       return {
         propiedad1: arr[0],
         propiedad2: arr[1],
-        id_articulo: arr[2],
-        // Añade todas las demás propiedades mapeadas aquí
+        id_articulo: arr[6],
+        aceptado_director: arr[22],
+        aceptado_gestion: arr[22],
         titulo_revista: arr[15],
         fecha_publicacion: arr[5]
         // Sigue mapeando todas las propiedades necesarias
@@ -265,8 +268,8 @@ export class ConsultarPublicacionComponent implements OnInit {
   }
 
   editarArticulo(articulo: any) {
-    // Lógica para editar el artículo, por ejemplo redirigir a una página de edición.
     console.log('Editar artículo:', articulo);
+    this.router.navigate(['/validar-publicacion', articulo.id_articulo]);
   }
 
   darDeBajaArticulo(articulo: any) {

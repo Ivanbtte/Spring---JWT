@@ -111,13 +111,17 @@ public class Articulos {
     @Column(nullable = false)
     private boolean aceptado_gestion;
 
+    @Column(nullable = false)
+    private Integer estatus;
+
     // Constructor con todos los parámetros
     public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion,
             String titulo_revista, Integer numero_revista, String volumen_revista, Integer pag_inicio,
             Integer pag_final, String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores,
             String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
             String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre,
-            boolean financiamiento_prodep, FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion) {
+            boolean financiamiento_prodep, FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion,
+            Integer estatus) {
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
         this.instituto = instituto;
@@ -143,6 +147,7 @@ public class Articulos {
         this.fileMetadata = fileMetadata;
         this.aceptado_director = aceptado_director;
         this.aceptado_gestion = aceptado_gestion;
+        this.estatus = estatus;
     }
 
 }

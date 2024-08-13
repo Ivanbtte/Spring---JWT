@@ -14,6 +14,7 @@ import { RutasGuard } from './auth/rutas.guard';
 import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
 import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
 import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
+import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
@@ -29,7 +30,8 @@ const routes: Routes = [
   { path: 'no-authorized', component: NotAuthorizedComponent },
   {path: 'catalogo',component: CatalogoComponent},
   {path: 'registrar-catalogo', component:RegistrarCatalogoComponent},
-  {path: 'upload', component:UploadFilesComponent}
+  {path: 'upload', component:UploadFilesComponent},
+  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent},
 ];
 
 @NgModule({

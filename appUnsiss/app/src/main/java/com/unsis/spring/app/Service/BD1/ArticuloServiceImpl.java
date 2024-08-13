@@ -125,7 +125,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.isFinanciamiento_prodep(),
                                 fileMetadata,
                                 articulo.isAceptado_director(),
-                                articulo.isAceptado_gestion());
+                                articulo.isAceptado_gestion(),
+                                articulo.getEstatus());
         }
 
         @Override
@@ -161,7 +162,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articuloDto.isFinanciamiento_prodep(),
                                 fileMetadata,
                                 articuloDto.isAceptado_director(),
-                                articuloDto.isAceptado_gestion());
+                                articuloDto.isAceptado_gestion(),
+                                articuloDto.getEstatus());
         }
 
         @Override

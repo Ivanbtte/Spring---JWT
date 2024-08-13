@@ -111,6 +111,28 @@ public class ArticuloController {
             currentArticulo.setCompilado(articuloDto.isCompilado());
             currentArticulo.setTrimestre(articuloDto.getTrimestre());
             currentArticulo.setFinanciamiento_prodep(articuloDto.isFinanciamiento_prodep());
+            currentArticulo.setAceptado_director(articuloDto.isAceptado_director());
+
+            ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
+
+            return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/articulo/observaciones/{id}")
+    public ResponseEntity<Object> observaciones(@RequestBody ArticuloDto articuloDto, @PathVariable Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            ArticuloDto currentArticulo = articuloService.findById(id);
+
+            currentArticulo.setObservaciones_directores(articuloDto.getObservaciones_directores());
+            currentArticulo.setObservaciones_gestion(articuloDto.getObservaciones_gestion());
+            currentArticulo.setAceptado_director(articuloDto.isAceptado_director());
+            currentArticulo.setAceptado_gestion(articuloDto.isAceptado_gestion());
+            currentArticulo.setEstatus(articuloDto.getEstatus());
 
             ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
 

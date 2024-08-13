@@ -387,8 +387,9 @@ export class RegistrarPublicacionComponent implements OnInit {
       indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep,
-      aceptado_director: true,
-      aceptado_gestion: true,
+      aceptado_director: false,
+      aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
@@ -450,8 +451,9 @@ export class RegistrarPublicacionComponent implements OnInit {
       indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep,
-      aceptado_director: true,
-      aceptado_gestion: true,
+      aceptado_director: false,
+      aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
@@ -516,8 +518,9 @@ export class RegistrarPublicacionComponent implements OnInit {
       indice_miar: this.miar,
       compilado: this.compilado,
       financiamiento_prodep: this.prodep,
-      aceptado_director: true,
-      aceptado_gestion: true,
+      aceptado_director: false,
+      aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
