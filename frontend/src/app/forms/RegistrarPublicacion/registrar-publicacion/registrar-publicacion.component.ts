@@ -14,6 +14,7 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   [key: string]: any;
   selectedFile!: File;
+  renamedFile!: File;
   investigadores: any[] = []; // Lista de investigadores
   institutos: any[] = [];
   institutosPublicacion: any[] = [];  // Lista de institutos
@@ -636,7 +637,28 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
-    console.log(this.selectedFile);
+    if (this.selectedFile) {
+      // Verifica que el archivo sea un PDF
+      if (this.selectedFile.type !== 'application/pdf') {
+        alert('Solo se permiten archivos PDF');
+        return;
+      }
+  
+      // Genera el folio
+      const trimestreId = this.selectedTrimestre; // El trimestre seleccionado
+      const archivoId = this.generateFileId(); // Función para generar un ID único
+      const archivoId2 = this.generateFileId(); // Función para generar un ID único
+      const folio = `TRIM${trimestreId}-ID${archivoId}${archivoId2}`;
+      
+      // Renombra el archivo
+      this.renamedFile = new File([this.selectedFile], `${folio}.pdf`, { type: 'application/pdf' });
+  
+    }
+    console.log(this.renamedFile);
+  }
+
+  generateFileId() {
+    return Math.floor(Math.random() * 10000); // Esto es solo un ejemplo, puedes personalizarlo
   }
 
 }
