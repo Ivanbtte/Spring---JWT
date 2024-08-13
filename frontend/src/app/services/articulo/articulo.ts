@@ -1,4 +1,5 @@
 export interface Articulo {
+  id_articulo?: number;
   tipoPublicacion: {
     id_publicacion_tipo: number;
     nombre: string;
@@ -38,4 +39,5 @@ export interface Articulo {
   financiamiento_prodep: boolean;
   aceptado_director: boolean;
   aceptado_gestion: boolean;
+  estatus: number;
 }

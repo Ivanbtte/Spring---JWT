@@ -59,6 +59,12 @@ export class ArticuloService {
     );
   }
 
+  agregarObservaciones(observaciones: any, id: string | null): Observable<any>{
+    return this.http.put<any>(environment.urlApi+'articulo/observaciones/'+ observaciones.id_articulo, observaciones).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   agregarAutorArticulo(articuloId: number, autorId: number): Observable<any> {
     return this.http.post(environment.urlApi+'articulo/'+articuloId+'/autores/'+autorId, {});
   }

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Articulo } from 'src/app/services/articulo/articulo';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
+import { Observaciones } from 'src/app/services/articulo/observaciones';
 
 @Component({
   selector: 'app-validar-publicacion',
@@ -9,7 +11,7 @@ import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 })
 export class ValidarPublicacionComponent implements OnInit {
 
-
+  rolUsuario: string | null = '';
   articulo: any;
 
   constructor(
@@ -17,6 +19,7 @@ export class ValidarPublicacionComponent implements OnInit {
     private articuloService: ArticuloService) { }
 
   ngOnInit(): void {
+    this.rolUsuario = sessionStorage.getItem('role');
     // Captura el ID de la URL
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -33,11 +36,74 @@ export class ValidarPublicacionComponent implements OnInit {
 
 
   rechazarPublicacion() {
-    throw new Error('Method not implemented.');
+    if (this.rolUsuario === 'COORDINADOR') {
+      const observaciones: Observaciones = {
+        id_articulo: this.articulo.id_articulo,
+        observaciones_directores: this.articulo.observaciones_directores,
+        observaciones_gestion: this.articulo.observaciones_gestion,
+        aceptado_director: false,
+        aceptado_gestion: this.articulo.aceptado_gestion,
+        estatus: 2
+      };
+      this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
+        console.log('Artículo Editado exitosamente');
+      }, error => {
+        console.error('Error al Editar el artículo', error);
+      });
+    } else if (this.rolUsuario === 'ADMIN') {
+      const observaciones: Observaciones = {
+        id_articulo: this.articulo.id_articulo,
+        observaciones_directores: this.articulo.observaciones_directores,
+        observaciones_gestion: this.articulo.observaciones_gestion,
+        aceptado_director: this.articulo.aceptado_director,
+        aceptado_gestion: true,
+        estatus: 4
+      };
+      this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
+        console.log('Artículo Editado exitosamente');
+      }, error => {
+        console.error('Error al Editar el artículo', error);
+      });
+    } else {
+      // Acción por defecto o para otros roles (si aplica)
+      console.log('Acción para otros roles');
     }
-    
-    aceptarPublicacion() {
-    throw new Error('Method not implemented.');
+  }
+
+  aceptarPublicacion() {
+
+    if (this.rolUsuario === 'COORDINADOR') {
+      const observaciones: Observaciones = {
+        id_articulo: this.articulo.id_articulo,
+        observaciones_directores: this.articulo.observaciones_directores,
+        observaciones_gestion: this.articulo.observaciones_gestion,
+        aceptado_director: true,
+        aceptado_gestion: this.articulo.aceptado_gestion,
+        estatus: 3
+      };
+      this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
+        console.log('Artículo Editado exitosamente');
+      }, error => {
+        console.error('Error al Editar el artículo', error);
+      });
+    } else if (this.rolUsuario === 'ADMIN') {
+      const observaciones: Observaciones = {
+        id_articulo: this.articulo.id_articulo,
+        observaciones_directores: this.articulo.observaciones_directores,
+        observaciones_gestion: this.articulo.observaciones_gestion,
+        aceptado_director: this.articulo.aceptado_director,
+        aceptado_gestion: true,
+        estatus: 4
+      };
+      this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
+        console.log('Artículo Editado exitosamente');
+      }, error => {
+        console.error('Error al Editar el artículo', error);
+      });
+    } else {
+      // Acción por defecto o para otros roles (si aplica)
+      console.log('Acción para otros roles');
     }
+  }
 
 }

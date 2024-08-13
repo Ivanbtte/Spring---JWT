@@ -223,6 +223,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       financiamiento_prodep: this.prodep,
       aceptado_director: false,
       aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
@@ -280,6 +281,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       financiamiento_prodep: this.prodep,
       aceptado_director: false,
       aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
@@ -340,6 +342,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       financiamiento_prodep: this.prodep,
       aceptado_director: false,
       aceptado_gestion: false,
+      estatus:1
     };
 
     this.articuloService.crearArticulo(articulo).subscribe(response => {
