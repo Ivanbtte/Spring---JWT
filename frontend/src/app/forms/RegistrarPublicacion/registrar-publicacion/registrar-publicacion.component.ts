@@ -3,6 +3,7 @@ import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Articulo } from 'src/app/services/articulo/articulo';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { FileService } from 'src/app/services/fileService/file.service';
 
 @Component({
   selector: 'app-registrar-publicacion',
@@ -12,7 +13,8 @@ import Swal from 'sweetalert2';
 export class RegistrarPublicacionComponent implements OnInit {
 
   [key: string]: any;
-
+  selectedFile!: File;
+  renamedFile!: File;
   investigadores: any[] = []; // Lista de investigadores
   institutos: any[] = [];
   institutosPublicacion: any[] = [];  // Lista de institutos
@@ -24,7 +26,7 @@ export class RegistrarPublicacionComponent implements OnInit {
 
 
 
-  constructor(private articuloService: ArticuloService, private router: Router) { }
+  constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) { }
 
   ngOnInit(): void {
     // Llama al método para obtener los institutos cuando se inicializa el componente
@@ -49,6 +51,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     );
   }
 
+  file!: number;
   tipoPublicacion: string = ''; //Borrar posiblemente
   titulo: string = '';
   instituto: number = 0;
@@ -85,7 +88,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   urlCapitulo: string = '';
 
   agregarInvestigador() {
-    
+
     this.investigadores.push({
       primerNombre: '',
       id_autor: Number,
@@ -152,12 +155,12 @@ export class RegistrarPublicacionComponent implements OnInit {
 
   guardarAutorUnsis(idAutor: number, index: number) {
 
-        // Validar que ambos campos estén seleccionados
-        const investigador = this.investigadores[index];
-        if (!investigador.instituto || !investigador.autorUnsisSeleccionado) {
-            Swal.fire('Error', 'Debe seleccionar un instituto y un autor antes de continuar', 'error');
-            return;
-        }
+    // Validar que ambos campos estén seleccionados
+    const investigador = this.investigadores[index];
+    if (!investigador.instituto || !investigador.autorUnsisSeleccionado) {
+      Swal.fire('Error', 'Debe seleccionar un instituto y un autor antes de continuar', 'error');
+      return;
+    }
     this.idsAutores.push(idAutor);
     this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
     this.investigadores[index].id_autor = idAutor;
@@ -168,11 +171,11 @@ export class RegistrarPublicacionComponent implements OnInit {
     return this.investigadores.some(investigador => investigador.agregado);
   }
   agregarAutorNoUnsis(investigador: any, index: number) {
-        // Validar que nombre1Autor y apellidoPaternoAutor no estén vacíos
-        if (!investigador.primerNombre || !investigador.apellidoPaterno) {
-          Swal.fire('Error', 'El primer nombre y el apellido paterno son obligatorios', 'error');
-          return;
-      }
+    // Validar que nombre1Autor y apellidoPaternoAutor no estén vacíos
+    if (!investigador.primerNombre || !investigador.apellidoPaterno) {
+      Swal.fire('Error', 'El primer nombre y el apellido paterno son obligatorios', 'error');
+      return;
+    }
     const nuevoAutor = {
       nombre1Autor: investigador.primerNombre,
       nombre2Autor: investigador.segundoNombre,
@@ -275,17 +278,17 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'El título del libro es obligatorio', 'error');
       return false;
     }
-  
+
     if (!this.editorialLibro || !this.editorialLibro.trim()) {
       Swal.fire('Error', 'La editorial del libro es obligatoria', 'error');
       return false;
     }
-  
+
     if (!this.selectedInstitutoPublicacion) {
       Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
       return false;
     }
-  
+
     if (!this.selectedTrimestre) {
       Swal.fire('Error', 'El trimestre es obligatorio', 'error');
       return false;
@@ -295,7 +298,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
       return false;
     }
-  
+
     // Validar que al menos uno de los ISBN esté presente
     if (!this.isbnImpreso && !this.isbnDigital) {
       Swal.fire('Error', 'Debe proporcionar al menos un ISBN (impreso o digital)', 'error');
@@ -304,10 +307,10 @@ export class RegistrarPublicacionComponent implements OnInit {
     return true;
   }
 
-  validarCap():boolean{
+  validarCap(): boolean {
     if (!this.tituloCapitulo) {
       Swal.fire('Error', 'El título del capítulo es obligatorio.', 'error');
-      return  false;
+      return false;
     }
     if (!this.tituloLibro) {
       Swal.fire('Error', 'El título del libro es obligatorio.', 'error');
@@ -344,7 +347,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   validarNombre(nombre: string): boolean {
     const regex = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ'´]*$/;
     return regex.test(nombre.trim());
-}
+  }
 
 
   crearArticulo() {
@@ -355,63 +358,75 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    const articulo: Articulo = {
-      tipoPublicacion: {
-        id_publicacion_tipo: 1,
-        nombre: 'Artículo'
-      },
-      instituto: {
-        id: this.selectedInstitutoPublicacion,
-        nombre: ''
-      },
-      trimestre: {
-        id_trimestre: this.selectedTrimestre,
-        nombre: '',
-        fecha_inicio: new Date('2024-05-12'), //fecha falsa
-        fecha_fin: new Date('2024-08-12') //fecha falsa
-      },
-      fileMetadata: {
-        id: 1,
-        fileName: '',
-        filePath: '',
-        fileType: ''
-      },
-      fecha_publicacion: this.fechaPublicacion,
-      titulo_revista: this.nombreRevista,
-      numero_revista: this.numEmision,
-      volumen_revista: this.numVolumen,
-      pag_inicio: this.paginaInicio,
-      pag_final: this.paginaFin,
-      doi: this.doi,
-      nombre_articulo: this.titulo,
-      indice_miar: this.miar,
-      compilado: this.compilado,
-      financiamiento_prodep: this.prodep,
-      aceptado_director: false,
-      aceptado_gestion: false,
-      estatus:1
-    };
 
-    this.articuloService.crearArticulo(articulo).subscribe(response => {
-      Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
-      const articuloId = response.id_articulo;
-      this.idsAutores.forEach((autorId, index) => {
-        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-          response => {
-            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-            if (index === this.idsAutores.length - 1) {
-              this.limpiarCampos();
-              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-            }
+    this.fileService.uploadFile(this.renamedFile).subscribe({
+      next: (response) => {
+        console.log('Upload successful', response);
+        this.file = response.id;
+        const articulo: Articulo = {
+          tipoPublicacion: {
+            id_publicacion_tipo: 1,
+            nombre: 'Artículo'
           },
-          error => {
-            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-          }
-        );
-      });
-    }, error => {
-      Swal.fire('Error', 'Error al registrar el artículo', 'error');
+          instituto: {
+            id: this.selectedInstitutoPublicacion,
+            nombre: ''
+          },
+          trimestre: {
+            id_trimestre: this.selectedTrimestre,
+            nombre: '',
+            fecha_inicio: new Date('2024-05-12'), //fecha falsa
+            fecha_fin: new Date('2024-08-12') //fecha falsa
+          },
+          fileMetadata: {
+            id: this.file,
+            fileName: '',
+            filePath: '',
+            fileType: ''
+          },
+          fecha_publicacion: this.fechaPublicacion,
+          titulo_revista: this.nombreRevista,
+          numero_revista: this.numEmision,
+          volumen_revista: this.numVolumen,
+          pag_inicio: this.paginaInicio,
+          pag_final: this.paginaFin,
+          doi: this.doi,
+          nombre_articulo: this.titulo,
+          indice_miar: this.miar,
+          compilado: this.compilado,
+          financiamiento_prodep: this.prodep,
+          aceptado_director: false,
+          aceptado_gestion: false,
+          estatus: 1
+        };
+
+        this.articuloService.crearArticulo(articulo).subscribe(response => {
+          Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
+          const articuloId = response.id_articulo;
+          this.idsAutores.forEach((autorId, index) => {
+            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+              response => {
+                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                if (index === this.idsAutores.length - 1) {
+                  this.limpiarCampos();
+                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                }
+              },
+              error => {
+                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+              }
+            );
+          });
+        }, error => {
+          Swal.fire('Error', 'Error al registrar el artículo', 'error');
+        });
+      },
+      error: (error) => {
+        console.error('Upload failed', error);
+      }
     });
+
+
   }
 
   crearLibro() {
@@ -422,59 +437,68 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    const articulo: Articulo = {
-      tipoPublicacion: {
-        id_publicacion_tipo: 3,
-        nombre: 'Libro'
-      },
-      instituto: {
-        id: this.selectedInstitutoPublicacion,
-        nombre: ''
-      },
-      trimestre: {
-        id_trimestre: this.selectedTrimestre,
-        nombre: '',
-        fecha_inicio: new Date('2024-05-12'), //fecha falsa
-        fecha_fin: new Date('2024-08-12') //fecha falsa
-      },
-      fileMetadata: {
-        id: 1,
-        fileName: '',
-        filePath: '',
-        fileType: ''
-      },
-      fecha_publicacion: this.fechaPublicacion,
-      nombre_articulo: this.tituloLibro,
-      editorial: this.editorialLibro,
-      isbn_digital: this.isbnDigital,
-      isbn_impreso: this.isbnImpreso,
-      indice_miar: this.miar,
-      compilado: this.compilado,
-      financiamiento_prodep: this.prodep,
-      aceptado_director: false,
-      aceptado_gestion: false,
-      estatus:1
-    };
-
-    this.articuloService.crearArticulo(articulo).subscribe(response => {
-      Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
-      const articuloId = response.id_articulo;
-      this.idsAutores.forEach((autorId, index) => {
-        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-          response => {
-            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-            if (index === this.idsAutores.length - 1) {
-              this.limpiarCampos();
-              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-            }
+    this.fileService.uploadFile(this.renamedFile).subscribe({
+      next: (response) => {
+        console.log('Upload successful', response);
+        this.file = response.id;
+        const articulo: Articulo = {
+          tipoPublicacion: {
+            id_publicacion_tipo: 3,
+            nombre: 'Libro'
           },
-          error => {
-            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-          }
-        );
-      });
-    }, error => {
-      console.error('Error al registrar el artículo', error);
+          instituto: {
+            id: this.selectedInstitutoPublicacion,
+            nombre: ''
+          },
+          trimestre: {
+            id_trimestre: this.selectedTrimestre,
+            nombre: '',
+            fecha_inicio: new Date('2024-05-12'), //fecha falsa
+            fecha_fin: new Date('2024-08-12') //fecha falsa
+          },
+          fileMetadata: {
+            id: this.file,
+            fileName: '',
+            filePath: '',
+            fileType: ''
+          },
+          fecha_publicacion: this.fechaPublicacion,
+          nombre_articulo: this.tituloLibro,
+          editorial: this.editorialLibro,
+          isbn_digital: this.isbnDigital,
+          isbn_impreso: this.isbnImpreso,
+          indice_miar: this.miar,
+          compilado: this.compilado,
+          financiamiento_prodep: this.prodep,
+          aceptado_director: false,
+          aceptado_gestion: false,
+          estatus: 1
+        };
+
+        this.articuloService.crearArticulo(articulo).subscribe(response => {
+          Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
+          const articuloId = response.id_articulo;
+          this.idsAutores.forEach((autorId, index) => {
+            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+              response => {
+                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                if (index === this.idsAutores.length - 1) {
+                  this.limpiarCampos();
+                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                }
+              },
+              error => {
+                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+              }
+            );
+          });
+        }, error => {
+          console.error('Error al registrar el artículo', error);
+        });
+      },
+      error: (error) => {
+        console.error('Upload failed', error);
+      }
     });
   }
 
@@ -486,62 +510,71 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
-    const articulo: Articulo = {
-      tipoPublicacion: {
-        id_publicacion_tipo: 2,
-        nombre: 'capitulo'
-      },
-      instituto: {
-        id: this.selectedInstitutoPublicacion,
-        nombre: ''
-      },
-      trimestre: {
-        id_trimestre: this.selectedTrimestre,
-        nombre: '',
-        fecha_inicio: new Date('2024-05-12'), //fecha falsa
-        fecha_fin: new Date('2024-08-12') //fecha falsa
-      },
-      fileMetadata: {
-        id: 1,
-        fileName: '',
-        filePath: '',
-        fileType: ''
-      },
-      fecha_publicacion: this.fechaPublicacion,
-      nombre_capitulo: this.tituloCapitulo,
-      nombre_articulo: this.tituloLibro,
-      editorial: this.editorialCapitulo,
-      pag_inicio: this.paginaInicio,
-      pag_final: this.paginaFin,
-      isbn_digital: this.isbnDigital,
-      isbn_impreso: this.isbnImpreso,
-      indice_miar: this.miar,
-      compilado: this.compilado,
-      financiamiento_prodep: this.prodep,
-      aceptado_director: false,
-      aceptado_gestion: false,
-      estatus:1
-    };
-
-    this.articuloService.crearArticulo(articulo).subscribe(response => {
-      Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
-      const articuloId = response.id_articulo;
-      this.idsAutores.forEach((autorId, index) => {
-        this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-          response => {
-            console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-            if (index === this.idsAutores.length - 1) {
-              this.limpiarCampos();
-              this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-            }
+    this.fileService.uploadFile(this.renamedFile).subscribe({
+      next: (response) => {
+        console.log('Upload successful', response);
+        this.file = response.id;
+        const articulo: Articulo = {
+          tipoPublicacion: {
+            id_publicacion_tipo: 2,
+            nombre: 'capitulo'
           },
-          error => {
-            console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-          }
-        );
-      });
-    }, error => {
-      console.error('Error al registrar el capitulo ', error);
+          instituto: {
+            id: this.selectedInstitutoPublicacion,
+            nombre: ''
+          },
+          trimestre: {
+            id_trimestre: this.selectedTrimestre,
+            nombre: '',
+            fecha_inicio: new Date('2024-05-12'), //fecha falsa
+            fecha_fin: new Date('2024-08-12') //fecha falsa
+          },
+          fileMetadata: {
+            id: this.file,
+            fileName: '',
+            filePath: '',
+            fileType: ''
+          },
+          fecha_publicacion: this.fechaPublicacion,
+          nombre_capitulo: this.tituloCapitulo,
+          nombre_articulo: this.tituloLibro,
+          editorial: this.editorialCapitulo,
+          pag_inicio: this.paginaInicio,
+          pag_final: this.paginaFin,
+          isbn_digital: this.isbnDigital,
+          isbn_impreso: this.isbnImpreso,
+          indice_miar: this.miar,
+          compilado: this.compilado,
+          financiamiento_prodep: this.prodep,
+          aceptado_director: false,
+          aceptado_gestion: false,
+          estatus: 1
+        };
+
+        this.articuloService.crearArticulo(articulo).subscribe(response => {
+          Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
+          const articuloId = response.id_articulo;
+          this.idsAutores.forEach((autorId, index) => {
+            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+              response => {
+                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                if (index === this.idsAutores.length - 1) {
+                  this.limpiarCampos();
+                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                }
+              },
+              error => {
+                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+              }
+            );
+          });
+        }, error => {
+          console.error('Error al registrar el capitulo ', error);
+        });
+      },
+      error: (error) => {
+        console.error('Upload failed', error);
+      }
     });
   }
 
@@ -600,6 +633,32 @@ export class RegistrarPublicacionComponent implements OnInit {
       // Prevenir la entrada de caracteres no permitidos
       event.preventDefault();
     }
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+    if (this.selectedFile) {
+      // Verifica que el archivo sea un PDF
+      if (this.selectedFile.type !== 'application/pdf') {
+        alert('Solo se permiten archivos PDF');
+        return;
+      }
+  
+      // Genera el folio
+      const trimestreId = this.selectedTrimestre; // El trimestre seleccionado
+      const archivoId = this.generateFileId(); // Función para generar un ID único
+      const archivoId2 = this.generateFileId(); // Función para generar un ID único
+      const folio = `TRIM${trimestreId}-ID${archivoId}${archivoId2}`;
+      
+      // Renombra el archivo
+      this.renamedFile = new File([this.selectedFile], `${folio}.pdf`, { type: 'application/pdf' });
+  
+    }
+    console.log(this.renamedFile);
+  }
+
+  generateFileId() {
+    return Math.floor(Math.random() * 10000); // Esto es solo un ejemplo, puedes personalizarlo
   }
 
 }
