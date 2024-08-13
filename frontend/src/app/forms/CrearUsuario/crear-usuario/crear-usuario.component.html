@@ -5,85 +5,111 @@
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
             <label for="email">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Ingrese su correo" required>
-            <div *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched" class="text-danger">
+            <input type="email" class="form-control" id="email" formControlName="email" placeholder="Ingrese su correo"
+                required (input)="convertEmailToLowerCase()">
+            <div *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched"
+                class="text-danger">
                 El correo electrónico es requerido.
             </div>
             <div *ngIf="userForm.get('email')?.errors?.['email'] && userForm.get('email')?.touched" class="text-danger">
                 El formato del correo electrónico no es válido.
             </div>
-        </div> 
+        </div>
         <div class="form-group">
             <label for="role">Rol</label>
             <select class="form-control" id="role" formControlName="role">
                 <option value="ADMIN">Administrador</option>
                 <option value="INVESTIGADOR">Investigador</option>
-                <option value="COORDINADOR">Coordinador</option>
+                <option value="COORDINADOR">Director</option>
             </select>
         </div>
 
         <!-- Campos adicionales para INVESTIGADOR y COORDINADOR -->
         <div *ngIf="userForm.get('role')?.value === 'INVESTIGADOR' || userForm.get('role')?.value === 'COORDINADOR'">
             <div class="form-group">
-                <label for="numeroEmpleado">Número de Empleado</label>
-                <input type="text" class="form-control" id="numeroEmpleado" formControlName="numeroEmpleado" placeholder="Ingrese su número de empleado" required>
-            </div>
-            <div class="form-group">
-                <label for="instituto">Instituto</label>
+                <label for="instituto">Instituto de afiliación</label>
                 <select class="form-control" id="instituto" formControlName="instituto" required>
-                  <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                    <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                    <div *ngIf="userForm.get('instituto')?.errors?.['required'] && userForm.get('instituto')?.touched"
+                        class="text-danger">
+                        El instituto es obligatorio.
+                    </div>
                 </select>
-              </div>
-            <div class="form-group">
-                <label for="nombre1">Nombre 1</label>
-                <input type="text" class="form-control" id="nombre1" formControlName="nombre1" placeholder="Ingrese su primer nombre" required>
             </div>
             <div class="form-group">
-                <label for="nombre2">Nombre 2</label>
-                <input type="text" class="form-control" id="nombre2" formControlName="nombre2" placeholder="Ingrese su segundo nombre" required>
+                <label for="nombre1">Primer nombre</label>
+                <input type="text" class="form-control" id="nombre1" formControlName="nombre1"
+                    placeholder="Ingrese su primer nombre" required (keypress)="onKeyPress($event, 'nombre1')"
+                    (input)="onInput($event, 'nombre1')">
+                <div *ngIf="userForm.get('nombre1')?.errors?.['required'] && userForm.get('nombre1')?.touched"
+                    class="text-danger">
+                    El primer nombre es obligatorio.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="nombre2">Segundo nombre</label>
+                <input type="text" class="form-control" id="nombre2" formControlName="nombre2"
+                    placeholder="Ingrese su segundo nombre" (keypress)="onKeyPress($event, 'nombre2')"
+                    (input)="onInput($event, 'nombre2')">
             </div>
             <div class="form-group">
                 <label for="apellidoPaterno">Apellido Paterno</label>
-                <input type="text" class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno" placeholder="Ingrese su apellido paterno" required>
+                <input type="text" class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno"
+                    placeholder="Ingrese su apellido paterno" required
+                    (keypress)="onKeyPress($event, 'apellidoPaterno')" (input)="onInput($event, 'apellidoPaterno')">
+                <div *ngIf="userForm.get('apellidoPaterno')?.errors?.['required'] && userForm.get('apellidoPaterno')?.touched"
+                    class="text-danger">
+                    El apellido paterno es obligatorio.
+                </div>
             </div>
             <div class="form-group">
                 <label for="apellidoMaterno">Apellido Materno</label>
-                <input type="text" class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno" placeholder="Ingrese su apellido materno" required>
+                <input type="text" class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno"
+                    placeholder="Ingrese su apellido materno" (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                    (input)="onInput($event, 'apellidoMaterno')">
             </div>
         </div>
 
         <div class="form-group">
             <label for="password">Contraseña</label>
             <div class="input-group">
-                <input type="password" class="form-control" id="password" formControlName="password" [type]="passwordFieldType" placeholder="Ingrese su contraseña" required>
+                <input type="password" class="form-control" id="password" formControlName="password"
+                    [type]="passwordFieldType" placeholder="Ingrese su contraseña" required>
             </div>
-            <div *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched"
+                class="text-danger">
                 La contraseña es requerida.
             </div>
-            <div *ngIf="userForm.get('password')?.errors?.['minlength'] && userForm.get('password')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['minlength'] && userForm.get('password')?.touched"
+                class="text-danger">
                 La contraseña debe tener al menos 8 caracteres.
             </div>
-            <div *ngIf="userForm.get('password')?.errors?.['uppercase'] && userForm.get('password')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['uppercase'] && userForm.get('password')?.touched"
+                class="text-danger">
                 La contraseña debe contener al menos una letra mayúscula.
             </div>
-            <div *ngIf="userForm.get('password')?.errors?.['number'] && userForm.get('password')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['number'] && userForm.get('password')?.touched"
+                class="text-danger">
                 La contraseña debe contener al menos un número.
             </div>
-            <div *ngIf="userForm.get('password')?.errors?.['special'] && userForm.get('password')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['special'] && userForm.get('password')?.touched"
+                class="text-danger">
                 La contraseña debe contener al menos un símbolo especial.
             </div>
         </div>
         <div class="form-group">
             <label for="confirmPassword">Confirmar Contraseña</label>
             <div class="input-group">
-                <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" [type]="passwordFieldType" placeholder="Confirme su contraseña" required>
+                <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword"
+                    [type]="passwordFieldType" placeholder="Confirme su contraseña" required>
                 <div class="input-group-append">
                     <span class="input-group-text password-toggle" (click)="togglePasswordVisibility()">
                         <i [class]="passwordToggleIcon"></i>
                     </span>
                 </div>
             </div>
-            <div *ngIf="userForm.get('confirmPassword')?.errors?.['required'] && userForm.get('confirmPassword')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('confirmPassword')?.errors?.['required'] && userForm.get('confirmPassword')?.touched"
+                class="text-danger">
                 La confirmación de la contraseña es requerida.
             </div>
             <div *ngIf="userForm.errors?.['mismatch'] && userForm.get('confirmPassword')?.touched" class="text-danger">

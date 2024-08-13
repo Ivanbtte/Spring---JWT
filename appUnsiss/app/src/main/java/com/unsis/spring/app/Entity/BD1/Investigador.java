@@ -26,7 +26,7 @@ public class Investigador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(nullable = false)
+    @Column()
     private Integer num_empleado;
 
     @Column(nullable = false)

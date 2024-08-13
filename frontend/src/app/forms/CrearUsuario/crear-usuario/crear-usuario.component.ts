@@ -4,6 +4,7 @@ import { AutorRequest } from 'src/app/services/registrarusuario/autor';
 import { Investigador } from 'src/app/services/registrarusuario/Investigador';
 import { RegistrarusuarioService } from 'src/app/services/registrarusuario/registrarusuario.service';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-usuario',
@@ -15,8 +16,8 @@ export class CrearUsuarioComponent implements OnInit {
   institutos: any[] = [];
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
-  
-  constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService) {
+
+  constructor(private fb: FormBuilder, private registrarusuarioService: RegistrarusuarioService, private router: Router) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [
@@ -35,6 +36,10 @@ export class CrearUsuarioComponent implements OnInit {
     });
 
     this.userForm.setValidators(this.passwordMatchValidator);
+    this.userForm.get('role')?.valueChanges.subscribe((newRole) => {
+      console.log('Role changed to:', newRole);
+      this.updateAdditionalFields(newRole);
+    });
   }
   ngOnInit(): void {
     // Obtener la lista de institutos
@@ -46,10 +51,7 @@ export class CrearUsuarioComponent implements OnInit {
         console.error('Error al obtener la lista de institutos', error);
       }
     );
-
-    
   }
-
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
@@ -75,6 +77,10 @@ export class CrearUsuarioComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.userForm.invalid) {
+      this.userForm.markAllAsTouched(); // Mostrar errores
+      return;
+    }
     if (this.userForm.valid) {
       const user = {
         username: this.userForm.value.email,
@@ -84,17 +90,15 @@ export class CrearUsuarioComponent implements OnInit {
 
       this.registrarusuarioService.registro(user).subscribe(
         userResponse => {
-          console.log('User Response:', userResponse);
           const userId = userResponse.id;
           const userName = userResponse.username;
           const userRole = userResponse.role;
-
+          this.router.navigate(['/usuario']);
           Swal.fire({
             icon: "success",
             title: "¡Registro Exitoso!",
             text: "El usuario ha sido registrado correctamente.",
           });
-
           if (user.role === 'INVESTIGADOR' || user.role === 'COORDINADOR') {
             const autor: AutorRequest = {
               nombre1Autor: this.userForm.value.nombre1,
@@ -103,7 +107,9 @@ export class CrearUsuarioComponent implements OnInit {
               apellidoMaternoAutor: this.userForm.value.apellidoMaterno,
               autorUnsis: true
             };
-
+            if (!this.validarAutor()) {
+              return;
+            }
             this.registrarusuarioService.registroAutor(autor).subscribe(
               autorResponse => {
                 Swal.fire({
@@ -113,10 +119,10 @@ export class CrearUsuarioComponent implements OnInit {
                 });
 
                 // Obtén el ID del instituto seleccionado
-              const institutoId = this.userForm.value.instituto;
+                const institutoId = this.userForm.value.instituto;
 
-              // Encuentra el instituto seleccionado en el array de institutos
-              const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
+                // Encuentra el instituto seleccionado en el array de institutos
+                const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
 
                 const investigador: Investigador = {
                   num_empleado: this.userForm.value.numeroEmpleado,
@@ -132,8 +138,8 @@ export class CrearUsuarioComponent implements OnInit {
                   },
                   instituto: {
                     id: institutoId, // ID del instituto seleccionado
-                  nombre: institutoSeleccionado ? institutoSeleccionado.nombre : '' // Nombre del instituto seleccionado
-                },
+                    nombre: institutoSeleccionado ? institutoSeleccionado.nombre : '' // Nombre del instituto seleccionado
+                  },
                   autor: {
                     id_autor: autorResponse.id_autor, // ID del autor creado
                     nombre1Autor: autorResponse.nombre1Autor,
@@ -144,6 +150,8 @@ export class CrearUsuarioComponent implements OnInit {
                   }
                 };
                 this.userForm.reset(); // Limpiar el formulario después del registro
+
+                console.log("Registrando....");
                 this.registrarusuarioService.registroInvestigador(investigador).subscribe(
                   investigadorResponse => {
                     Swal.fire({
@@ -151,6 +159,7 @@ export class CrearUsuarioComponent implements OnInit {
                       title: "¡Investigador Registrado!",
                       text: "El investigador ha sido registrado correctamente.",
                     });
+                    this.router.navigate(['/usuario']);
                   },
                   investigadorError => {
                     Swal.fire({
@@ -160,6 +169,7 @@ export class CrearUsuarioComponent implements OnInit {
                     });
                   }
                 );
+                this.userForm.reset();
               },
               autorError => {
                 Swal.fire({
@@ -170,8 +180,6 @@ export class CrearUsuarioComponent implements OnInit {
               }
             );
           }
-
-          
         },
         error => {
           Swal.fire({
@@ -180,11 +188,11 @@ export class CrearUsuarioComponent implements OnInit {
             text: "Algo salió mal!",
           });
         }
-        
+
       );
     }
   }
-  
+
   togglePasswordVisibility() {
     if (this.passwordFieldType === 'password') {
       this.passwordFieldType = 'text';
@@ -199,57 +207,119 @@ export class CrearUsuarioComponent implements OnInit {
     const isAdditionalFieldsRequired = role === 'INVESTIGADOR' || role === 'COORDINADOR';
 
     if (isAdditionalFieldsRequired) {
-      this.userForm.get('numeroEmpleado')?.setValidators([Validators.required]);
       this.userForm.get('instituto')?.setValidators([Validators.required]);
       this.userForm.get('nombre1')?.setValidators([Validators.required]);
-      this.userForm.get('nombre2')?.setValidators([Validators.required]);
       this.userForm.get('apellidoPaterno')?.setValidators([Validators.required]);
-      this.userForm.get('apellidoMaterno')?.setValidators([Validators.required]);
     } else {
-      this.userForm.get('numeroEmpleado')?.clearValidators();
       this.userForm.get('instituto')?.clearValidators();
       this.userForm.get('nombre1')?.clearValidators();
-      this.userForm.get('nombre2')?.clearValidators();
       this.userForm.get('apellidoPaterno')?.clearValidators();
-      this.userForm.get('apellidoMaterno')?.clearValidators();
     }
 
-    this.userForm.get('numeroEmpleado')?.updateValueAndValidity();
     this.userForm.get('instituto')?.updateValueAndValidity();
     this.userForm.get('nombre1')?.updateValueAndValidity();
-    this.userForm.get('nombre2')?.updateValueAndValidity();
     this.userForm.get('apellidoPaterno')?.updateValueAndValidity();
-    this.userForm.get('apellidoMaterno')?.updateValueAndValidity();
+    // Limpiar los campos si el rol cambia
+    if (!isAdditionalFieldsRequired) {
+      this.userForm.patchValue({
+        numeroEmpleado: '',
+        instituto: '',
+        nombre1: '',
+        apellidoPaterno: '',
+        nombre2: '',
+        apellidoMaterno: ''
+      });
+    }
   }
 
- /* report(){
-    this.registrarusuarioService.reporte().subscribe(response => {
-      const blob = new Blob([response], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.pdf';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
+  onKeyPress(event: KeyboardEvent, field: string): void {
+    const charCode = event.charCode;
+    const char = String.fromCharCode(charCode);
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ'´]$/.test(char)) {
+      // Prevenir la entrada del carácter no permitido.
+      event.preventDefault();
+    }
+  }
+  convertEmailToLowerCase(): void {
+    const emailControl = this.userForm.get('email');
+    if (emailControl) {
+      const emailValue = emailControl.value;
+      emailControl.setValue(emailValue.toLowerCase(), { emitEvent: false });
+    }
   }
 
-  reportExel() {
-    this.registrarusuarioService.reporteExe().subscribe(response => {
-      const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reporte.xlsx';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error downloading the file', error);
-    });
-  }*/
-  
+  validarAutor(): boolean {
+    const nombre1 = this.userForm.get('nombre1')?.value;
+    const apellidoPaterno = this.userForm.get('apellidoPaterno')?.value;
+    const selectedInstituto = this.userForm.get('instituto')?.value;
+    console.log("Validado");
+    if (!nombre1 || !apellidoPaterno || !selectedInstituto) {
+      this.userForm.markAllAsTouched();  // Muestra los mensajes de error en caso de que falte algún dato.
+      return false;
+    }
+
+    return true;
+  }
+
+  onInput(event: Event, field: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let valor = inputElement.value;
+
+    // Elimina caracteres no permitidos
+    valor = valor.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ'´]/g, '');
+
+    // Convertir a mayúscula la primera letra y el resto a minúsculas
+    valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
+
+    // Asigna el valor limpio de nuevo al campo de entrada
+    inputElement.value = valor;
+
+    // Actualiza el modelo de formulario reactivo
+    if (this.userForm.contains(field)) {
+      this.userForm.get(field)?.setValue(valor);
+    }
+  }
+
+
+  onKeyPressNumber(event: KeyboardEvent): void {
+    const charCode = event.charCode;
+    const char = String.fromCharCode(charCode);
+
+    // Verifica si el carácter es un número (0-9)
+    if (!/^\d$/.test(char)) {
+      // Prevenir la entrada de caracteres no permitidos
+      event.preventDefault();
+    }
+  }
+
+  /* report(){
+     this.registrarusuarioService.reporte().subscribe(response => {
+       const blob = new Blob([response], { type: 'application/pdf' });
+       const url = window.URL.createObjectURL(blob);
+       const link = document.createElement('a');
+       link.href = url;
+       link.download = 'reporte.pdf';
+       link.click();
+       window.URL.revokeObjectURL(url);
+     }, error => {
+       console.error('Error downloading the file', error);
+     });
+   }
+ 
+   reportExel() {
+     this.registrarusuarioService.reporteExe().subscribe(response => {
+       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+       const url = window.URL.createObjectURL(blob);
+       const link = document.createElement('a');
+       link.href = url;
+       link.download = 'reporte.xlsx';
+       link.click();
+       window.URL.revokeObjectURL(url);
+     }, error => {
+       console.error('Error downloading the file', error);
+     });
+   }*/
+
 }
 
 

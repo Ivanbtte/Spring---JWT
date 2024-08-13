@@ -25,7 +25,6 @@ export class InvestigadorComponent implements OnInit {
     this.investigadorService.getInvestigadores().subscribe(
       (data: Investigador[]) => {
         this.investigadores = data;
-        console.info("Se supone que se deben mostrar los datos");
       },
       (error) => {
         console.error('Error al obtener los investigadores:', error);
