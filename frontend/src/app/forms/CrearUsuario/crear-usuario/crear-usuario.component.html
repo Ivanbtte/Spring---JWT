@@ -6,7 +6,7 @@
         <div class="form-group">
             <label for="email">Correo Electrónico</label>
             <input type="email" class="form-control" id="email" formControlName="email" placeholder="Ingrese su correo"
-                required>
+                required (input)="convertEmailToLowerCase()">
             <div *ngIf="userForm.get('email')?.errors?.['required'] && userForm.get('email')?.touched"
                 class="text-danger">
                 El correo electrónico es requerido.
@@ -20,42 +20,53 @@
             <select class="form-control" id="role" formControlName="role">
                 <option value="ADMIN">Administrador</option>
                 <option value="INVESTIGADOR">Investigador</option>
-                <option value="COORDINADOR">Coordinador</option>
+                <option value="COORDINADOR">Director</option>
             </select>
         </div>
 
         <!-- Campos adicionales para INVESTIGADOR y COORDINADOR -->
         <div *ngIf="userForm.get('role')?.value === 'INVESTIGADOR' || userForm.get('role')?.value === 'COORDINADOR'">
             <div class="form-group">
-                <label for="numeroEmpleado">Número de Empleado</label>
-                <input type="text" class="form-control" id="numeroEmpleado" formControlName="numeroEmpleado"
-                    placeholder="Ingrese su número de empleado" required>
-            </div>
-            <div class="form-group">
-                <label for="instituto">Instituto</label>
+                <label for="instituto">Instituto de afiliación</label>
                 <select class="form-control" id="instituto" formControlName="instituto" required>
                     <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
+                    <div *ngIf="userForm.get('instituto')?.errors?.['required'] && userForm.get('instituto')?.touched"
+                        class="text-danger">
+                        El instituto es obligatorio.
+                    </div>
                 </select>
             </div>
             <div class="form-group">
-                <label for="nombre1">Nombre 1</label>
+                <label for="nombre1">Primer nombre</label>
                 <input type="text" class="form-control" id="nombre1" formControlName="nombre1"
-                    placeholder="Ingrese su primer nombre" required>
+                    placeholder="Ingrese su primer nombre" required (keypress)="onKeyPress($event, 'nombre1')"
+                    (input)="onInput($event, 'nombre1')">
+                <div *ngIf="userForm.get('nombre1')?.errors?.['required'] && userForm.get('nombre1')?.touched"
+                    class="text-danger">
+                    El primer nombre es obligatorio.
+                </div>
             </div>
             <div class="form-group">
-                <label for="nombre2">Nombre 2</label>
+                <label for="nombre2">Segundo nombre</label>
                 <input type="text" class="form-control" id="nombre2" formControlName="nombre2"
-                    placeholder="Ingrese su segundo nombre" required>
+                    placeholder="Ingrese su segundo nombre" (keypress)="onKeyPress($event, 'nombre2')"
+                    (input)="onInput($event, 'nombre2')">
             </div>
             <div class="form-group">
                 <label for="apellidoPaterno">Apellido Paterno</label>
                 <input type="text" class="form-control" id="apellidoPaterno" formControlName="apellidoPaterno"
-                    placeholder="Ingrese su apellido paterno" required>
+                    placeholder="Ingrese su apellido paterno" required
+                    (keypress)="onKeyPress($event, 'apellidoPaterno')" (input)="onInput($event, 'apellidoPaterno')">
+                <div *ngIf="userForm.get('apellidoPaterno')?.errors?.['required'] && userForm.get('apellidoPaterno')?.touched"
+                    class="text-danger">
+                    El apellido paterno es obligatorio.
+                </div>
             </div>
             <div class="form-group">
                 <label for="apellidoMaterno">Apellido Materno</label>
                 <input type="text" class="form-control" id="apellidoMaterno" formControlName="apellidoMaterno"
-                    placeholder="Ingrese su apellido materno" required>
+                    placeholder="Ingrese su apellido materno" (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                    (input)="onInput($event, 'apellidoMaterno')">
             </div>
         </div>
 
