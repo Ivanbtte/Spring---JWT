@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+  import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutorRequest } from 'src/app/services/registrarusuario/autor';
