@@ -4,6 +4,7 @@ import { LoginRequest } from './loginRequest';
 import  {  Observable, throwError, catchError, BehaviorSubject , tap, map} from 'rxjs';
 import { User } from './user';
 import { environment } from 'src/environments/environment';
+import { EncryptionServiceService } from './encryption-service.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class LoginService {
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserData: BehaviorSubject<String> =new BehaviorSubject<String>("");
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private encryptionService: EncryptionServiceService) { 
     this.currentUserLoginOn=new BehaviorSubject<boolean>(sessionStorage.getItem("token")!=null);
     this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
   }
@@ -21,9 +22,11 @@ export class LoginService {
   login(credentials: LoginRequest): Observable<any> {
     return this.http.post<any>(environment.urlHost + "auth/login", credentials).pipe(
       tap((userData) => {
+        const encryptedRole = this.encryptionService.encrypt(userData.role);
+        const encryptedInstituto = this.encryptionService.encrypt(userData.instituto);
         sessionStorage.setItem("token", userData.token);
-        sessionStorage.setItem("role", userData.role); // Guardar el rol en sessionStorage
-        sessionStorage.setItem("instituto", userData.instituto); // Guardar el instituto en sessionStorage
+        sessionStorage.setItem("role", encryptedRole);
+        sessionStorage.setItem("instituto", encryptedInstituto);
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -60,7 +63,7 @@ export class LoginService {
     return this.currentUserData.value;
   }
   getUserRole(): string {
-    return sessionStorage.getItem("role") || "";  // Recuperar el rol del usuario desde el sessionStorage
+    return this.encryptionService.decrypt(sessionStorage.getItem("role") || ""); 
   }
 
 }
