@@ -241,6 +241,7 @@ export class CrearUsuarioComponent implements OnInit {
       event.preventDefault();
     }
   }
+  
   convertEmailToLowerCase(): void {
     const emailControl = this.userForm.get('email');
     if (emailControl) {

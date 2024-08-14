@@ -52,6 +52,10 @@ export class RegistrarusuarioService {
     return this.http.put<User>(`${this.apiUrl}user/${userId}`, user);
   }
 
+  updateUserPass(userId: number, user: any): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}user/${userId}`, user);
+  }
+  
   updateAutor(userId: number, autor: AutorRequest): Observable<AutorRequest> {
     return this.http.put<AutorRequest>(`${this.apiUrl}autor/${userId}`, autor);
   }
