@@ -39,25 +39,30 @@
                     </div>
                     <div *ngIf="filtrarPorProfesor">
                         <div class="form-group-container">
-                          <div class="form-group">
-                            <label for="institutoProfesor">Instituto</label>
-                            <select class="form-control" id="institutoProfesor"
-                                    [(ngModel)]="selectedInstituteForProfessor" name="institutoForProfesor" 
+                            <div class="form-group">
+                                <label for="institutoProfesor">Instituto</label>
+                                <select class="form-control" id="institutoProfesor"
+                                    [(ngModel)]="selectedInstituteForProfessor" name="institutoForProfesor"
                                     (change)="onInstituteForProfessorChange()">
-                              <option value="">Seleccione un instituto</option>
-                              <option *ngFor="let instituto of institutos" [value]="instituto.id">{{ instituto.nombre }}</option>
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <label for="profesor">Profesor</label>
-                            <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor" name="profesor">
-                              <option value="">Seleccione un profesor</option>
-                              <option *ngFor="let profesor of profesoresFiltrados" [value]="profesor.id">{{ profesor.nombre_1_investigador }} {{ profesor.nombre_2_investigador }} {{ profesor.apellido_paterno_1_investigador }} {{ profesor.apellido_materno_2_investigador }}</option>
-                            </select>
-                          </div>
+                                    <option value="">Seleccione un instituto</option>
+                                    <option *ngFor="let instituto of institutos" [value]="instituto.id">{{
+                                        instituto.nombre }}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="profesor">Profesor</label>
+                                <select class="form-control" id="profesor" [(ngModel)]="selectedProfesor"
+                                    name="profesor">
+                                    <option value="">Seleccione un profesor</option>
+                                    <option *ngFor="let profesor of profesoresFiltrados" [value]="profesor.id">{{
+                                        profesor.nombre_1_investigador }} {{ profesor.nombre_2_investigador }} {{
+                                        profesor.apellido_paterno_1_investigador }} {{
+                                        profesor.apellido_materno_2_investigador }}</option>
+                                </select>
+                            </div>
                         </div>
-                      </div>
-                      <!--<pre>{{ institutos | json }}</pre>--> 
+                    </div>
+                    <!--<pre>{{ institutos | json }}</pre>-->
                 </form>
             </div>
         </div>
@@ -69,8 +74,8 @@
                 <form>
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="filtrarPorFechas"
-                                [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('fechas')"  />
+                            <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}"
+                                (change)="onCheckboxChange('fechas')" />
                             Filtrar por fechas <i class="fa fa-calendar"></i>
                         </label>
                     </div>
@@ -92,7 +97,8 @@
                 <form>
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="filtrarPorTipo" [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('tipo')"/>
+                            <input type="checkbox" [(ngModel)]="filtrarPorTipo" [ngModelOptions]="{standalone: true}"
+                                (change)="onCheckboxChange('tipo')" />
                             Filtrar por tipo de publicación <i class="fa fa-file"></i>
                         </label>
                     </div>
@@ -111,12 +117,14 @@
         </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Buscar</button>
-    <button (click)="reporteExe()">Download Exel</button>
     <!-- Botón de búsqueda -->
-    <button type="button" class="btn btn-primary" (click)="searchPublications()">Buscar</button>
+    <button type="button" class="btn btn-primary" (click)="searchPublications()"><i class="fa fa-search"
+            aria-hidden="true"></i>
+        Buscar</button>
 
-
+    <button type="button" class="btn btn-success" (click)="reporteExe()"><i class="fa fa-file-excel-o"
+            aria-hidden="true"></i>
+        Download Exel</button>
     <table class="table table-striped">
         <thead>
             <tr>

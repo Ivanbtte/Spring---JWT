@@ -265,9 +265,9 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[15],      //estaba en 15 para pruebas de Leonel se cambio a 19
+        titulo_revista: arr[19],      //estaba en 15 para pruebas de Leonel se cambio a 19
         fecha_publicacion: arr[5],
-        nombre_articulo: arr[19]      //estaba en 19... se cambiara a 15
+        nombre_articulo: arr[15]      //estaba en 19... se cambiara a 15
         // Sigue mapeando todas las propiedades necesarias
       };
     });
