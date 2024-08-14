@@ -241,10 +241,20 @@ export class ConsultarPublicacionComponent implements OnInit {
     this.articuloService.searchPublications(searchCriteria).subscribe(data => {
       console.log("Datos recibidos del backend:", data);
       this.articulosFiltrados = this.convertirDatos(data);
+      
+      // Ordenar los artículos por nombre_articulo
+      this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
+        const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
+        const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
+        return nombreA.localeCompare(nombreB);
+      });
+      
+      console.log("Datos ordenados:", this.articulosFiltrados);
     }, error => {
       console.error('Error al buscar publicaciones:', error);
     });
   }
+  
   
 
   convertirDatos(data: any[]): any[] {
@@ -255,8 +265,9 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[15],
-        fecha_publicacion: arr[5]
+        titulo_revista: arr[15],      //estaba en 15 para pruebas de Leonel se cambio a 19
+        fecha_publicacion: arr[5],
+        nombre_articulo: arr[19]      //estaba en 19... se cambiara a 15
         // Sigue mapeando todas las propiedades necesarias
       };
     });

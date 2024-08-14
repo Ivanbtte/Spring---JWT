@@ -121,6 +121,7 @@
         <thead>
             <tr>
                 <th>ID de Investigación</th>
+                <th>Titulo de publicacion</th>
                 <th>Titulo de revista</th>
                 <th>Fecha de publicación</th>
                 <th>Acciones</th>
@@ -129,6 +130,7 @@
         <tbody>
             <tr *ngFor="let articulo of articulosFiltrados; trackBy: trackById">
                 <td>{{articulo.id_articulo}}</td>
+                <td>{{articulo.nombre_articulo}}</td>
                 <td>{{articulo.titulo_revista}}</td>
                 <td>{{formatDate(articulo.fecha_publicacion)}}</td>
                 <td>
