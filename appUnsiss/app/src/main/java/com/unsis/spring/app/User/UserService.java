@@ -22,7 +22,7 @@ public class UserService {
     @Transactional
     public UserResponse updateUser(UserRequest userRequest) {
         User user = userRepository.findById(userRequest.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ID: "+userRequest.getId()));
 
         user.setRole(userRequest.getRole());
         if (userRequest.getUsername() != null) {
