@@ -23,6 +23,7 @@ export class LoginService {
       tap((userData) => {
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", userData.role); // Guardar el rol en sessionStorage
+        sessionStorage.setItem("instituto", userData.instituto); // Guardar el instituto en sessionStorage
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -33,6 +34,7 @@ export class LoginService {
   logout(): void {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("role"); // Quitar el rol del sessionStorage
+    sessionStorage.removeItem("instituto");
     this.currentUserLoginOn.next(false);
   }
 
