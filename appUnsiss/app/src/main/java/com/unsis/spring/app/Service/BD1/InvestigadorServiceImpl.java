@@ -173,7 +173,7 @@ public class InvestigadorServiceImpl implements InvestigadorService {
     public InvestigadorDto findByIdUser(Long userId) {
         // Usamos la consulta para obtener una lista de Investigadores asociados al
         // usuario
-        List<Investigador> investigadores = investigadorDao.findByUser(userId);
+        List<Investigador> investigadores = investigadorDao.findByUser2(userId);
 
         // Nos aseguramos de que hay al menos un investigador en la lista
         if (investigadores.isEmpty()) {
