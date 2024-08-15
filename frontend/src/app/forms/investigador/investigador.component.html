@@ -6,7 +6,16 @@
         <h3>Investigadores
         </h3>
     </div>
-    
+    <!-- ComboBox para Institutos -->
+    <div class="form-group">
+        <label for="institutoSelect">Filtrar por Instituto:</label>
+        <select class="form-control" id="institutoSelect" (change)="onInstitutoChange($event)">
+            <option value="">Todos</option>
+            <option *ngFor="let instituto of institutos" [value]="instituto.id">
+                {{ instituto.nombre }}
+            </option>
+        </select>
+    </div>
     <table class="table table-striped">
         <thead>
         <tr>
