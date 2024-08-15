@@ -28,7 +28,8 @@
   }
   
   .btn-aceptar,
-  .btn-rechazar {
+  .btn-rechazar,
+  .btn-editar {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -40,9 +41,17 @@
   .btn-aceptar {
     background-color: #4CAF50; /* Green */
   }
+
+  .btn-editar {
+    background-color: #4749c0; /* Green */
+  }
   
   .btn-rechazar {
     background-color: #F44336; /* Red */
+  }
+
+  .btn-editar:hover {
+    background-color: #4749c0; /* Green */
   }
   
   .btn-aceptar:hover {

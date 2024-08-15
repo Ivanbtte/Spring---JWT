@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Articulo } from 'src/app/services/articulo/articulo';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Observaciones } from 'src/app/services/articulo/observaciones';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 @Component({
   selector: 'app-validar-publicacion',
@@ -16,10 +17,11 @@ export class ValidarPublicacionComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private articuloService: ArticuloService) { }
+    private articuloService: ArticuloService,
+    private loginService: LoginService) { }
 
   ngOnInit(): void {
-    this.rolUsuario = sessionStorage.getItem('role');
+    this.rolUsuario = this.loginService.getUserRole();
     // Captura el ID de la URL
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
