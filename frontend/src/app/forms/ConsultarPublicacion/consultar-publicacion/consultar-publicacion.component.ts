@@ -38,7 +38,12 @@ export class ConsultarPublicacionComponent implements OnInit {
   selectedInvestigador: any[] = [];
   profesoresFiltrados: any[] = [];
   dataService: any;
-
+  //Variables extras:
+  filtrarPorTrimestre: boolean = false;
+  trimestres: number[] = [1, 2, 3, 4];
+  listaAnios: number[] = Array.from({length: (new Date().getFullYear() - 2000 + 1)}, (v, k) => 2000 + k);
+  selectedTrimestre: number | null = null;
+  selectedAnio: number | null = null;
 
   constructor(
     private articuloService: ArticuloService,
@@ -231,8 +236,8 @@ export class ConsultarPublicacionComponent implements OnInit {
     const searchCriteria = {
       institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
       autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-      fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null,
-      fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null,
+      fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+      fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
       tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
     };
   
@@ -355,9 +360,15 @@ export class ConsultarPublicacionComponent implements OnInit {
         }
         break;
       case 'fechas':
-        if (!this.filtrarPorFechas) {
-          this.startDate = '';
-          this.endDate = '';
+        if (this.filtrarPorFechas) {
+          this.filtrarPorTrimestre = false;
+          this.selectedTrimestre=null;
+          this.selectedAnio=null;
+        }
+        break;
+      case 'trimestre':
+        if (this.filtrarPorTrimestre) {
+          this.filtrarPorFechas = false;
         }
         break;
       case 'tipo':
@@ -365,6 +376,44 @@ export class ConsultarPublicacionComponent implements OnInit {
           this.selectedTipoPublicacion = null;
         }
         break;
+    }
+  }
+  onTrimestreChange(): void {
+    // Verifica que ambos valores no sean nulos o undefined
+    if (this.selectedTrimestre !== null && this.selectedAnio !== null) {
+      // Asegúrate de que `selectedTrimestre` y `selectedAnio` son números
+      const trimestre = Number(this.selectedTrimestre);
+      const anio = Number(this.selectedAnio);
+      let startDate: string;
+      let endDate: string;
+      switch (trimestre) {
+        case 1:
+          console.log("Trimestre 1");
+          startDate = `${anio}-01-01`;
+          endDate = `${anio}-03-31`;
+          break;
+        case 2:
+          startDate = `${anio}-04-01`;
+          endDate = `${anio}-06-30`;
+          break;
+        case 3:
+          startDate = `${anio}-07-01`;
+          endDate = `${anio}-09-30`;
+          break;
+        case 4:
+          startDate = `${anio}-10-01`;
+          endDate = `${anio}-12-31`;
+          break;
+        default:
+          console.error("Trimestre no válido:", trimestre);
+          return;
+      }
+  
+      // Asigna las fechas a las propiedades correspondientes
+      this.startDate = startDate;
+      this.endDate = endDate;
+    } else {
+      console.warn("No se seleccionaron ambos valores (trimestre o año).");
     }
   }
 }

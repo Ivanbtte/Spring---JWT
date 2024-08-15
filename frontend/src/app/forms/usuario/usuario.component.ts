@@ -30,7 +30,12 @@ export class UsuarioComponent implements OnInit {
   loadUsers(): void {
     this.userService.getUsers().subscribe(
       (data: User[]) => {
-        this.users = data;
+        // Ordenar los usuarios por nombre de usuario alfabéticamente
+        this.users = data.sort((a, b) => {
+          if (a.username < b.username) return -1;
+          if (a.username > b.username) return 1;
+          return 0;
+        });
       },
       (error: any) => {
         console.error('Error al obtener los usuarios:', error);
