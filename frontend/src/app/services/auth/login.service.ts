@@ -65,5 +65,8 @@ export class LoginService {
   getUserRole(): string {
     return this.encryptionService.decrypt(sessionStorage.getItem("role") || ""); 
   }
+  getInstituto(): string {
+    return this.encryptionService.decrypt(sessionStorage.getItem("instituto") || ""); 
+  }
 
 }
