@@ -25,6 +25,7 @@ import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Repository.BD1.ArticuloDao;
 import com.unsis.spring.app.Repository.BD1.FileMetadataRepository;
 import com.unsis.spring.app.Repository.BD1.InstitutoDao;
+import com.unsis.spring.app.Repository.BD1.InvestigadorDao;
 import com.unsis.spring.app.Repository.BD1.Tipo_PublicacionDao;
 import com.unsis.spring.app.Repository.BD1.TrimestreDao;
 
@@ -48,7 +49,13 @@ public class ArticuloServiceImpl implements ArticuloService {
         private TrimestreDao trimestreDao;
 
         @Autowired
+        private InvestigadorDao investigadorDao;
+
+        @Autowired
         private FileMetadataRepository fileMetadataRepository;
+
+        @Autowired
+        private EmailService emailService;
 
         @Override
         @Transactional
@@ -63,7 +70,27 @@ public class ArticuloServiceImpl implements ArticuloService {
         public ArticuloDto save(ArticuloDto articuloDto) {
                 Articulos articulo = convertToEntity(articuloDto);
                 Articulos savedArticulo = articuloDao.save(articulo);
+ 
+                try {
+                        String coordinadorEmail = obtenerEmailDelCoordinador(articulo.getInstituto().getId());
+                        if (coordinadorEmail != null) {
+                            String subject = "Nueva publicación para revisión";
+                            String text = "Hay una nueva publicación pendiente de revisión.";
+                            emailService.sendEmail(coordinadorEmail, subject, text);
+                        } else {
+                            // Maneja el caso donde no se encontró un correo válido
+                            System.err.println("No se encontró un correo de coordinador válido.");
+                        }
+                    } catch (Exception e) {
+                        // Maneja la excepción sin detener toda la transacción
+                        System.err.println("Error enviando el correo: " + e.getMessage());
+                    }
                 return convertToDto(savedArticulo);
+        }
+
+        private String obtenerEmailDelCoordinador(Long institutoId) {
+                return investigadorDao.findCoordinadorEmailByInstitutoId(institutoId)
+                        .orElseThrow(() -> new RuntimeException("No se encontró un coordinador activo para el instituto con ID: " + institutoId));
         }
 
         @Override
@@ -99,7 +126,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.getTrimestre().getFecha_fin());
                 FileMetadata fileMetadata = new FileMetadata(articulo.getFileMetadata().getId(),
                                 articulo.getFileMetadata().getFileName(), articulo.getFileMetadata().getFilePath(),
-                                articulo.getFileMetadata().getFileType());                
+                                articulo.getFileMetadata().getFileType());
 
                 return new ArticuloDto(
                                 articulo.getId_articulo(),
@@ -135,7 +162,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 .findById(articuloDto.getTipoPublicacion().getId_publicacion_tipo()).orElse(null);
                 Instituto instituto = institutoDao.findById(articuloDto.getInstituto().getId()).orElse(null);
                 Trimestre trimestre = trimestreDao.findById(articuloDto.getTrimestre().getId_trimestre()).orElse(null);
-                FileMetadata fileMetadata = fileMetadataRepository.findById(articuloDto.getFileMetadata().getId()).orElse(null);
+                FileMetadata fileMetadata = fileMetadataRepository.findById(articuloDto.getFileMetadata().getId())
+                                .orElse(null);
 
                 return new Articulos(
                                 articuloDto.getId_articulo(),
@@ -911,7 +939,8 @@ public class ArticuloServiceImpl implements ArticuloService {
         }
 
         @Override
-        public List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo) {
-            return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo);
+        public List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin,
+                        Integer tipo) {
+                return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo);
         }
 }

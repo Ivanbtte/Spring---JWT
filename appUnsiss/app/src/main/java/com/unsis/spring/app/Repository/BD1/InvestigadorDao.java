@@ -19,4 +19,7 @@ public interface InvestigadorDao extends JpaRepository<Investigador, Long> {
     List<Investigador> findByUser2(@Param("userId") Long userId);
 
     Optional<Investigador> findByUser(User user);
+
+    @Query(value = "SELECT u.username FROM Investigador i JOIN usuario u ON i.id_usuario = u.id WHERE i.id_instituto = :institutoId AND u.role = 'COORDINADOR' AND u.enabled = true", nativeQuery = true)
+    Optional<String> findCoordinadorEmailByInstitutoId(@Param("institutoId") Long institutoId);
 }
