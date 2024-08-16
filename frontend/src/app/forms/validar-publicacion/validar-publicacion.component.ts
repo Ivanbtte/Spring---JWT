@@ -4,6 +4,7 @@ import { Articulo } from 'src/app/services/articulo/articulo';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Observaciones } from 'src/app/services/articulo/observaciones';
 import { LoginService } from 'src/app/services/auth/login.service';
+import { FileService } from 'src/app/services/fileService/file.service';
 
 @Component({
   selector: 'app-validar-publicacion',
@@ -12,13 +13,15 @@ import { LoginService } from 'src/app/services/auth/login.service';
 })
 export class ValidarPublicacionComponent implements OnInit {
 
+
   rolUsuario: string | null = '';
   articulo: any;
 
   constructor(
     private route: ActivatedRoute,
     private articuloService: ArticuloService,
-    private loginService: LoginService) { }
+    private loginService: LoginService,
+    private fileService: FileService) { }
 
   ngOnInit(): void {
     this.rolUsuario = this.loginService.getUserRole();
@@ -107,5 +110,16 @@ export class ValidarPublicacionComponent implements OnInit {
       console.log('Acción para otros roles');
     }
   }
+
+  descargarPublicacion(fileId: string) {
+    const id = +fileId; // Convertir el string a número
+    this.fileService.downloadFile(id).subscribe(response => {
+      const url = window.URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = this.articulo.fileMetadata.fileName;
+      a.click();
+    });
+    }
 
 }

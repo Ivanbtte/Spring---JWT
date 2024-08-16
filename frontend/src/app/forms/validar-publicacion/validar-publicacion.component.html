@@ -83,4 +83,7 @@
   <div *ngIf="rolUsuario === 'INVESTIGADOR'" class="card-footer">
     <button class="btn-editar" (click)="aceptarPublicacion()">Editar Publicación</button>
   </div>
+  <div class="card-footer">
+    <button class="btn-descargar" (click)="descargarPublicacion(articulo.fileMetadata.id)">Descargar Archivo</button>
+  </div>
 </div>
