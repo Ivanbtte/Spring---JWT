@@ -1,5 +1,41 @@
-/* Animaciones */
-@keyframes slideDown {
+/* Estilos del contenedor */
+.warning-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 20px;
+    text-align: center;
+    animation: slideDown 1s ease-out;
+  }
+  
+  /* Estilo del GIF */
+  .warning-gif {
+    width: 150px; /* Ajusta el tamaño del GIF según prefieras */
+    height: auto;
+    margin-bottom: 20px; /* Separación entre el GIF y el mensaje */
+  }
+  
+  .warning-container h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #d90429;
+    animation: shake 0.5s ease-in-out infinite alternate;
+  }
+  
+  .warning-container p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: #721c24;
+  }
+  
+  /* Animaciones */
+  @keyframes slideDown {
     0% {
       transform: translateY(-100%);
       opacity: 0;
@@ -20,44 +56,6 @@
     40%, 80% {
       transform: translateX(5px);
     }
-  }
-  
-  /* Estilos del contenedor */
-  .warning-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-    padding: 20px;
-    text-align: center;
-    animation: slideDown 1s ease-out; /* Animación de deslizamiento */
-  }
-  
-  .warning-container h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #d90429;
-    animation: shake 0.5s ease-in-out infinite alternate; /* Vibración del título */
-  }
-  
-  .warning-container p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: #721c24;
-  }
-  
-  /* Icono de advertencia ⚠️ */
-  .warning-container::before {
-    content: "\26A0";
-    font-size: 4rem;
-    color: #d90429;
-    margin-bottom: 20px;
-    animation: shake 0.5s ease-in-out infinite alternate; /* Vibración del icono */
   }
   
   body {
