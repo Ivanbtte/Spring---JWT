@@ -29,7 +29,8 @@
   
   .btn-aceptar,
   .btn-rechazar,
-  .btn-editar {
+  .btn-editar,
+  .btn-descargar{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -38,6 +39,10 @@
     font-weight: bold;
   }
   
+  .btn-descargar {
+    background-color: #21c6ef; /* Green */
+  }
+
   .btn-aceptar {
     background-color: #4CAF50; /* Green */
   }
@@ -48,6 +53,10 @@
   
   .btn-rechazar {
     background-color: #F44336; /* Red */
+  }
+
+  .btn-descargar:hover {
+    background-color: #20b9df; /* Green */
   }
 
   .btn-editar:hover {
