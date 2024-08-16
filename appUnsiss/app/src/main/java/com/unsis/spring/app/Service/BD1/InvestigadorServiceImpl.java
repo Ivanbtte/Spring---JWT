@@ -185,4 +185,29 @@ public class InvestigadorServiceImpl implements InvestigadorService {
         return convertToDto(investigador);
     }
 
+    @Override
+    public List<InvestigadorDto> findInvestigadoresHabilitados() {
+        // Usamos la consulta para obtener una lista de Investigadores cuyos usuarios
+        // están habilitados
+        List<Investigador> investigadoresHabilitados = investigadorDao.findInvestigadoresHabilitados();
+
+        // Convertimos la lista de investigadores a una lista de InvestigadorDto
+        return investigadoresHabilitados.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<InvestigadorDto> findInvestigadoresHabilitadosPorInstituto(Long institutoId) {
+        // Usamos la consulta para obtener una lista de Investigadores habilitados
+        // filtrados por instituto
+        List<Investigador> investigadoresHabilitadosPorInstituto = investigadorDao
+                .findInvestigadoresHabilitadosPorInstituto(institutoId);
+
+        // Convertimos la lista de investigadores a una lista de InvestigadorDto
+        return investigadoresHabilitadosPorInstituto.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
 }

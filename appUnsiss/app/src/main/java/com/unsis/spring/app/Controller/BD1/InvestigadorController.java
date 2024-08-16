@@ -32,7 +32,7 @@ public class InvestigadorController {
     public ResponseEntity<Object> get() {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<InvestigadorDto> list = investigadorService.findAll();
+            List<InvestigadorDto> list = investigadorService.findInvestigadoresHabilitados();
             return new ResponseEntity<Object>(list, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
@@ -119,7 +119,7 @@ public class InvestigadorController {
     public ResponseEntity<Object> getByInstitutoId(@PathVariable Long institutoId) {
         Map<String, Object> map = new HashMap<>();
         try {
-            List<InvestigadorDto> investigadores = investigadorService.findByInstitutoId(institutoId);
+            List<InvestigadorDto> investigadores = investigadorService.findInvestigadoresHabilitadosPorInstituto(institutoId);
             return new ResponseEntity<>(investigadores, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());

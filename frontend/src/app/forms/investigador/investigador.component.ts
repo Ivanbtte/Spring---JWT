@@ -36,6 +36,7 @@ export class InvestigadorComponent implements OnInit {
       }
     );
   }
+
   onInstitutoChange(event: any): void {
     const institutoId = event.target.value; // Obtener el ID del instituto seleccionado
     this.loadInvestigadores(institutoId); // Pasar el ID del instituto
@@ -43,30 +44,31 @@ export class InvestigadorComponent implements OnInit {
 
   loadInvestigadores(institutoId?: number): void {
     if (institutoId) {
-      // Llamar al servicio para obtener investigadores por instituto
+      // Llamar al servicio para obtener investigadores habilitados por instituto
       this.investigadorService.getInvestigadorByInstitute(institutoId).subscribe(
         (data: Investigador[]) => {
           // Ordenar los investigadores alfabéticamente
           this.investigadores = this.sortInvestigadores(data);
         },
         (error) => {
-          console.error('Error al obtener los investigadores filtrados por instituto:', error);
+          console.error('Error al obtener los investigadores filtrados por instituto y habilitados:', error);
         }
       );
     } else {
-      // Obtener todos los investigadores si no se ha seleccionado un instituto
       this.investigadorService.getInvestigadores().subscribe(
         (data: Investigador[]) => {
-          // Ordenar los investigadores alfabéticamente
-          this.investigadores = this.sortInvestigadores(data);
+          // Filtrar investigadores habilitados y ordenar alfabéticamente
+          const investigadoresHabilitados = data.filter(investigador => investigador); // Aquí podrías agregar la lógica de filtro por habilitado si es necesario
+          this.investigadores = this.sortInvestigadores(investigadoresHabilitados);
+          console.log("Investigadores habilitados: ", this.investigadores);
         },
         (error) => {
-          console.error('Error al obtener los investigadores:', error);
+          console.error('Error al obtener los investigadores habilitados:', error);
         }
       );
     }
   }
-  
+
   private sortInvestigadores(investigadores: Investigador[]): Investigador[] {
     return investigadores.sort((a, b) => {
       const apellidoPaternoComparison = (a.apellido_paterno_1_investigador ?? '').localeCompare(b.apellido_paterno_1_investigador ?? '');
@@ -91,16 +93,4 @@ export class InvestigadorComponent implements OnInit {
     this.router.navigate(['/editar-investigador', investigador.id]);
   }
 
-  onDelete(investigador: Investigador): void {
-    if (confirm('¿Estás seguro de que deseas dar de baja a este investigador?')) {
-      this.investigadorService.deleteInvestigador(investigador.id).subscribe(
-        () => {
-          this.investigadores = this.investigadores.filter(i => i.id !== investigador.id);
-        },
-        (error) => {
-          console.error('Error al dar de baja al investigador:', error);
-        }
-      );
-    }
-  }
 }

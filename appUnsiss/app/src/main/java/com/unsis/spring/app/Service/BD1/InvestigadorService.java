@@ -17,5 +17,9 @@ public interface InvestigadorService {
     public void delete(Long id);
 
     public List<InvestigadorDto> findByInstitutoId(Long institutoId); // Nuevo método
+    
+    public List<InvestigadorDto> findInvestigadoresHabilitados();
+
+    public List<InvestigadorDto> findInvestigadoresHabilitadosPorInstituto(Long institutoId);
 
 }

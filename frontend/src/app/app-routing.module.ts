@@ -9,6 +9,7 @@ import { CrearUsuarioComponent } from './forms/CrearUsuario/crear-usuario/crear-
 import { UsuarioComponent } from './forms/usuario/usuario.component';
 import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { EditarInvestigadorComponent } from './forms/formsEdit/editar-investigador/editar-investigador.component';
+import { EditarArticuloComponent } from './forms/formsEdit/editar-articulo/editar-articulo.component';
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
 import { RutasGuard } from './auth/rutas.guard';
@@ -29,11 +30,12 @@ const routes: Routes = [
   { path: 'investigador', component: InvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'ADMIN'] } },
   { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'editar-investigador/:id', component: EditarInvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'ADMIN'] } },
+  { path: 'editar-articulo/:id', component: EditarArticuloComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'INVESTIGADOR'] } },
   { path: 'no-authorized', component: NotAuthorizedComponent },
-  {path: 'catalogo',component: CatalogoComponent},
-  {path: 'registrar-catalogo', component:RegistrarCatalogoComponent},
-  {path: 'upload', component:UploadFilesComponent},
-  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent},
+  { path: 'catalogo', component: CatalogoComponent },
+  { path: 'registrar-catalogo', component: RegistrarCatalogoComponent },
+  { path: 'upload', component: UploadFilesComponent },
+  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent },
 ];
 
 @NgModule({

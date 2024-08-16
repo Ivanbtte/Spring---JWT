@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Articulo } from 'src/app/services/articulo/articulo';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Observaciones } from 'src/app/services/articulo/observaciones';
@@ -27,6 +27,7 @@ export class ValidarPublicacionComponent implements OnInit {
     this.rolUsuario = this.loginService.getUserRole();
     // Captura el ID de la URL
     const id = this.route.snapshot.paramMap.get('id');
+
     if (id) {
       this.articuloService.getArticuloById(+id).subscribe(
         data => {
@@ -39,6 +40,10 @@ export class ValidarPublicacionComponent implements OnInit {
     }
   }
 
+  editarPublicacion(articulo : Articulo): void {
+    console.log("Llevando a editar : ", articulo.id_articulo);
+    //this.router.navigate(['/editar-articulo/', articulo.id_articulo]);
+  }
 
   rechazarPublicacion() {
     if (this.rolUsuario === 'COORDINADOR') {
@@ -76,7 +81,6 @@ export class ValidarPublicacionComponent implements OnInit {
   }
 
   aceptarPublicacion() {
-
     if (this.rolUsuario === 'COORDINADOR') {
       const observaciones: Observaciones = {
         id_articulo: this.articulo.id_articulo,

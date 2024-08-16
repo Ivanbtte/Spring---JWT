@@ -1,4 +1,4 @@
-  import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutorRequest } from 'src/app/services/registrarusuario/autor';
@@ -60,7 +60,7 @@ export class EditarInvestigadorComponent implements OnInit {
       invest => {
         console.log('Datos del investigador:', invest);
 
-        this.userId = invest.user.id;         
+        this.userId = invest.user.id;
         this.username = invest.user.username;
         this.userstatus = invest.user.enabled;
 
@@ -98,7 +98,7 @@ export class EditarInvestigadorComponent implements OnInit {
             role: invest.user.role || ''
             // Otros campos que no dependen del investigador
           });
-          this.updateAdditionalFields(invest. user.role);
+          this.updateAdditionalFields(invest.user.role);
         }
       },
       error => {
@@ -146,7 +146,7 @@ export class EditarInvestigadorComponent implements OnInit {
               nombre2Autor: this.userForm.value.nombre2,
               apellidoPaternoAutor: this.userForm.value.apellidoPaterno,
               apellidoMaternoAutor: this.userForm.value.apellidoMaterno,
-              autorUnsis:  this.autorunsis
+              autorUnsis: this.autorunsis
             };
 
             // Imprimir los datos que se enviarán al servicio de `autor`
@@ -199,6 +199,9 @@ export class EditarInvestigadorComponent implements OnInit {
                       title: "¡Investigador Actualizado!",
                       text: "El investigador ha sido actualizado correctamente.",
                     });
+
+                    // Redirigir al usuario a otra dirección después de la actualización exitosa
+                    this.router.navigate(['/investigador']);
                   },
                   investigadorError => {
                     console.log('Error en la actualización de Investigador:', investigadorError); // Log del error
@@ -219,6 +222,9 @@ export class EditarInvestigadorComponent implements OnInit {
                 });
               }
             );
+          } else {
+            // Redirigir al usuario a otra dirección después de la actualización exitosa
+            this.router.navigate(['/investigador']);
           }
         },
         error => {
@@ -233,6 +239,7 @@ export class EditarInvestigadorComponent implements OnInit {
       );
     }
   }
+
 
   updateAdditionalFields(role: string): void {
     const isAdditionalFieldsRequired = role === 'INVESTIGADOR' || role === 'COORDINADOR';
