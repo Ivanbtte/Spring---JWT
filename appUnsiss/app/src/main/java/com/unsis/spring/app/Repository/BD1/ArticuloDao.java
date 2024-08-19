@@ -1,6 +1,7 @@
 package com.unsis.spring.app.Repository.BD1;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -130,4 +131,8 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         @Param("fechaInicio") String fechaInicio,
                         @Param("fechaFin") String  fechaFin,
                         @Param("tipo") Integer tipo);
+
+// Reemplaza el método original con este
+@Query("SELECT a FROM Articulos a WHERE a.fecha_publicacion = :fechaPublicacion AND LOWER(a.nombre_articulo) = LOWER(:nombreArticulo)")
+Optional<Articulos> findByFechaPublicacionAndNombreArticulo(@Param("fechaPublicacion") Date fechaPublicacion, @Param("nombreArticulo") String nombreArticulo);
 }

@@ -1,5 +1,6 @@
 package com.unsis.spring.app.Entity.BD1;
 
+import java.text.Normalizer;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -148,6 +150,22 @@ public class Articulos {
         this.aceptado_director = aceptado_director;
         this.aceptado_gestion = aceptado_gestion;
         this.estatus = estatus;
+    }
+
+    @Transient
+    private String tituloNormalizado;
+
+    // Método para normalizar el título
+    public String getTituloNormalizado() {
+        if (nombre_articulo == null) {
+            return null;
+        }
+        // Normalizar acentos, convertir a minúsculas y eliminar espacios adicionales
+        return Normalizer.normalize(nombre_articulo, Normalizer.Form.NFD)
+                         .replaceAll("\\p{M}", "")
+                         .toLowerCase()
+                         .replaceAll("\\s+", " ")  // Reemplaza múltiples espacios por uno solo
+                         .trim();  // Elimina espacios al inicio y al final
     }
 
 }

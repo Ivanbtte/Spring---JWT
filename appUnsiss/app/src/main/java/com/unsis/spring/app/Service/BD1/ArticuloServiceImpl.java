@@ -2,6 +2,7 @@ package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,29 +69,44 @@ public class ArticuloServiceImpl implements ArticuloService {
         @Override
         @Transactional
         public ArticuloDto save(ArticuloDto articuloDto) {
+
                 Articulos articulo = convertToEntity(articuloDto);
+
+                String tituloNormalizado = articulo.getTituloNormalizado();
+
+                // Verificar si existe un artículo con el mismo título y fecha de publicación
+                Optional<Articulos> existingArticulo = articuloDao.findByFechaPublicacionAndNombreArticulo(
+                                articulo.getFecha_publicacion(), tituloNormalizado);
+
+                if (existingArticulo.isPresent()) {
+                        throw new IllegalArgumentException(
+                                        "Ya existe un artículo con el mismo título y fecha de publicación.");
+                }
+
                 Articulos savedArticulo = articuloDao.save(articulo);
- 
+
                 try {
                         String coordinadorEmail = obtenerEmailDelCoordinador(articulo.getInstituto().getId());
                         if (coordinadorEmail != null) {
-                            String subject = "Nueva publicación para revisión";
-                            String text = "Hay una nueva publicación pendiente de revisión.";
-                            emailService.sendEmail(coordinadorEmail, subject, text);
+                                String subject = "Nueva publicación para revisión";
+                                String text = "Hay una nueva publicación pendiente de revisión.";
+                                emailService.sendEmail(coordinadorEmail, subject, text);
                         } else {
-                            // Maneja el caso donde no se encontró un correo válido
-                            System.err.println("No se encontró un correo de coordinador válido.");
+                                // Maneja el caso donde no se encontró un correo válido
+                                System.err.println("No se encontró un correo de coordinador válido.");
                         }
-                    } catch (Exception e) {
+                } catch (Exception e) {
                         // Maneja la excepción sin detener toda la transacción
                         System.err.println("Error enviando el correo: " + e.getMessage());
-                    }
+                }
                 return convertToDto(savedArticulo);
         }
 
         private String obtenerEmailDelCoordinador(Long institutoId) {
                 return investigadorDao.findCoordinadorEmailByInstitutoId(institutoId)
-                        .orElseThrow(() -> new RuntimeException("No se encontró un coordinador activo para el instituto con ID: " + institutoId));
+                                .orElseThrow(() -> new RuntimeException(
+                                                "No se encontró un coordinador activo para el instituto con ID: "
+                                                                + institutoId));
         }
 
         @Override
@@ -943,4 +959,5 @@ public class ArticuloServiceImpl implements ArticuloService {
                         Integer tipo) {
                 return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo);
         }
+
 }
