@@ -15,20 +15,19 @@ body {
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px; /* Reducimos el ancho del formulario */
 }
+
 .registration-form {
     width: 100%;
-    max-width: 400px;
-    margin: 30px;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .registration-form h3 {
     margin-bottom: 20px;
+    font-size: 1.4rem; /* Ajustamos el tamaño del título */
 }
 
 .registration-form .form-group {
@@ -38,12 +37,14 @@ body {
 .registration-form label {
     font-weight: bold;
     color: #333;
+    font-size: 0.9rem; /* Reducimos el tamaño de las etiquetas */
 }
 
 .registration-form .form-control {
     border-radius: 5px;
     padding: 10px;
     font-size: 14px;
+    width: 100%; /* Aseguramos que los inputs ocupen todo el ancho disponible */
 }
 
 .registration-form .form-control:focus {
@@ -56,6 +57,7 @@ body {
     border-color: #007bff;
     border-radius: 5px;
     font-size: 16px;
+    width: 100%; /* Hacemos el botón ocupar todo el ancho del formulario */
 }
 
 .registration-form .btn-primary:hover {
@@ -68,26 +70,12 @@ body {
     margin-top: 5px;
 }
 
-.text-center {
-    text-align: center;
-}
-
-.my-3 {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
 .input-group-append .input-group-text {
     background: none;
     border: none;
     cursor: pointer;
-  }
-  
-  .form-control {
-    padding-right: 2.5rem; /* Añadir espacio para el icono dentro del input */
-  }
-  
-  .password-toggle i {
-    font-size: 1.2rem; /* Ajustar el tamaño del icono si es necesario */
-  }
+}
 
-  
+.password-toggle i {
+    font-size: 1.2rem;
+}
