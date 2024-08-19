@@ -12,7 +12,6 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Nombre de Usuario</th>
         <th>Role</th>
         <th>Acciones</th>
@@ -20,7 +19,6 @@
     </thead>
     <tbody>
       <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
         <td>{{ user.username }}</td>
         <td>{{ getRoleText(user.role) }}</td>
         <td>
