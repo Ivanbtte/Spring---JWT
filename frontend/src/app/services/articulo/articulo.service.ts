@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -22,7 +22,12 @@ export class ArticuloService {
   // Método para obtener trimestres
   getTrimestres(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi + 'trimestre').pipe(
-      catchError(this.handleError)
+      map(trimestres => {
+        // Ordena los trimestres por fecha de inicio descendente
+        trimestres.sort((a, b) => new Date(b.fecha_inicio).getTime() - new Date(a.fecha_inicio).getTime());
+        // Filtra para obtener solo los dos últimos trimestres
+        return trimestres.slice(0, 2);
+      })
     );
   }
 

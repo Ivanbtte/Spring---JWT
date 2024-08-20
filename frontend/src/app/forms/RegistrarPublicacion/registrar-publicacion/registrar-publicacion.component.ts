@@ -23,7 +23,9 @@ export class RegistrarPublicacionComponent implements OnInit {
   selectedInstitutoPublicacion: any;
   selectedTrimestre: any;
   trimestres: any[] = [];
-
+  // Variables para manejar el rango de fechas
+  fechaInicioPermitida!: Date;
+  fechaFinPermitida!: Date;
 
 
   constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) { }
@@ -150,6 +152,25 @@ export class RegistrarPublicacionComponent implements OnInit {
         console.error('Error al obtener autores por instituto', error);
       }
     );
+  }
+
+  onTrimestreChange(): void {
+    console.log('Trimestres:', this.trimestres);
+    console.log('Trimestre cambiado:', this.selectedTrimestre);
+    if (this.selectedTrimestre) {
+      const trimestreSeleccionado = this.trimestres.find(t => t.id_trimestre === Number(this.selectedTrimestre));
+      console.log('Entra aca', trimestreSeleccionado);
+      if (trimestreSeleccionado) {
+        // Establece las fechas permitidas basadas en el trimestre seleccionado
+        this.fechaInicioPermitida = new Date(trimestreSeleccionado.fecha_inicio);
+        this.fechaInicioPermitida.setDate(this.fechaInicioPermitida.getDate() - 7); // Permite seleccionar 1 semana antes
+  
+        this.fechaFinPermitida = new Date(trimestreSeleccionado.fecha_fin); // Fecha de fin del trimestre
+  
+        console.log('Fecha inicio permitida:', this.fechaInicioPermitida);
+        console.log('Fecha fin permitida:', this.fechaFinPermitida);
+      }
+    }
   }
 
   guardarAutorUnsis(idAutor: number, index: number) {

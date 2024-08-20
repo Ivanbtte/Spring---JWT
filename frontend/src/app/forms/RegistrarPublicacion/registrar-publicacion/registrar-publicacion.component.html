@@ -122,13 +122,20 @@
       </div>
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
+      
       <div class="form-group">
         <label for="fechaPublicacion">Fecha de publicación</label>
-        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+        <input 
+          type="date" 
+          id="fechaPublicacion" 
+          class="form-control" 
+          [(ngModel)]="fechaPublicacion"
+          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
+          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
           name="fechaPublicacion">
       </div>
       <div class="form-group-container">
@@ -277,13 +284,20 @@
 
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
+      
       <div class="form-group">
         <label for="fechaPublicacion">Fecha de publicación</label>
-        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+        <input 
+          type="date" 
+          id="fechaPublicacion" 
+          class="form-control" 
+          [(ngModel)]="fechaPublicacion"
+          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
+          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
           name="fechaPublicacion">
       </div>
       <div class="form-group">
@@ -430,13 +444,20 @@
 
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
+      
       <div class="form-group">
         <label for="fechaPublicacion">Fecha de publicación</label>
-        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+        <input 
+          type="date" 
+          id="fechaPublicacion" 
+          class="form-control" 
+          [(ngModel)]="fechaPublicacion"
+          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
+          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
           name="fechaPublicacion">
       </div>
       <div class="form-group-container">
