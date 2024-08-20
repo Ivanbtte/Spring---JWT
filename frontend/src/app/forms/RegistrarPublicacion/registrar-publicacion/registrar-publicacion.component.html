@@ -172,6 +172,9 @@
         </label>
         <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
       </div>
+      <div *ngIf="fileName" class="file-name">
+        Archivo seleccionado: {{ fileName }}
+      </div>
       <br>
       <button type="button" class="btn btn-success" (click)="crearArticulo()">
         <i class="fa fa-check"></i> Registrar
@@ -319,6 +322,9 @@
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
         <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+      </div>
+      <div *ngIf="fileName" class="file-name">
+        Archivo seleccionado: {{ fileName }}
       </div>
       <br>
       <button type="button" class="btn btn-success" (click)="crearLibro()">
@@ -482,6 +488,10 @@
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
         <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+      
+      </div>
+      <div *ngIf="fileName" class="file-name">
+        Archivo seleccionado: {{ fileName }}
       </div>
       <br>
       <button type="button" class="btn btn-success" (click)="crearCapitulo()">

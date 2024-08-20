@@ -293,6 +293,10 @@ export class CrearUsuarioComponent implements OnInit {
       event.preventDefault();
     }
   }
+  
+  cancel(): void {
+    this.router.navigate(['/usuario']);
+  }
 
   /* report(){
      this.registrarusuarioService.reporte().subscribe(response => {

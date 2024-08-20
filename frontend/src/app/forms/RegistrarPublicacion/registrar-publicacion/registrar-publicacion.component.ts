@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Articulo } from 'src/app/services/articulo/articulo';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { FileService } from 'src/app/services/fileService/file.service';
   styleUrls: ['./registrar-publicacion.component.css']
 })
 export class RegistrarPublicacionComponent implements OnInit {
-
+  @ViewChild('fileInput') fileInput!: ElementRef;
   [key: string]: any;
   selectedFile!: File;
   renamedFile!: File;
@@ -23,7 +23,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   selectedInstitutoPublicacion: any;
   selectedTrimestre: any;
   trimestres: any[] = [];
-
+  fileName: string = '';
 
 
   constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) { }
@@ -267,6 +267,10 @@ export class RegistrarPublicacionComponent implements OnInit {
         }
       }
     }
+    if (!this.renamedFile) {
+      Swal.fire('Error', 'Debe subir su evidencia en PDF antes de registrar la publicación', 'error');
+      return false;
+    }
 
     return true;
   }
@@ -304,6 +308,11 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe proporcionar al menos un ISBN (impreso o digital)', 'error');
       return false;
     }
+    // Validar que un archivo PDF haya sido seleccionado
+    if (!this.renamedFile) {
+      Swal.fire('Error', 'Debe subir un evidencia en PDF antes de registrar la publicación', 'error');
+      return false;
+    }
     return true;
   }
 
@@ -338,6 +347,11 @@ export class RegistrarPublicacionComponent implements OnInit {
     }
     if (!this.isbnImpreso && !this.isbnDigital) {
       Swal.fire('Error', 'Debes proporcionar al menos un ISBN (impreso o digital).', 'error');
+      return false;
+    }
+    // Validar que un archivo PDF haya sido seleccionado
+    if (!this.renamedFile) {
+      Swal.fire('Error', 'Debe subir su evidencia en PDF antes de registrar la publicación', 'error');
       return false;
     }
     return true;
@@ -595,6 +609,9 @@ export class RegistrarPublicacionComponent implements OnInit {
     this.miar = '';
     this.tituloLibro = '';
     this.editorialLibro = '';
+    // Reiniciar la selección del archivo
+    this.fileInput.nativeElement.value = '';
+    this.fileName = ''; // Limpia el nombre del archivo en el formulario, si es necesario
   }
 
   onCheckboxChange(event: Event, field: string) {
@@ -638,21 +655,23 @@ export class RegistrarPublicacionComponent implements OnInit {
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
     if (this.selectedFile) {
-      // Verifica que el archivo sea un PDF
       if (this.selectedFile.type !== 'application/pdf') {
-        alert('Solo se permiten archivos PDF');
+        Swal.fire('Error', 'Solo se permiten archivos PDF', 'error');
+        this.fileName = '';
         return;
       }
-  
+      // Actualiza el nombre del archivo
+      this.fileName = this.selectedFile.name;
+
       // Genera el folio
       const trimestreId = this.selectedTrimestre; // El trimestre seleccionado
       const archivoId = this.generateFileId(); // Función para generar un ID único
       const archivoId2 = this.generateFileId(); // Función para generar un ID único
       const folio = `TRIM${trimestreId}-ID${archivoId}${archivoId2}`;
-      
+
       // Renombra el archivo
       this.renamedFile = new File([this.selectedFile], `${folio}.pdf`, { type: 'application/pdf' });
-  
+
     }
     console.log(this.renamedFile);
   }
