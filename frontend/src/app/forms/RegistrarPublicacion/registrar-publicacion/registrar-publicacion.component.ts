@@ -138,7 +138,6 @@ export class RegistrarPublicacionComponent implements OnInit {
       this.investigadores.splice(index, 1);
       this.autoresPorInstituto.splice(index, 1);
     }
-    console.log("ID de autores: ", this.idsAutores);
 
   }
 
@@ -359,6 +358,10 @@ export class RegistrarPublicacionComponent implements OnInit {
       return;
     }
 
+    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
+
     this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
@@ -384,7 +387,7 @@ export class RegistrarPublicacionComponent implements OnInit {
             filePath: '',
             fileType: ''
           },
-          fecha_publicacion: this.fechaPublicacion,
+          fecha_publicacion: fechaPublicacionAjustada,
           titulo_revista: this.nombreRevista,
           numero_revista: this.numEmision,
           volumen_revista: this.numVolumen,
@@ -437,6 +440,11 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
+
+    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
+
     this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
@@ -462,7 +470,7 @@ export class RegistrarPublicacionComponent implements OnInit {
             filePath: '',
             fileType: ''
           },
-          fecha_publicacion: this.fechaPublicacion,
+          fecha_publicacion: fechaPublicacionAjustada,
           nombre_articulo: this.tituloLibro,
           editorial: this.editorialLibro,
           isbn_digital: this.isbnDigital,
@@ -510,6 +518,11 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
+
+    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
+
     this.fileService.uploadFile(this.renamedFile).subscribe({
       next: (response) => {
         console.log('Upload successful', response);
@@ -535,7 +548,7 @@ export class RegistrarPublicacionComponent implements OnInit {
             filePath: '',
             fileType: ''
           },
-          fecha_publicacion: this.fechaPublicacion,
+          fecha_publicacion: fechaPublicacionAjustada,
           nombre_capitulo: this.tituloCapitulo,
           nombre_articulo: this.tituloLibro,
           editorial: this.editorialCapitulo,
@@ -643,16 +656,16 @@ export class RegistrarPublicacionComponent implements OnInit {
         alert('Solo se permiten archivos PDF');
         return;
       }
-  
+
       // Genera el folio
       const trimestreId = this.selectedTrimestre; // El trimestre seleccionado
       const archivoId = this.generateFileId(); // Función para generar un ID único
       const archivoId2 = this.generateFileId(); // Función para generar un ID único
       const folio = `TRIM${trimestreId}-ID${archivoId}${archivoId2}`;
-      
+
       // Renombra el archivo
       this.renamedFile = new File([this.selectedFile], `${folio}.pdf`, { type: 'application/pdf' });
-  
+
     }
     console.log(this.renamedFile);
   }
