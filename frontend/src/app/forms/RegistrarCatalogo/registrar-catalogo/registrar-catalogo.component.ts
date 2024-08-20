@@ -56,11 +56,17 @@ export class RegistrarCatalogoComponent implements OnInit {
   }
 
   registrarTrimestre() {
+
+    const fechaInicioAjustada = this.trimestreForm.value.fecha_inicio ? new Date(this.trimestreForm.value.fecha_inicio) : new Date();
+    fechaInicioAjustada.setDate(fechaInicioAjustada.getDate() + 1);
+    const fechaFinAjustada = this.trimestreForm.value.fecha_fin ? new Date(this.trimestreForm.value.fecha_fin) : new Date();
+    fechaFinAjustada.setDate(fechaFinAjustada.getDate() + 1);
+
     if (this.trimestreForm.valid) {
       const trimestre = {
         nombre: this.trimestreForm.value.nombre,
-        fecha_inicio: this.trimestreForm.value.fecha_inicio,
-        fecha_fin: this.trimestreForm.value.fecha_fin
+        fecha_inicio: fechaInicioAjustada,
+        fecha_fin: fechaFinAjustada
       };
 
       this.catalogoService.addTrimestre(trimestre).subscribe(
