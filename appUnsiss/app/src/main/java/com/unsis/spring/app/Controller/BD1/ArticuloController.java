@@ -76,6 +76,7 @@ public class ArticuloController {
     @PostMapping(value = "/articulo")
     public ResponseEntity<Object> create(@RequestBody ArticuloDto articuloDto) {
         Map<String, Object> map = new HashMap<String, Object>();
+        System.out.println("Fecha "+ articuloDto.getFecha_publicacion());
         try {
             ArticuloDto res = articuloService.save(articuloDto);
             return new ResponseEntity<Object>(res, HttpStatus.OK);
