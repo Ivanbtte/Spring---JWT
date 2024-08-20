@@ -31,45 +31,48 @@
         </div>
       </div>
 
+      <!-- Primer Nombre (Obligatorio) -->
       <div class="form-group">
         <label for="nombre1">Primer nombre:</label>
         <input type="text" id="nombre1" formControlName="nombre1" class="form-control"
-          placeholder="Ingrese el primer nombre" [required]="userForm.value.role !== 'ADMIN'">
+          placeholder="Ingrese el primer nombre" (keypress)="onKeyPress($event, 'nombre1')"
+          (input)="onInput($event, 'nombre1')" />
         <div *ngIf="userForm.get('nombre1')?.invalid && userForm.get('nombre1')?.touched" class="text-danger">
           Por favor ingrese un primer nombre.
         </div>
       </div>
 
+      <!-- Segundo Nombre (Opcional) -->
       <div class="form-group">
         <label for="nombre2">Segundo nombre:</label>
         <input type="text" id="nombre2" formControlName="nombre2" class="form-control"
-          placeholder="Ingrese el segundo nombre">
-        <div *ngIf="userForm.get('nombre2')?.invalid && userForm.get('nombre2')?.touched" class="text-danger">
-          Por favor ingrese un segundo nombre válido.
-        </div>
+          placeholder="Ingrese el segundo nombre" (keypress)="onKeyPress($event, 'nombre2')"
+          (input)="onInput($event, 'nombre2')" />
       </div>
 
+      <!-- Apellido Paterno (Obligatorio) -->
       <div class="form-group">
         <label for="apellidoPaterno">Apellido Paterno:</label>
         <input type="text" id="apellidoPaterno" formControlName="apellidoPaterno" class="form-control"
-          placeholder="Ingrese el apellido paterno" [required]="userForm.value.role !== 'ADMIN'">
+          placeholder="Ingrese el apellido paterno" (keypress)="onKeyPress($event, 'apellidoPaterno')"
+          (input)="onInput($event, 'apellidoPaterno')" />
         <div *ngIf="userForm.get('apellidoPaterno')?.invalid && userForm.get('apellidoPaterno')?.touched"
           class="text-danger">
           Por favor ingrese un apellido paterno.
         </div>
       </div>
 
+      <!-- Apellido Materno (Opcional) -->
       <div class="form-group">
         <label for="apellidoMaterno">Apellido Materno:</label>
         <input type="text" id="apellidoMaterno" formControlName="apellidoMaterno" class="form-control"
-          placeholder="Ingrese el apellido materno" [required]="userForm.value.role !== 'ADMIN'">
-        <div *ngIf="userForm.get('apellidoMaterno')?.invalid && userForm.get('apellidoMaterno')?.touched"
-          class="text-danger">
-          Por favor ingrese un apellido materno.
-        </div>
+          placeholder="Ingrese el apellido materno" (keypress)="onKeyPress($event, 'apellidoMaterno')"
+          (input)="onInput($event, 'apellidoMaterno')" />
       </div>
+
     </div>
 
-    <button type="submit" class="btn btn-primary">Actualizar Usuario</button>
+    <button type="submit" class="btn btn-primary btn-block">Actualizar</button>
+    <button type="button" class="btn btn-danger btn-block" (click)="cancel()">Cancelar</button>
   </form>
 </div>

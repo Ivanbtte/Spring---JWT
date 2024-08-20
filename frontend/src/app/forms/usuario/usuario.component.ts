@@ -11,6 +11,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class UsuarioComponent implements OnInit {
 
   users: User[] = [];
+  p: number = 1; // Página inicial
 
   constructor(private userService: UserService, private router: Router) { }
 

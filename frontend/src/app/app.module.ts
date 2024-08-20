@@ -28,7 +28,7 @@ import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component'
 import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
 import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,6 +59,7 @@ import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
+    NgxPaginationModule
   ],
   providers: [
     {provide:HTTP_INTERCEPTORS,useClass:JwtInterceptorService,multi:true},

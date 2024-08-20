@@ -14,6 +14,7 @@ export class InvestigadorComponent implements OnInit {
   investigadores: Investigador[] = [];
   selectedInstituto: number | null = null;
   institutos: any[] = [];
+  p: number = 1; // Página inicial
 
   constructor(
     private router: Router,
