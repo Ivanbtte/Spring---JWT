@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AutorRequest } from 'src/app/services/registrarusuario/autor';
-import { Investigador } from 'src/app/services/registrarusuario/Investigador';
 import { RegistrarusuarioService } from 'src/app/services/registrarusuario/registrarusuario.service';
 import Swal from 'sweetalert2';
 
@@ -104,8 +102,8 @@ export class EditarUsuarioComponent implements OnInit {
           this.router.navigate(['/usuario']);
           Swal.fire({
             icon: "success",
-            title: "¡Registro Exitoso!",
-            text: "El usuario ha sido registrado correctamente.",
+            title: "¡Exitoso!",
+            text: "El usuario ha sido editado correctamente.",
           });
         },
         error => {
@@ -188,5 +186,9 @@ export class EditarUsuarioComponent implements OnInit {
         emailControl.enable(); // Habilita el campo si el rol es ADMIN o ROOT
       }
     }
+  }
+
+  cancel(): void {
+    this.router.navigate(['/usuario']);
   }
 }

@@ -249,7 +249,6 @@ export class EditarInvestigadorComponent implements OnInit {
       this.userForm.get('instituto')?.setValidators([Validators.required]);
       this.userForm.get('nombre1')?.setValidators([Validators.required]);
       this.userForm.get('apellidoPaterno')?.setValidators([Validators.required]);
-      this.userForm.get('apellidoMaterno')?.setValidators([Validators.required]);
     } else {
       this.userForm.get('instituto')?.clearValidators();
       this.userForm.get('nombre1')?.clearValidators();
@@ -264,6 +263,26 @@ export class EditarInvestigadorComponent implements OnInit {
     this.userForm.get('apellidoPaterno')?.updateValueAndValidity();
     this.userForm.get('apellidoMaterno')?.updateValueAndValidity();
 
+  }
+  cancel(): void {
+    this.router.navigate(['/investigador']);
+  }
+  onKeyPress(event: KeyboardEvent, field: string): void {
+    const charCode = event.charCode;
+    const char = String.fromCharCode(charCode);
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ'´]$/.test(char)) {
+      // Prevenir la entrada del carácter no permitido.
+      event.preventDefault();
+    }
+  }
+
+  onInput(event: Event, field: string): void {
+    const inputElement = event.target as HTMLInputElement;
+    let valor = inputElement.value;
+    valor = valor.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ'´]/g, '');
+    valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
+    inputElement.value = valor;
+    (this as any)[field] = valor;  // Aquí está el cambio para evitar el error
   }
 
 }

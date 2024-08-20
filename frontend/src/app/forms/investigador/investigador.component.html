@@ -18,26 +18,29 @@
     </div>
     <table class="table table-striped">
         <thead>
-        <tr>
-            <th>Apellido Paterno</th>
-            <th>Apellido Materno</th>
-            <th>Nombre</th>
-            <th>Segundo Nombre</th>
-            <th>Acciones</th>
-        </tr>
+            <tr>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Nombre</th>
+                <th>Segundo Nombre</th>
+                <th>Acciones</th>
+            </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let investigador of investigadores">
-            <td>{{ investigador.apellido_paterno_1_investigador }}</td>
-            <td>{{ investigador.apellido_materno_2_investigador }}</td>
-            <td>{{ investigador.nombre_1_investigador }}</td>
-            <td>{{ investigador.nombre_2_investigador }}</td>
-            <td>
-            <button class="btn btn-primary" (click)="onEdit(investigador)">
-                <i class="fa fa-edit"></i> Editar
-            </button>
-            </td>
-        </tr>
+            <tr *ngFor="let investigador of investigadores| paginate: { itemsPerPage: 10, currentPage: p }">
+
+                <td>{{ investigador.apellido_paterno_1_investigador }}</td>
+                <td>{{ investigador.apellido_materno_2_investigador }}</td>
+                <td>{{ investigador.nombre_1_investigador }}</td>
+                <td>{{ investigador.nombre_2_investigador }}</td>
+                <td>
+                    <button class="btn btn-primary" (click)="onEdit(investigador)">
+                        <i class="fa fa-edit"></i> Editar
+                    </button>
+                </td>
+            </tr>
         </tbody>
     </table>
+    <!-- Controles de paginación -->
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>

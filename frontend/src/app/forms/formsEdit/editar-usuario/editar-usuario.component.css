@@ -89,5 +89,10 @@ body {
   .password-toggle i {
     font-size: 1.2rem; /* Ajustar el tamaño del icono si es necesario */
   }
-
+  .btn-block {
+    margin-bottom: 10px; /* Añade un margen inferior entre los botones */
+  }
   
+  button[type="submit"] {
+    margin-right: 10px; /* Añade un margen derecho entre los botones */
+  }

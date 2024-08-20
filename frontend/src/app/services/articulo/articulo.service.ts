@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
+import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root'
 })
@@ -78,16 +78,27 @@ export class ArticuloService {
     return this.http.get<any>(environment.urlApi+'articulo/'+id);
   }
 
-  private handleError(error:HttpErrorResponse){
-    if(error.status==0){
-      console.error('Se ha producido un error ',error.status, error.error);
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      // Error del lado del cliente o de la red
+      console.error('Se ha producido un error: ', error.status, error.error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de red',
+        text: 'No se pudo conectar al servidor. Por favor verifique su conexión.',
+      });
+    } else {
+      // El backend devolvió un código de error
+      console.error('Backend retornó el código de estado: ', error.status, error.error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el servidor',
+        text: `${error.error.message || 'Ocurrió un problema, inténtelo de nuevo.'}`,
+      });
     }
-    else {
-      console.error('Backend retornó el código de estado ', error.status, error.error);
-    }
+    // Retornar el error para que otros servicios puedan manejarlo si es necesario
     return throwError(() => new Error('Algo falló. Por favor intente nuevamente.'));
   }
-
   reporte() {
     const headers = new HttpHeaders({
       'Accept': 'application/pdf'
