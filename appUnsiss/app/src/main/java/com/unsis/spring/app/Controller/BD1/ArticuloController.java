@@ -28,14 +28,11 @@ import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
-import com.unsis.spring.app.Auth.AuthResponse;
 import com.unsis.spring.app.ReportPDF.ArticuloReportExcel;
 import com.unsis.spring.app.ReportPDF.ArticuloReportPDF;
-import com.unsis.spring.app.ReportPDF.UserReportExcel;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
-import com.unsis.spring.app.User.UserDTO;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -76,7 +73,7 @@ public class ArticuloController {
     @PostMapping(value = "/articulo")
     public ResponseEntity<Object> create(@RequestBody ArticuloDto articuloDto) {
         Map<String, Object> map = new HashMap<String, Object>();
-        System.out.println("Fecha "+ articuloDto.getFecha_publicacion());
+        System.out.println("Fecha " + articuloDto.getFecha_publicacion());
         try {
             ArticuloDto res = articuloService.save(articuloDto);
             return new ResponseEntity<Object>(res, HttpStatus.OK);
@@ -404,5 +401,6 @@ public class ArticuloController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }

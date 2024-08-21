@@ -115,7 +115,8 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "a.titulo_revista, " +
                         "a.volumen_revista, " +
                         "a.aceptado_director, " +
-                        "a.aceptado_gestion " +
+                        "a.aceptado_gestion, " +
+                        "a.file_metadata_id " +
                         "FROM Articulos a " +
                         "LEFT JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
                         "LEFT JOIN public.investigador inv ON inv.id_autor = aa.id_autor " +
