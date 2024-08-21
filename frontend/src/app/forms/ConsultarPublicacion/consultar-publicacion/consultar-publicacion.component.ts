@@ -7,6 +7,8 @@ import { AutorService } from 'src/app/services/autor/autor.service';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
+import { saveAs } from 'file-saver';
+
 @Component({
   selector: 'app-consultar-publicacion',
   templateUrl: './consultar-publicacion.component.html',
@@ -257,6 +259,26 @@ export class ConsultarPublicacionComponent implements OnInit {
       console.log("Datos ordenados:", this.articulosFiltrados);
     }, error => {
       console.error('Error al buscar publicaciones:', error);
+    });
+  }
+
+  dowloadZip(): void {
+    const searchCriteria = {
+      institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+      autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+      fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+      fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+      tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+    };
+
+    console.log("Criterios de búsqueda enviados:", searchCriteria);
+  
+    this.articuloService.dowloadzip(searchCriteria).subscribe(data => {
+      console.log("Datos recibidos del backend:", data);
+      const blob = new Blob([data], { type: 'application/zip' });
+      saveAs(blob, 'archivos.zip'); // Asigna un nombre al archivo que se descargará
+    }, error => {
+      console.error('Error al descargar el zip', error);
     });
   }
   

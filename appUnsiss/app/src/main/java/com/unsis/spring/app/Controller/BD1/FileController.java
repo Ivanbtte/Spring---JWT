@@ -64,17 +64,16 @@ public class FileController {
     }
 
     @PostMapping("/download-zip")
-    public ResponseEntity<Resource> downloadZipFile(
-            @RequestParam(required = false) Long institutoId,
-            @RequestParam(required = false) Long autorId,
-            @RequestParam(required = false) String fechaInicio,
-            @RequestParam(required = false) String fechaFin,
-            @RequestParam(required = false) Integer tipo) {
+    public ResponseEntity<Resource> downloadZipFile(@RequestBody SearchCriteria criteria) {
     
         try {
             // Obtener los artículos filtrados
             List<Object[]> articulos = articuloService.findFilteredArticulos(
-                    institutoId, autorId, fechaInicio, fechaFin, tipo);
+                    criteria.getInstitutoId(),
+                    criteria.getAutorId(),
+                    criteria.getFechaInicio(),
+                    criteria.getFechaFin(),
+                    criteria.getTipo());
     
             // Extraer file_metadata_id de los resultados filtrados
             List<Long> fileMetadataIds = articulos.stream()

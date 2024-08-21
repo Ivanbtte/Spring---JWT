@@ -44,6 +44,19 @@ export class ArticuloService {
   searchPublications(criteria: any): Observable<any> {
     return this.http.post<any>(environment.urlApi + 'articulosfiltro', criteria);
   }
+
+  dowloadzip(criteria: any): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+
+    console.log(criteria);
+    return this.http.post(environment.urlApi + 'files/download-zip', criteria, {
+      headers: headers,
+      responseType: 'blob' // Indicamos que la respuesta es un blob
+    });
+  }
+
    // Nuevo método para agregar un autor no UNSIS
    agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
     return this.http.post<any>(environment.urlApi + 'autor', nuevoAutor).pipe(
