@@ -64,24 +64,26 @@ public class FileController {
     }
 
     @PostMapping("/download-zip")
-    public ResponseEntity<Resource> downloadZipFile(@RequestBody SearchCriteria criteria) {
+    public ResponseEntity<Resource> downloadZipFile(
+            @RequestParam(required = false) Long institutoId,
+            @RequestParam(required = false) Long autorId,
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin,
+            @RequestParam(required = false) Integer tipo) {
+    
         try {
             // Obtener los artículos filtrados
             List<Object[]> articulos = articuloService.findFilteredArticulos(
-                    criteria.getInstitutoId(),
-                    criteria.getAutorId(),
-                    criteria.getFechaInicio(),
-                    criteria.getFechaFin(),
-                    criteria.getTipo());
-
+                    institutoId, autorId, fechaInicio, fechaFin, tipo);
+    
             // Extraer file_metadata_id de los resultados filtrados
             List<Long> fileMetadataIds = articulos.stream()
-                    .map(articulo -> (Long) articulo[22]) // Suponiendo que file_metadata_id está en la posición 22
+                    .map(articulo -> (Long) articulo[23]) // Suponiendo que file_metadata_id está en la posición 22
                     .collect(Collectors.toList());
-
+    
             // Crear y devolver el archivo ZIP
             return fileService.createZipFromFilteredFiles(fileMetadataIds);
-
+    
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
