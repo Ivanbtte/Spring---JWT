@@ -53,7 +53,6 @@ export class InvestigadorService {
   }
 
   getInvestigadorByInstitute(id: number): Observable<Investigador[]> {
-    console.log('Llamando al backend para obtener investigadores del instituto con ID:', id);
     return this.http.get<Investigador[]>(`${environment.urlApi}investigador/instituto/${id}`).pipe(
       catchError(this.handleError)
     );

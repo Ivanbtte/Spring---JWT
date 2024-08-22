@@ -10,7 +10,6 @@ import { InstitutoService } from 'src/app/services/instituto/instituto.service';
   styleUrls: ['./investigador.component.css']
 })
 export class InvestigadorComponent implements OnInit {
-
   investigadores: Investigador[] = [];
   selectedInstituto: number | null = null;
   institutos: any[] = [];
@@ -61,7 +60,6 @@ export class InvestigadorComponent implements OnInit {
           // Filtrar investigadores habilitados y ordenar alfabéticamente
           const investigadoresHabilitados = data.filter(investigador => investigador); // Aquí podrías agregar la lógica de filtro por habilitado si es necesario
           this.investigadores = this.sortInvestigadores(investigadoresHabilitados);
-          console.log("Investigadores habilitados: ", this.investigadores);
         },
         (error) => {
           console.error('Error al obtener los investigadores habilitados:', error);
@@ -74,13 +72,13 @@ export class InvestigadorComponent implements OnInit {
     return investigadores.sort((a, b) => {
       const apellidoPaternoComparison = (a.apellido_paterno_1_investigador ?? '').localeCompare(b.apellido_paterno_1_investigador ?? '');
       if (apellidoPaternoComparison !== 0) return apellidoPaternoComparison;
-  
+
       const apellidoMaternoComparison = (a.apellido_materno_2_investigador ?? '').localeCompare(b.apellido_materno_2_investigador ?? '');
       if (apellidoMaternoComparison !== 0) return apellidoMaternoComparison;
-  
+
       const nombre1Comparison = (a.nombre_1_investigador ?? '').localeCompare(b.nombre_1_investigador ?? '');
       if (nombre1Comparison !== 0) return nombre1Comparison;
-  
+
       return (a.nombre_2_investigador ?? '').localeCompare(b.nombre_2_investigador ?? '');
     });
   }
@@ -90,7 +88,6 @@ export class InvestigadorComponent implements OnInit {
   }
 
   onEdit(investigador: Investigador): void {
-    console.log("Llevando a editar : ", investigador.id);
     this.router.navigate(['/editar-investigador', investigador.id]);
   }
 

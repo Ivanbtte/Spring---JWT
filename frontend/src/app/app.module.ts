@@ -13,7 +13,6 @@ import { HeaderComponent } from './shared/header/header.component';
 import { NavComponent } from './shared/nav/nav.component';
 import { PersonalDetailsComponent } from './components/personal-details/personal-details.component';
 import { UsuarioComponent } from './forms/usuario/usuario.component';
-import { RegistrarInvestigadorComponent } from './forms/RegistrarInvestigador/registrar-investigador/registrar-investigador.component';
 import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
 import { CrearUsuarioComponent } from './forms/CrearUsuario/crear-usuario/crear-usuario.component';
 import { ConsultarPublicacionComponent } from './forms/ConsultarPublicacion/consultar-publicacion/consultar-publicacion.component';
@@ -40,7 +39,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
     NavComponent,
     PersonalDetailsComponent,
     UsuarioComponent,
-    RegistrarInvestigadorComponent,
     RegistrarPublicacionComponent,
     CrearUsuarioComponent,
     ConsultarPublicacionComponent,
