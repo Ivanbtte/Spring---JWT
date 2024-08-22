@@ -67,34 +67,28 @@
           <ng-template #noAutorUnsis>
             <div class="form-group">
               <label for="primerNombre{{ i }}">Primer nombre:</label>
-              <input type="text" id="primerNombre{{ i }}" class="form-control" 
-                [(ngModel)]="investigador.primerNombre" 
-                name="primerNombre{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+              <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
+                name="primerNombre{{ i }}" [disabled]="investigador.agregado"
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -110,42 +104,42 @@
         </div>
       </div>
 
-      <div class="form-group-container">
-        <div class="form-group">
-          <label for="numVolumen">Número de volumen</label>
-          <input type="text" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" (keypress)="onKeyPressNumber($event)" />
-        </div>
-        <div class="form-group">
-          <label for="numEmision">Número de emisión</label>
-          <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" (keypress)="onKeyPressNumber($event)"/>
-        </div>
-      </div>
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre"
+          (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
-      
-      <div class="form-group">
-        <label for="fechaPublicacion">Fecha de publicación</label>
-        <input 
-          type="date" 
-          id="fechaPublicacion" 
-          class="form-control" 
-          [(ngModel)]="fechaPublicacion"
-          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
-          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
-          name="fechaPublicacion">
+
+      <div class="form-group-container">
+        <div class="form-group">
+          <label for="fechaPublicacion">Fecha de publicación</label>
+          <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+            [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
+            [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
+        </div>
+        <div class="form-group">
+          <label for="numVolumen">Número de volumen</label>
+          <input type="text" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen"
+            (keypress)="onKeyPressNumber($event)" />
+        </div>
+        <div class="form-group">
+          <label for="numEmision">Número de emisión</label>
+          <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision"
+            (keypress)="onKeyPressNumber($event)" />
+        </div>
       </div>
       <div class="form-group-container">
         <div class="form-group">
           <label for="paginaInicio">Página de inicio</label>
-          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio"   (keypress)="onKeyPressNumber($event)" />
+          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
         <div class="form-group">
           <label for="paginaFin">Página final</label>
-          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin"    (keypress)="onKeyPressNumber($event)"/>
+          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
       </div>
 
@@ -161,18 +155,25 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
-          <span class="checkmark"></span>
-        </label>
-      </div>
-      
-      <div class="form-group">
-        <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
 
+      <div class="form-group">
+        <label class="checkbox-container">Financiamiento Prodep
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <p class="file-upload-message"><br>
+        De cada publicación reportada debe anexarse la evidencia en formato PDF, con todas las páginas
+        legibles, respetando el siguiente contenido para el registro de un artículo:<br><br>
+        Artículo completo (sólo el artículo, no toda la revista).
+
+      </p>
       <div class="custom-file-upload">
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
@@ -246,30 +247,26 @@
               <label for="primerNombre{{ i }}">Primer nombre:</label>
               <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
                 name="primerNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -287,21 +284,17 @@
 
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre"
+          (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
-      
+      <div class="form-group-container">
       <div class="form-group">
         <label for="fechaPublicacion">Fecha de publicación</label>
-        <input 
-          type="date" 
-          id="fechaPublicacion" 
-          class="form-control" 
-          [(ngModel)]="fechaPublicacion"
-          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
-          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
-          name="fechaPublicacion">
+        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
+          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
       </div>
       <div class="form-group">
         <label for="isbn">ISBN impreso</label>
@@ -311,6 +304,7 @@
         <label for="isbn">ISBN digital</label>
         <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
       </div>
+      </div>
       <div class="form-group">
         <label for="doi">Indice MIAR</label>
         <input type="text" id="miar" class="form-control" [(ngModel)]="miar" name="miar">
@@ -319,18 +313,24 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
-          <span class="checkmark"></span>
-        </label>
-      </div>
-      
-      <div class="form-group">
-        <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
 
+      <div class="form-group">
+        <label class="checkbox-container">Financiamiento Prodep
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <p class="file-upload-message"><br>
+        De cada publicación reportada debe anexarse la evidencia en formato PDF, con todas las páginas
+        legibles, respetando el siguiente contenido para registro de un libro:<br><br>
+        Todo el libro, desde la portada hasta la contraportada.
+      </p>
       <div class="custom-file-upload">
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
@@ -409,30 +409,26 @@
               <label for="primerNombre{{ i }}">Primer nombre:</label>
               <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
                 name="primerNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -450,22 +446,27 @@
 
       <div class="form-group">
         <label for="trimestre">Trimestre</label>
-        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
+        <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre"
+          (change)="onTrimestreChange()">
           <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}</option>
         </select>
       </div>
-      
+      <div class="form-group-container">
       <div class="form-group">
         <label for="fechaPublicacion">Fecha de publicación</label>
-        <input 
-          type="date" 
-          id="fechaPublicacion" 
-          class="form-control" 
-          [(ngModel)]="fechaPublicacion"
-          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''" 
-          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''"
-          name="fechaPublicacion">
+        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
+          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
       </div>
+      <div class="form-group">
+        <label for="isbn">ISBN impreso</label>
+        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
+      </div>
+      <div class="form-group">
+        <label for="isbn">ISBN digital</label>
+        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
+      </div>
+    </div>
       <div class="form-group-container">
         <div class="form-group">
           <label for="paginaInicio">Página de inicio</label>
@@ -476,14 +477,7 @@
           <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin" />
         </div>
       </div>
-      <div class="form-group">
-        <label for="isbn">ISBN impreso</label>
-        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
-      </div>
-      <div class="form-group">
-        <label for="isbn">ISBN digital</label>
-        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
-      </div>
+
       <div class="form-group">
         <label for="doi">Indice MIAR</label>
         <input type="text" id="miar" class="form-control" [(ngModel)]="miar" name="miar">
@@ -492,24 +486,30 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
-          <span class="checkmark"></span>
-        </label>
-      </div>
-      
-      <div class="form-group">
-        <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
 
+      <div class="form-group">
+        <label class="checkbox-container">Financiamiento Prodep
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <p class="file-upload-message"><br>
+        De cada publicación reportada debe anexarse la evidencia en formato PDF, con todas las páginas
+        legibles, respetando el siguiente contenido para registro de un capítulo de libro:<br><br>
+        Portada, índice, página donde se menciona el ISBN y el capítulo (sólo el capítulo que se reporta).
+      </p>
       <div class="custom-file-upload">
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
         <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
-      
+
       </div>
       <div *ngIf="fileName" class="file-name">
         Archivo seleccionado: {{ fileName }}

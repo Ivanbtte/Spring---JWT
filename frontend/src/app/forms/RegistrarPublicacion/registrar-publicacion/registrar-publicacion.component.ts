@@ -165,9 +165,9 @@ export class RegistrarPublicacionComponent implements OnInit {
         // Establece las fechas permitidas basadas en el trimestre seleccionado
         this.fechaInicioPermitida = new Date(trimestreSeleccionado.fecha_inicio);
         this.fechaInicioPermitida.setDate(this.fechaInicioPermitida.getDate() - 7); // Permite seleccionar 1 semana antes
-  
+
         this.fechaFinPermitida = new Date(trimestreSeleccionado.fecha_fin); // Fecha de fin del trimestre
-  
+
         console.log('Fecha inicio permitida:', this.fechaInicioPermitida);
         console.log('Fecha fin permitida:', this.fechaFinPermitida);
       }
@@ -393,79 +393,89 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, registrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+        fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
 
-    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
-    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
-    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
-    this.fileService.uploadFile(this.renamedFile).subscribe({
-      next: (response) => {
-        console.log('Upload successful', response);
-        this.file = response.id;
-        const articulo: Articulo = {
-          tipoPublicacion: {
-            id_publicacion_tipo: 1,
-            nombre: 'Artículo'
-          },
-          instituto: {
-            id: this.selectedInstitutoPublicacion,
-            nombre: ''
-          },
-          trimestre: {
-            id_trimestre: this.selectedTrimestre,
-            nombre: '',
-            fecha_inicio: new Date('2024-05-12'), //fecha falsa
-            fecha_fin: new Date('2024-08-12') //fecha falsa
-          },
-          fileMetadata: {
-            id: this.file,
-            fileName: '',
-            filePath: '',
-            fileType: ''
-          },
-          fecha_publicacion: fechaPublicacionAjustada,
-          titulo_revista: this.nombreRevista,
-          numero_revista: this.numEmision,
-          volumen_revista: this.numVolumen,
-          pag_inicio: this.paginaInicio,
-          pag_final: this.paginaFin,
-          doi: this.doi,
-          nombre_articulo: this.titulo,
-          indice_miar: this.miar,
-          compilado: this.compilado,
-          financiamiento_prodep: this.prodep,
-          aceptado_director: false,
-          aceptado_gestion: false,
-          estatus: 1
-        };
-
-        this.articuloService.crearArticulo(articulo).subscribe(response => {
-          Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
-          const articuloId = response.id_articulo;
-          this.idsAutores.forEach((autorId, index) => {
-            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-              response => {
-                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-                if (index === this.idsAutores.length - 1) {
-                  this.limpiarCampos();
-                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-                }
+        this.fileService.uploadFile(this.renamedFile).subscribe({
+          next: (response) => {
+            console.log('Upload successful', response);
+            this.file = response.id;
+            const articulo: Articulo = {
+              tipoPublicacion: {
+                id_publicacion_tipo: 1,
+                nombre: 'Artículo'
               },
-              error => {
-                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-              }
-            );
-          });
-        }, error => {
-          Swal.fire('Error', 'Error al registrar el artículo', 'error');
+              instituto: {
+                id: this.selectedInstitutoPublicacion,
+                nombre: ''
+              },
+              trimestre: {
+                id_trimestre: this.selectedTrimestre,
+                nombre: '',
+                fecha_inicio: new Date('2024-05-12'), //fecha falsa
+                fecha_fin: new Date('2024-08-12') //fecha falsa
+              },
+              fileMetadata: {
+                id: this.file,
+                fileName: '',
+                filePath: '',
+                fileType: ''
+              },
+              fecha_publicacion: fechaPublicacionAjustada,
+              titulo_revista: this.nombreRevista,
+              numero_revista: this.numEmision,
+              volumen_revista: this.numVolumen,
+              pag_inicio: this.paginaInicio,
+              pag_final: this.paginaFin,
+              doi: this.doi,
+              nombre_articulo: this.titulo,
+              indice_miar: this.miar,
+              compilado: this.compilado,
+              financiamiento_prodep: this.prodep,
+              aceptado_director: false,
+              aceptado_gestion: false,
+              estatus: 1
+            };
+
+            this.articuloService.crearArticulo(articulo).subscribe(response => {
+              Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
+              const articuloId = response.id_articulo;
+              this.idsAutores.forEach((autorId, index) => {
+                this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+                  response => {
+                    console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                    if (index === this.idsAutores.length - 1) {
+                      this.limpiarCampos();
+                      this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                    }
+                  },
+                  error => {
+                    console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+                  }
+                );
+              });
+            }, error => {
+              Swal.fire('Error', 'Error al registrar el artículo', 'error');
+            });
+          },
+          error: (error) => {
+            console.error('Upload failed', error);
+          }
         });
-      },
-      error: (error) => {
-        console.error('Upload failed', error);
       }
     });
-
-
   }
 
   crearLibro() {
@@ -476,72 +486,84 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, registrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+        fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
 
-    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
-    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
-    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
-    this.fileService.uploadFile(this.renamedFile).subscribe({
-      next: (response) => {
-        console.log('Upload successful', response);
-        this.file = response.id;
-        const articulo: Articulo = {
-          tipoPublicacion: {
-            id_publicacion_tipo: 3,
-            nombre: 'Libro'
-          },
-          instituto: {
-            id: this.selectedInstitutoPublicacion,
-            nombre: ''
-          },
-          trimestre: {
-            id_trimestre: this.selectedTrimestre,
-            nombre: '',
-            fecha_inicio: new Date('2024-05-12'), //fecha falsa
-            fecha_fin: new Date('2024-08-12') //fecha falsa
-          },
-          fileMetadata: {
-            id: this.file,
-            fileName: '',
-            filePath: '',
-            fileType: ''
-          },
-          fecha_publicacion: fechaPublicacionAjustada,
-          nombre_articulo: this.tituloLibro,
-          editorial: this.editorialLibro,
-          isbn_digital: this.isbnDigital,
-          isbn_impreso: this.isbnImpreso,
-          indice_miar: this.miar,
-          compilado: this.compilado,
-          financiamiento_prodep: this.prodep,
-          aceptado_director: false,
-          aceptado_gestion: false,
-          estatus: 1
-        };
-
-        this.articuloService.crearArticulo(articulo).subscribe(response => {
-          Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
-          const articuloId = response.id_articulo;
-          this.idsAutores.forEach((autorId, index) => {
-            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-              response => {
-                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-                if (index === this.idsAutores.length - 1) {
-                  this.limpiarCampos();
-                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-                }
+        this.fileService.uploadFile(this.renamedFile).subscribe({
+          next: (response) => {
+            console.log('Upload successful', response);
+            this.file = response.id;
+            const articulo: Articulo = {
+              tipoPublicacion: {
+                id_publicacion_tipo: 3,
+                nombre: 'Libro'
               },
-              error => {
-                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-              }
-            );
-          });
-        }, error => {
-          console.error('Error al registrar el artículo', error);
+              instituto: {
+                id: this.selectedInstitutoPublicacion,
+                nombre: ''
+              },
+              trimestre: {
+                id_trimestre: this.selectedTrimestre,
+                nombre: '',
+                fecha_inicio: new Date('2024-05-12'), //fecha falsa
+                fecha_fin: new Date('2024-08-12') //fecha falsa
+              },
+              fileMetadata: {
+                id: this.file,
+                fileName: '',
+                filePath: '',
+                fileType: ''
+              },
+              fecha_publicacion: fechaPublicacionAjustada,
+              nombre_articulo: this.tituloLibro,
+              editorial: this.editorialLibro,
+              isbn_digital: this.isbnDigital,
+              isbn_impreso: this.isbnImpreso,
+              indice_miar: this.miar,
+              compilado: this.compilado,
+              financiamiento_prodep: this.prodep,
+              aceptado_director: false,
+              aceptado_gestion: false,
+              estatus: 1
+            };
+
+            this.articuloService.crearArticulo(articulo).subscribe(response => {
+              Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
+              const articuloId = response.id_articulo;
+              this.idsAutores.forEach((autorId, index) => {
+                this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+                  response => {
+                    console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                    if (index === this.idsAutores.length - 1) {
+                      this.limpiarCampos();
+                      this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                    }
+                  },
+                  error => {
+                    console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+                  }
+                );
+              });
+            }, error => {
+              console.error('Error al registrar el artículo', error);
+            });
+          },
+          error: (error) => {
+            console.error('Upload failed', error);
+          }
         });
-      },
-      error: (error) => {
-        console.error('Upload failed', error);
       }
     });
   }
@@ -554,75 +576,87 @@ export class RegistrarPublicacionComponent implements OnInit {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
     }
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, registrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
+        fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
 
-    // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
-    const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
-    fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
-    this.fileService.uploadFile(this.renamedFile).subscribe({
-      next: (response) => {
-        console.log('Upload successful', response);
-        this.file = response.id;
-        const articulo: Articulo = {
-          tipoPublicacion: {
-            id_publicacion_tipo: 2,
-            nombre: 'capitulo'
-          },
-          instituto: {
-            id: this.selectedInstitutoPublicacion,
-            nombre: ''
-          },
-          trimestre: {
-            id_trimestre: this.selectedTrimestre,
-            nombre: '',
-            fecha_inicio: new Date('2024-05-12'), //fecha falsa
-            fecha_fin: new Date('2024-08-12') //fecha falsa
-          },
-          fileMetadata: {
-            id: this.file,
-            fileName: '',
-            filePath: '',
-            fileType: ''
-          },
-          fecha_publicacion: fechaPublicacionAjustada,
-          nombre_capitulo: this.tituloCapitulo,
-          nombre_articulo: this.tituloLibro,
-          editorial: this.editorialCapitulo,
-          pag_inicio: this.paginaInicio,
-          pag_final: this.paginaFin,
-          isbn_digital: this.isbnDigital,
-          isbn_impreso: this.isbnImpreso,
-          indice_miar: this.miar,
-          compilado: this.compilado,
-          financiamiento_prodep: this.prodep,
-          aceptado_director: false,
-          aceptado_gestion: false,
-          estatus: 1
-        };
-
-        this.articuloService.crearArticulo(articulo).subscribe(response => {
-          Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
-          const articuloId = response.id_articulo;
-          this.idsAutores.forEach((autorId, index) => {
-            this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
-              response => {
-                console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
-                if (index === this.idsAutores.length - 1) {
-                  this.limpiarCampos();
-                  this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
-                }
+        this.fileService.uploadFile(this.renamedFile).subscribe({
+          next: (response) => {
+            console.log('Upload successful', response);
+            this.file = response.id;
+            const articulo: Articulo = {
+              tipoPublicacion: {
+                id_publicacion_tipo: 2,
+                nombre: 'capitulo'
               },
-              error => {
-                console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
-              }
-            );
-          });
-        }, error => {
-          console.error('Error al registrar el capitulo ', error);
+              instituto: {
+                id: this.selectedInstitutoPublicacion,
+                nombre: ''
+              },
+              trimestre: {
+                id_trimestre: this.selectedTrimestre,
+                nombre: '',
+                fecha_inicio: new Date('2024-05-12'), //fecha falsa
+                fecha_fin: new Date('2024-08-12') //fecha falsa
+              },
+              fileMetadata: {
+                id: this.file,
+                fileName: '',
+                filePath: '',
+                fileType: ''
+              },
+              fecha_publicacion: fechaPublicacionAjustada,
+              nombre_capitulo: this.tituloCapitulo,
+              nombre_articulo: this.tituloLibro,
+              editorial: this.editorialCapitulo,
+              pag_inicio: this.paginaInicio,
+              pag_final: this.paginaFin,
+              isbn_digital: this.isbnDigital,
+              isbn_impreso: this.isbnImpreso,
+              indice_miar: this.miar,
+              compilado: this.compilado,
+              financiamiento_prodep: this.prodep,
+              aceptado_director: false,
+              aceptado_gestion: false,
+              estatus: 1
+            };
+
+            this.articuloService.crearArticulo(articulo).subscribe(response => {
+              Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
+              const articuloId = response.id_articulo;
+              this.idsAutores.forEach((autorId, index) => {
+                this.articuloService.agregarAutorArticulo(articuloId, autorId).subscribe(
+                  response => {
+                    console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
+                    if (index === this.idsAutores.length - 1) {
+                      this.limpiarCampos();
+                      this.router.navigate(['/inicio']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                    }
+                  },
+                  error => {
+                    console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
+                  }
+                );
+              });
+            }, error => {
+              console.error('Error al registrar el capitulo ', error);
+            });
+          },
+          error: (error) => {
+            console.error('Upload failed', error);
+          }
         });
-      },
-      error: (error) => {
-        console.error('Upload failed', error);
       }
     });
   }

@@ -178,3 +178,8 @@ h3 {
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
+  .file-upload-message {
+    font-style: italic;
+    margin-bottom: 10px;
+    color: #555; /* Cambia el color según prefieras */
+  }
