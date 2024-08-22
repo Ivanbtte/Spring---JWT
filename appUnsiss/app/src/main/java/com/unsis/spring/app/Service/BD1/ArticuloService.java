@@ -11,6 +11,8 @@ public interface ArticuloService {
 
     public ArticuloDto save(ArticuloDto articuloDto);
 
+    public ArticuloDto update(ArticuloDto articuloDto);
+
     public Articulos saveArticulo(Articulos articulo);
 
     public ArticuloDto findById(Long id);
