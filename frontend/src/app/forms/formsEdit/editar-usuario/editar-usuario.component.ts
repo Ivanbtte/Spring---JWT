@@ -36,7 +36,6 @@ export class EditarUsuarioComponent implements OnInit {
     });
     this.userForm.setValidators(this.passwordMatchValidator);
     this.userForm.get('role')?.valueChanges.subscribe((newRole) => {
-      console.log('Role changed to:', newRole);
     });
   }
 
@@ -50,8 +49,6 @@ export class EditarUsuarioComponent implements OnInit {
   loadUserData(userId: number): void {
     this.registrarusuarioService.getUserById(userId).subscribe(
       user => {
-        console.log('Datos del usuario:', user);
-
         this.userId = user.id;
         this.username = user.username;
         this.userstatus = user.enabled;
@@ -62,9 +59,6 @@ export class EditarUsuarioComponent implements OnInit {
           username: user.username || ''
           // La contraseña no se carga para evitar exposición accidental
         });
-
-
-        console.log('Valores después de actualizar estado del campo:', this.userForm.value);
       },
       error => {
         console.error('Error al cargar los datos del usuario:', error);
@@ -81,23 +75,14 @@ export class EditarUsuarioComponent implements OnInit {
     }
 
     if (this.userForm.valid) {
-      console.log('Valores del formulario:', this.userForm.value); // Imprime los valores del formulario
-
       const user = {
         id: this.userId,
         username: this.userForm.value.email,
         password: this.userForm.value.password,
         role: this.userForm.value.role.toUpperCase(),
       };
-
-      // Imprimir en consola lo que se está enviando antes de actualizar
-      console.log('Datos enviados para actualizar el usuario:', user);
-
       this.registrarusuarioService.updateUserPass(this.userId, user).subscribe(
         userResponse => {
-          // Imprimir en consola la respuesta después de actualizar
-          console.log('Respuesta del servidor después de actualizar el usuario:', userResponse);
-
           // Redirigir al usuario a la página de usuarios
           this.router.navigate(['/usuario']);
           Swal.fire({

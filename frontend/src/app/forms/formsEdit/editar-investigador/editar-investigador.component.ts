@@ -19,6 +19,7 @@ export class EditarInvestigadorComponent implements OnInit {
   autorId: any;
   username: string = 'username';
   userstatus: boolean = false;
+  datosCargados: boolean = false; // variable de control
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +36,6 @@ export class EditarInvestigadorComponent implements OnInit {
       apellidoPaterno: [''],
       apellidoMaterno: [''],
     });
-
   }
 
   ngOnInit(): void {
@@ -43,36 +43,30 @@ export class EditarInvestigadorComponent implements OnInit {
     this.registrarusuarioService.getInstitutos().subscribe(
       data => {
         this.institutos = data;
+        // Solo carga los datos del investigador después de que los institutos se hayan cargado
+        this.userId = this.route.snapshot.params['id'];
+        if (this.userId) {
+          this.loadInvestData(this.userId);
+        }
       },
       error => {
         console.error('Error al obtener la lista de institutos', error);
       }
     );
-
-    this.userId = this.route.snapshot.params['id'];
-    if (this.userId) {
-      this.loadInvestData(this.userId);
-    }
   }
 
   loadInvestData(userId: number): void {
     this.registrarusuarioService.getInvestigadorById(userId).subscribe(
       invest => {
-        console.log('Datos del investigador:', invest);
-
         this.userId = invest.user.id;
         this.username = invest.user.username;
         this.userstatus = invest.user.enabled;
-
         if (this.userId) {
           this.registrarusuarioService.getAutorByIds(this.userId).subscribe(
             investigador => {
-              console.log('Datos del usuario:', investigador.user);
-
               this.investigadorId = investigador.id;
               this.autorunsis = investigador.autor.autorUnsis;
               this.autorId = investigador.autor.id_autor;
-
               this.userForm.patchValue({
                 id: this.userId,
                 role: invest.user.role || '',
@@ -82,10 +76,9 @@ export class EditarInvestigadorComponent implements OnInit {
                 apellidoPaterno: investigador.apellido_paterno_1_investigador || '',
                 apellidoMaterno: investigador.apellido_materno_2_investigador || ''
               });
-
-              console.log('Valores del formulario después de patchValue:', this.userForm.value);
-
+              this.userForm.updateValueAndValidity();
               this.updateAdditionalFields(invest.user.role);
+              this.datosCargados = true;
             },
             error => {
               console.error('Error loading investigator data:', error);
@@ -96,9 +89,9 @@ export class EditarInvestigadorComponent implements OnInit {
           this.userForm.patchValue({
             email: invest.user.username || '',
             role: invest.user.role || ''
-            // Otros campos que no dependen del investigador
           });
           this.updateAdditionalFields(invest.user.role);
+          this.datosCargados = true;
         }
       },
       error => {
@@ -108,38 +101,20 @@ export class EditarInvestigadorComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log('Botón de enviar presionado');
-    console.log('Formulario Válido:', this.userForm.valid); // Verifica la validez del formulario
-
     // Log de validez para cada control
     Object.keys(this.userForm.controls).forEach(key => {
       const control = this.userForm.get(key);
-      console.log(`${key} Válido:`, control?.valid, 'Errores:', control?.errors);
     });
-    console.log('Formulario Válido:', this.userForm.valid); // Verifica la validez del formulario
-
     if (this.userForm.valid) {
       const user = {
         id: this.userForm.value.id,
         role: this.userForm.value.role.toUpperCase() // Solo se necesita el rol
       };
-
-      // Aquí se imprime el objeto `user` antes de enviarlo al backend
-      console.log('Datos del Usuario al actualizar:', user);
-
       // Editar usuario existente
       this.registrarusuarioService.updateUser(this.userId!, user).subscribe(
         userResponse => {
-          console.log('Respuesta del Usuario:', userResponse);
           const userId = userResponse.id;
           const userRole = userResponse.role;
-
-          Swal.fire({
-            icon: "success",
-            title: "¡Actualización Exitosa!",
-            text: "El usuario ha sido actualizado correctamente.",
-          });
-
           if (user.role === 'INVESTIGADOR' || user.role === 'COORDINADOR') {
             const autor: AutorRequest = {
               nombre1Autor: this.userForm.value.nombre1,
@@ -148,13 +123,8 @@ export class EditarInvestigadorComponent implements OnInit {
               apellidoMaternoAutor: this.userForm.value.apellidoMaterno,
               autorUnsis: this.autorunsis
             };
-
-            // Imprimir los datos que se enviarán al servicio de `autor`
-            console.log('Datos del Autor al actualizar:', autor);
-
             const institutoId = this.userForm.value.instituto;
             const institutoSeleccionado = this.institutos.find(i => i.id === institutoId);
-
             const investigador: Investigador = {
               num_empleado: this.userForm.value.numeroEmpleado,
               nombre_1_investigador: this.userForm.value.nombre1,
@@ -180,46 +150,29 @@ export class EditarInvestigadorComponent implements OnInit {
                 autorUnsis: this.autorunsis
               }
             };
-
-            // Imprimir los datos que se enviarán al servicio de `investigador`
-            console.log('Datos del Investigador al actualizar:', investigador);
-
             this.registrarusuarioService.updateAutor(this.investigadorId!, autor).subscribe(
               autorResponse => {
-                Swal.fire({
-                  icon: "success",
-                  title: "¡Autor Actualizado!",
-                  text: "El autor ha sido actualizado correctamente.",
-                });
-
                 this.registrarusuarioService.updateInvestigador(this.investigadorId!, investigador).subscribe(
                   investigadorResponse => {
                     Swal.fire({
                       icon: "success",
-                      title: "¡Investigador Actualizado!",
-                      text: "El investigador ha sido actualizado correctamente.",
+                      title: "!Actualizado!",
+                      text: "Ha sido actualizado correctamente.",
                     });
 
                     // Redirigir al usuario a otra dirección después de la actualización exitosa
                     this.router.navigate(['/investigador']);
                   },
                   investigadorError => {
-                    console.log('Error en la actualización de Investigador:', investigadorError); // Log del error
                     Swal.fire({
                       icon: "error",
-                      title: "Error en Actualización de Investigador",
-                      text: "Algo salió mal al actualizar el investigador.",
+                      title: "Error en Actualización",
+                      text: "Algo salió mal al actualizar",
                     });
                   }
                 );
               },
               autorError => {
-                console.log('Error en la actualización de Autor:', autorError); // Log del error
-                Swal.fire({
-                  icon: "error",
-                  title: "Error en Actualización de Autor",
-                  text: "Algo salió mal al actualizar el autor.",
-                });
               }
             );
           } else {
@@ -228,13 +181,6 @@ export class EditarInvestigadorComponent implements OnInit {
           }
         },
         error => {
-          console.log('Error al actualizar el usuario:', error); // Aquí se imprime el error de la solicitud
-          console.log('Datos del Usuario fallido al actualizar:', user); // Aquí se re-imprime el objeto `user`
-          Swal.fire({
-            icon: "error",
-            title: "Error al actualizar el usuario",
-            text: "Algo salió mal!",
-          });
         }
       );
     }

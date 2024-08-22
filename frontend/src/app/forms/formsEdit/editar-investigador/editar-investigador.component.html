@@ -1,8 +1,8 @@
 <app-nav></app-nav>
 <app-menu></app-menu>
 <div class="container">
-  <h3>Editar Investigador</h3>
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <h3>Editar</h3>
+  <form *ngIf="datosCargados" [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <!-- Campo de Selección de Rol (Visible para todos los roles) -->
     <div class="form-group">
       <label for="role">Rol: </label>

@@ -37,7 +37,6 @@ export class CrearUsuarioComponent implements OnInit {
 
     this.userForm.setValidators(this.passwordMatchValidator);
     this.userForm.get('role')?.valueChanges.subscribe((newRole) => {
-      console.log('Role changed to:', newRole);
       this.updateAdditionalFields(newRole);
     });
   }
@@ -151,8 +150,6 @@ export class CrearUsuarioComponent implements OnInit {
                   }
                 };
                 this.userForm.reset(); // Limpiar el formulario después del registro
-
-                console.log("Registrando....");
                 this.registrarusuarioService.registroInvestigador(investigador).subscribe(
                   investigadorResponse => {
                     Swal.fire({
@@ -254,7 +251,6 @@ export class CrearUsuarioComponent implements OnInit {
     const nombre1 = this.userForm.get('nombre1')?.value;
     const apellidoPaterno = this.userForm.get('apellidoPaterno')?.value;
     const selectedInstituto = this.userForm.get('instituto')?.value;
-    console.log("Validado");
     if (!nombre1 || !apellidoPaterno || !selectedInstituto) {
       this.userForm.markAllAsTouched();  // Muestra los mensajes de error en caso de que falte algún dato.
       return false;

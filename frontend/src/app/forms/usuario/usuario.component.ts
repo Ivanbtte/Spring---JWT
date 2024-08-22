@@ -24,7 +24,6 @@ export class UsuarioComponent implements OnInit {
   }
 
   FormEditar(user: User): void {
-    console.log("Llevando a editar : ", user.id);
     this.router.navigate(['/editar-usuario/', user.id]);
   }
 
@@ -53,7 +52,7 @@ export class UsuarioComponent implements OnInit {
       case 'COORDINADOR':
         return 'Director';
       default:
-        return 'Desconocido';
+        return 'Root';
     }
   }
 
@@ -75,7 +74,6 @@ export class UsuarioComponent implements OnInit {
   onDisable(user: User): void {
     this.userService.disableUser(user.id).subscribe(
       () => {
-        console.log('Usuario deshabilitado con éxito');
         this.loadUsers(); // Recargar la lista de usuarios
       },
       (error: any) => {
@@ -87,7 +85,6 @@ export class UsuarioComponent implements OnInit {
   onEnable(user: User): void {
     this.userService.enableUser(user.id).subscribe(
       () => {
-        console.log('Usuario habilitado con éxito');
         this.loadUsers(); // Recargar la lista de usuarios
       },
       (error: any) => {
