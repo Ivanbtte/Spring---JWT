@@ -112,12 +112,6 @@ export class CrearUsuarioComponent implements OnInit {
             }
             this.registrarusuarioService.registroAutor(autor).subscribe(
               autorResponse => {
-                Swal.fire({
-                  icon: "success",
-                  title: "¡Autor Registrado!",
-                  text: "El autor ha sido registrado correctamente.",
-                });
-
                 // Obtén el ID del instituto seleccionado
                 const institutoId = this.userForm.value.instituto;
 
