@@ -53,7 +53,8 @@ export class ValidarPublicacionComponent implements OnInit {
         observaciones_gestion: this.articulo.observaciones_gestion,
         aceptado_director: false,
         aceptado_gestion: this.articulo.aceptado_gestion,
-        estatus: 2
+        estatus: 2,
+        compilado: false
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
         console.log('Artículo Editado exitosamente');
@@ -66,8 +67,9 @@ export class ValidarPublicacionComponent implements OnInit {
         observaciones_directores: this.articulo.observaciones_directores,
         observaciones_gestion: this.articulo.observaciones_gestion,
         aceptado_director: this.articulo.aceptado_director,
-        aceptado_gestion: true,
-        estatus: 4
+        aceptado_gestion: false,
+        estatus: 2,
+        compilado: false
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
         console.log('Artículo Editado exitosamente');
@@ -88,7 +90,8 @@ export class ValidarPublicacionComponent implements OnInit {
         observaciones_gestion: this.articulo.observaciones_gestion,
         aceptado_director: true,
         aceptado_gestion: this.articulo.aceptado_gestion,
-        estatus: 3
+        estatus: 3,
+        compilado: false
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
         console.log('Artículo Editado exitosamente');
@@ -102,7 +105,8 @@ export class ValidarPublicacionComponent implements OnInit {
         observaciones_gestion: this.articulo.observaciones_gestion,
         aceptado_director: this.articulo.aceptado_director,
         aceptado_gestion: true,
-        estatus: 4
+        estatus: 4,
+        compilado: true
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
         console.log('Artículo Editado exitosamente');

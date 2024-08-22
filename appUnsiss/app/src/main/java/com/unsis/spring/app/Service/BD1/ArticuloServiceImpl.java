@@ -102,6 +102,15 @@ public class ArticuloServiceImpl implements ArticuloService {
                 return convertToDto(savedArticulo);
         }
 
+        @Override
+        @Transactional
+        public ArticuloDto update(ArticuloDto articuloDto) {
+
+                Articulos articulo = convertToEntity(articuloDto);
+                Articulos savedArticulo = articuloDao.save(articulo);
+                return convertToDto(savedArticulo);
+        }
+
         private String obtenerEmailDelCoordinador(Long institutoId) {
                 return investigadorDao.findCoordinadorEmailByInstitutoId(institutoId)
                                 .orElseThrow(() -> new RuntimeException(

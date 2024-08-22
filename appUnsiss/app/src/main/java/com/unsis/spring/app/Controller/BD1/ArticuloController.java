@@ -106,12 +106,12 @@ public class ArticuloController {
             currentArticulo.setObservaciones_directores(articuloDto.getObservaciones_directores());
             currentArticulo.setObservaciones_gestion(articuloDto.getObservaciones_gestion());
             currentArticulo.setIndice_miar(articuloDto.getIndice_miar());
-            currentArticulo.setCompilado(articuloDto.isCompilado());
             currentArticulo.setTrimestre(articuloDto.getTrimestre());
             currentArticulo.setFinanciamiento_prodep(articuloDto.isFinanciamiento_prodep());
             currentArticulo.setAceptado_director(articuloDto.isAceptado_director());
+            currentArticulo.setEstatus(articuloDto.getEstatus());
 
-            ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
+            ArticuloDto updatedArticulo = articuloService.update(currentArticulo);
 
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
         } catch (Exception e) {
@@ -126,13 +126,14 @@ public class ArticuloController {
         try {
             ArticuloDto currentArticulo = articuloService.findById(id);
 
+            currentArticulo.setCompilado(articuloDto.isCompilado());
             currentArticulo.setObservaciones_directores(articuloDto.getObservaciones_directores());
             currentArticulo.setObservaciones_gestion(articuloDto.getObservaciones_gestion());
             currentArticulo.setAceptado_director(articuloDto.isAceptado_director());
             currentArticulo.setAceptado_gestion(articuloDto.isAceptado_gestion());
             currentArticulo.setEstatus(articuloDto.getEstatus());
 
-            ArticuloDto updatedArticulo = articuloService.save(currentArticulo);
+            ArticuloDto updatedArticulo = articuloService.update(currentArticulo);
 
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
         } catch (Exception e) {

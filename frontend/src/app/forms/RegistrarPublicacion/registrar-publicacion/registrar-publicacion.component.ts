@@ -102,7 +102,6 @@ export class RegistrarPublicacionComponent implements OnInit {
       autorUnsisSeleccionado: ''
     });
     this.autoresPorInstituto.push([]);
-    console.log("Investigadores: ", this.investigadores)
   }
 
   eliminarInvestigador(index: number) {
@@ -120,7 +119,6 @@ export class RegistrarPublicacionComponent implements OnInit {
         const autorId = investigador.id_autor; // Asegúrate de que `idAutor` sea el ID correcto
         this.articuloService.eliminarAutorNoUnsis(autorId).subscribe(
           response => {
-            console.log('Investigador eliminado', response);
             this.investigadores.splice(index, 1);
             this.autoresPorInstituto.splice(index, 1);
 
@@ -156,20 +154,14 @@ export class RegistrarPublicacionComponent implements OnInit {
   }
 
   onTrimestreChange(): void {
-    console.log('Trimestres:', this.trimestres);
-    console.log('Trimestre cambiado:', this.selectedTrimestre);
     if (this.selectedTrimestre) {
       const trimestreSeleccionado = this.trimestres.find(t => t.id_trimestre === Number(this.selectedTrimestre));
-      console.log('Entra aca', trimestreSeleccionado);
       if (trimestreSeleccionado) {
         // Establece las fechas permitidas basadas en el trimestre seleccionado
         this.fechaInicioPermitida = new Date(trimestreSeleccionado.fecha_inicio);
         this.fechaInicioPermitida.setDate(this.fechaInicioPermitida.getDate() - 7); // Permite seleccionar 1 semana antes
 
         this.fechaFinPermitida = new Date(trimestreSeleccionado.fecha_fin); // Fecha de fin del trimestre
-
-        console.log('Fecha inicio permitida:', this.fechaInicioPermitida);
-        console.log('Fecha fin permitida:', this.fechaFinPermitida);
       }
     }
   }
@@ -185,7 +177,6 @@ export class RegistrarPublicacionComponent implements OnInit {
     this.idsAutores.push(idAutor);
     this.investigadores[index].agregado = true; // Bandera para deshabilitar elementos
     this.investigadores[index].id_autor = idAutor;
-    console.log("ID de autores: ", this.idsAutores);
   }
 
   validarRegistroAutores(): boolean {
@@ -207,11 +198,8 @@ export class RegistrarPublicacionComponent implements OnInit {
 
     this.articuloService.agregarAutorNoUnsis(nuevoAutor).subscribe(
       response => {
-        console.log('Autor no UNSIS agregado:', response);
         investigador.id_autor = response.id_autor;
         this.idsAutores.push(response.id_autor); // Agrega el ID al array
-        console.log("ID de autores: ", this.idsAutores);
-        // Aquí puedes agregar la lógica adicional que necesites después de agregar el autor no UNSIS
       },
       error => {
         console.error('Error al agregar autor no UNSIS:', error);
@@ -410,7 +398,6 @@ export class RegistrarPublicacionComponent implements OnInit {
 
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
-            console.log('Upload successful', response);
             this.file = response.id;
             const articulo: Articulo = {
               tipoPublicacion: {
@@ -442,7 +429,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               doi: this.doi,
               nombre_articulo: this.titulo,
               indice_miar: this.miar,
-              compilado: this.compilado,
+              compilado: false,
               financiamiento_prodep: this.prodep,
               aceptado_director: false,
               aceptado_gestion: false,
@@ -503,7 +490,6 @@ export class RegistrarPublicacionComponent implements OnInit {
 
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
-            console.log('Upload successful', response);
             this.file = response.id;
             const articulo: Articulo = {
               tipoPublicacion: {
@@ -532,7 +518,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               isbn_digital: this.isbnDigital,
               isbn_impreso: this.isbnImpreso,
               indice_miar: this.miar,
-              compilado: this.compilado,
+              compilado: false,
               financiamiento_prodep: this.prodep,
               aceptado_director: false,
               aceptado_gestion: false,
@@ -593,7 +579,6 @@ export class RegistrarPublicacionComponent implements OnInit {
 
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
-            console.log('Upload successful', response);
             this.file = response.id;
             const articulo: Articulo = {
               tipoPublicacion: {
@@ -625,7 +610,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               isbn_digital: this.isbnDigital,
               isbn_impreso: this.isbnImpreso,
               indice_miar: this.miar,
-              compilado: this.compilado,
+              compilado: false,
               financiamiento_prodep: this.prodep,
               aceptado_director: false,
               aceptado_gestion: false,

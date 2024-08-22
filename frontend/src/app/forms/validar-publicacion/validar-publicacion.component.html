@@ -16,8 +16,10 @@
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 2 -->
@@ -35,8 +37,10 @@
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 3 -->
@@ -53,14 +57,17 @@
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Cuadro de Texto para Observaciones -->
     <div *ngIf="rolUsuario === 'ADMIN'" class="form-group">
       <label for="observaciones">Observaciones:</label>
       <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_gestion" rows="4"
+        [disabled]="articulo.estatus === 4 || articulo.estatus === 2"
         placeholder="Escribe tus observaciones aquí..."></textarea>
     </div>
 
@@ -68,17 +75,19 @@
     <div *ngIf="rolUsuario === 'COORDINADOR'" class="form-group">
       <label for="observaciones">Observaciones:</label>
       <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_directores" rows="4"
+        [disabled]="articulo.estatus === 4 || articulo.estatus === 2"
         placeholder="Escribe tus observaciones aquí..."></textarea>
     </div>
 
   </div>
-  <div *ngIf="rolUsuario === 'COORDINADOR'"class="card-footer">
+  <div *ngIf="rolUsuario === 'COORDINADOR' && articulo.estatus === 1" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
   </div>
-  <div *ngIf="rolUsuario === 'ADMIN'"class="card-footer">
+  <div *ngIf="rolUsuario === 'ADMIN' && articulo.estatus === 3" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
+
   </div>
   <div *ngIf="rolUsuario === 'INVESTIGADOR'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
