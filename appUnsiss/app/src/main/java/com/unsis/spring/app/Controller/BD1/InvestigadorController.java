@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.unsis.spring.app.DTO.InvestigadorDto;
 import com.unsis.spring.app.Service.BD1.InvestigadorService;
@@ -124,6 +126,16 @@ public class InvestigadorController {
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/investigador/cargar-excel")
+    public ResponseEntity<String> cargarInvestigadoresDesdeExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            investigadorService.cargarInvestigadoresDesdeExcel(file.getInputStream());
+            return ResponseEntity.status(HttpStatus.OK).body("Archivo cargado exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar el archivo: " + e.getMessage());
         }
     }
 }

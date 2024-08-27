@@ -2,9 +2,14 @@ package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.InputStream;
+import java.util.Optional;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.poi.ss.usermodel.*;
 
 import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.DTO.InstitutoDto;
@@ -12,10 +17,13 @@ import com.unsis.spring.app.DTO.InvestigadorDto;
 import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.Entity.BD1.Instituto;
 import com.unsis.spring.app.Entity.BD1.Investigador;
+import com.unsis.spring.app.Repository.BD1.AutorDao;
+import com.unsis.spring.app.Repository.BD1.InstitutoDao;
 import com.unsis.spring.app.Repository.BD1.InvestigadorDao;
 import com.unsis.spring.app.User.Role;
 import com.unsis.spring.app.User.User;
 import com.unsis.spring.app.User.UserDTO;
+import com.unsis.spring.app.User.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,7 +32,19 @@ import jakarta.transaction.Transactional;
 public class InvestigadorServiceImpl implements InvestigadorService {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private InvestigadorDao investigadorDao;
+
+    @Autowired
+    private InstitutoDao institutoDao;
+
+    @Autowired
+    private AutorDao autorDao;
 
     @Override
     @Transactional
@@ -210,4 +230,63 @@ public class InvestigadorServiceImpl implements InvestigadorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    @Override
+    public void cargarInvestigadoresDesdeExcel(InputStream excelInputStream) throws Exception {
+        Workbook workbook = new XSSFWorkbook(excelInputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        for (Row row : sheet) {
+            if (row.getRowNum() == 0)
+                continue; // Salta la fila de encabezado
+
+            Investigador investigador = new Investigador();
+
+            String nombre1 = row.getCell(0).getStringCellValue();
+            investigador.setNombre_1_investigador(nombre1);
+
+            String nombre2 = row.getCell(1).getStringCellValue();
+            investigador.setNombre_2_investigador(nombre2);
+
+            String apellidoPaterno = row.getCell(2).getStringCellValue();
+            investigador.setApellido_paterno_1_investigador(apellidoPaterno);
+
+            String apellidoMaterno = row.getCell(3).getStringCellValue();
+            investigador.setApellido_materno_2_investigador(apellidoMaterno);
+
+            String nombreInstituto = row.getCell(4).getStringCellValue();
+            Optional<Instituto> institutoOpt = institutoDao.findByNombre(nombreInstituto);
+            if (institutoOpt.isPresent()) {
+                investigador.setInstituto(institutoOpt.get());
+            } else {
+                throw new RuntimeException("Instituto no encontrado: " + nombreInstituto);
+            }
+
+            // Crear y asignar usuario
+            User user = new User();
+            user.setUsername(row.getCell(5).getStringCellValue());
+            // Convierte el string del Excel a un tipo enum
+            String roleString = row.getCell(6).getStringCellValue().toUpperCase(); // Asegúrate que el valor sea todo con mayúsculas
+            Role role = Role.valueOf(roleString);
+            user.setRole(role);
+            user.setPassword(passwordEncoder.encode(row.getCell(7).getStringCellValue()));
+            user.setEnabled(true); // asegúrate de cifrar el password
+            userRepository.save(user);
+            investigador.setUser(user);
+
+            // Crear y asignar autor
+            Autor autor = new Autor();
+            autor.setNombre1Autor(nombre1);
+            autor.setNombre2Autor(nombre2);
+            autor.setApellidoPaternoAutor(apellidoPaterno);
+            autor.setApellidoMaternoAutor(apellidoMaterno);
+            autor.setAutorUnsis(true);
+            autorDao.save(autor);
+            investigador.setAutor(autor);
+
+            investigadorDao.save(investigador);
+        }
+
+        workbook.close();
+    }
 }
