@@ -1,7 +1,7 @@
 <app-nav></app-nav>
 <app-menu></app-menu>
 <div *ngIf="articulo" class="articulo-card">
-  <h3 class="card-header">Validar Publicación: {{ articulo.nombre_articulo }}</h3>
+  <h3 class="card-header">Título de la Publicación: {{ articulo.nombre_articulo }}</h3>
   <div class="card-body">
 
     <!-- Si el tipo de publicación es 1 -->
@@ -14,7 +14,6 @@
       <p><strong>DOI:</strong> {{ articulo.doi }}</p>
       <p><strong>Nombre del Artículo:</strong> {{ articulo.nombre_articulo }}</p>
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
-      <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
       <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
         articulo.observaciones_gestion }}</p>
@@ -35,7 +34,6 @@
       <p><strong>Observaciones Directores:</strong> {{ articulo.observaciones_directores }}</p>
       <p><strong>Observaciones Gestión:</strong> {{ articulo.observaciones_gestion }}</p>
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
-      <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
       <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
         articulo.observaciones_gestion }}</p>
@@ -55,7 +53,6 @@
       <p><strong>Observaciones Directores:</strong> {{ articulo.observaciones_directores }}</p>
       <p><strong>Observaciones Gestión:</strong> {{ articulo.observaciones_gestion }}</p>
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
-      <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
       <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
         articulo.observaciones_gestion }}</p>
