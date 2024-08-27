@@ -91,18 +91,6 @@ export class ConsultarPublicacionComponent implements OnInit {
         console.error('Error al obtener los tipos de publicaciones', error);
       })
   }
-  // Función para bloquear campos si el usuario es un investigador
-  bloquearCamposInvestigador(): void {
-    this.filtrarPorInstituto = false; // Bloquea el filtro de instituto
-    this.filtrarPorProfesor = true;  // Activa el filtro de profesor
-    this.onInstituteChange(); // Filtra automáticamente por su instituto
-  }
-
-  // Función para bloquear campos si el usuario es un director
-  bloquearCamposDirector(): void {
-    this.filtrarPorInstituto = true; // Activa el filtro de instituto
-    this.filtrarPorProfesor = false; // Bloquea el filtro de profesor
-  }
 
   reporteExe() {
     const headers = new HttpHeaders({
@@ -227,9 +215,12 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[19],      //estaba en 15 para pruebas de Leonel se cambio a 19
+        titulo_revista: arr[19],    
         fecha_publicacion: arr[5],
-        nombre_articulo: arr[15]      //estaba en 19... se cambiara a 15
+        nombre_articulo: arr[15],
+        observaciones_directores: arr[17],
+        observaciones_gestion: arr[18]   
+
         // Sigue mapeando todas las propiedades necesarias
       };
     });
@@ -369,5 +360,17 @@ export class ConsultarPublicacionComponent implements OnInit {
     } else {
       console.warn("No se seleccionaron ambos valores (trimestre o año).");
     }
+  }
+  // Función para bloquear campos si el usuario es un investigador
+  bloquearCamposInvestigador(): void {
+    this.filtrarPorInstituto = false; // Bloquea el filtro de instituto
+    this.filtrarPorProfesor = true;  // Activa el filtro de profesor
+    this.onInstituteChange(); // Filtra automáticamente por su instituto
+  }
+
+  // Función para bloquear campos si el usuario es un director
+  bloquearCamposDirector(): void {
+    this.filtrarPorInstituto = true; // Activa el filtro de instituto
+    this.filtrarPorProfesor = false; // Bloquea el filtro de profesor
   }
 }
