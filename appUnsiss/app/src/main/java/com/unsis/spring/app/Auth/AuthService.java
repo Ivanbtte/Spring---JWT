@@ -34,19 +34,22 @@ public class AuthService {
 
         // Inicializar el valor de instituto en null
         String instituto = null;
+        int id = 0;
 
         // Verificar el rol del usuario y si es COORDINADOR o INVESTIGADOR, buscar el
         // instituto
         if (user.getRole() == Role.COORDINADOR || user.getRole() == Role.INVESTIGADOR) {
             Investigador investigador = investigadorDao.findByUser(user).orElseThrow();
-            instituto = investigador.getInstituto().getNombre(); // Obtener el nombre del instituto
+            instituto = investigador.getInstituto().getNombre();
+            id = investigador.getId(); // Obtener el nombre del instituto
         }
 
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
                 .role(user.getRole().name())
-                .instituto(instituto) // Añadir el instituto
+                .instituto(instituto)
+                .id(id) // Añadir el instituto
                 .build();
     }
 

@@ -14,4 +14,5 @@ public class AuthResponse {
     String token;
     String role;
     String instituto;
+    int id;
 }
