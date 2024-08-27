@@ -15,18 +15,17 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./consultar-publicacion.component.css']
 })
 export class ConsultarPublicacionComponent implements OnInit {
+  p: number = 1; // Página inicial
   filtrarPorInstituto: boolean = false;
   filtrarPorPublicacion: boolean = false;
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   filtrarPorTipo: boolean = false;
-
   selectedInstituto: number | null = null;
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
   selectedTipoPublicacion: number | null = null;
   selectedInstituteForProfessor:  number | null = null;
-
   publicacion: any[] = [];
   tipo_publicaciones: any[] = [];//En uso
   profesores: any[] = [];//En uso
@@ -87,71 +86,11 @@ export class ConsultarPublicacionComponent implements OnInit {
     this.catalogoService.getTiposPublicacion().subscribe(
       (data: any[]) => {
         this.tipo_publicaciones = data;
-        console.log(data);
       },
       (error: any) => {
         console.error('Error al obtener los tipos de publicaciones', error);
       })
   }
-
-  /*reporteExe1() {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-
-    if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
-      const institutoId = this.selectedInstituto;
-
-      if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
-        const profesorId = this.selectedProfesor;
-
-        if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-          const tipoPublicacionId = this.selectedTipoPublicacion;
-
-          if (!isNaN(institutoId) && !isNaN(profesorId) && !isNaN(tipoPublicacionId)) {
-            console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
-            this.articuloService.reporteExe_Instituto_Investigador_TipoPublicacion(institutoId, profesorId, tipoPublicacionId).subscribe(response => {
-              this.downloadFile(response);
-            });
-          } else {
-            console.error('El ID del instituto, del profesor, o del tipo de publicación no es válido.');
-          }
-
-        } else if (!isNaN(institutoId) && !isNaN(profesorId)) {
-          console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
-          this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del profesor no es válido.');
-        }
-
-      } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-        const tipoPublicacionId = this.selectedTipoPublicacion;
-
-        if (!isNaN(institutoId) && !isNaN(tipoPublicacionId)) {
-          console.log(`Instituto ID: ${institutoId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
-          this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipoPublicacionId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del tipo de publicación no es válido.');
-        }
-
-      } else if (!isNaN(institutoId)) {
-        this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del instituto no es válido.');
-      }
-    } else {
-      console.log('Generando reporte general');
-      this.articuloService.reporteExe().subscribe(response => {
-        this.downloadFile(response);
-      });
-    }
-  }*/
 
   reporteExe() {
     const headers = new HttpHeaders({
@@ -168,7 +107,6 @@ export class ConsultarPublicacionComponent implements OnInit {
           const tipoPublicacionId = this.selectedTipoPublicacion;
   
           if (!isNaN(institutoId) && !isNaN(profesorId) && !isNaN(tipoPublicacionId)) {
-            console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
             this.articuloService.reporteExe_Instituto_Investigador_TipoPublicacion(institutoId, profesorId, tipoPublicacionId).subscribe(response => {
               this.downloadFile(response);
             });
@@ -177,7 +115,6 @@ export class ConsultarPublicacionComponent implements OnInit {
           }
   
         } else if (!isNaN(institutoId) && !isNaN(profesorId)) {
-          console.log(`Instituto ID: ${institutoId}, Profesor ID: ${profesorId}`);
           this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
             this.downloadFile(response);
           });
@@ -189,7 +126,6 @@ export class ConsultarPublicacionComponent implements OnInit {
         const tipoPublicacionId = this.selectedTipoPublicacion;
   
         if (!isNaN(institutoId) && !isNaN(tipoPublicacionId)) {
-          console.log(`Instituto ID: ${institutoId}, Tipo de Publicación ID: ${tipoPublicacionId}`);
           this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipoPublicacionId).subscribe(response => {
             this.downloadFile(response);
           });
@@ -208,7 +144,6 @@ export class ConsultarPublicacionComponent implements OnInit {
       const profesorId = this.selectedProfesor;
   
       if (!isNaN(profesorId)) {
-        console.log(`Profesor ID: ${profesorId}`);
         this.articuloService.reporteExe_Profesor(profesorId).subscribe(response => {
           this.downloadFile(response);
         });
@@ -216,14 +151,12 @@ export class ConsultarPublicacionComponent implements OnInit {
         console.error('El ID del profesor no es válido.');
       }
     } else {
-      console.log('Generando reporte general');
       this.articuloService.reporteExe().subscribe(response => {
         this.downloadFile(response);
       });
     }
   }
   
-
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);
@@ -243,10 +176,7 @@ export class ConsultarPublicacionComponent implements OnInit {
       tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
     };
   
-    console.log("Criterios de búsqueda enviados:", searchCriteria);
-  
     this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-      console.log("Datos recibidos del backend:", data);
       this.articulosFiltrados = this.convertirDatos(data);
       
       // Ordenar los artículos por nombre_articulo
@@ -255,8 +185,6 @@ export class ConsultarPublicacionComponent implements OnInit {
         const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
         return nombreA.localeCompare(nombreB);
       });
-      
-      console.log("Datos ordenados:", this.articulosFiltrados);
     }, error => {
       console.error('Error al buscar publicaciones:', error);
     });
@@ -271,18 +199,13 @@ export class ConsultarPublicacionComponent implements OnInit {
       tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
     };
 
-    console.log("Criterios de búsqueda enviados:", searchCriteria);
-  
     this.articuloService.dowloadzip(searchCriteria).subscribe(data => {
-      console.log("Datos recibidos del backend:", data);
       const blob = new Blob([data], { type: 'application/zip' });
       saveAs(blob, 'archivos.zip'); // Asigna un nombre al archivo que se descargará
     }, error => {
       console.error('Error al descargar el zip', error);
     });
   }
-  
-  
 
   convertirDatos(data: any[]): any[] {
     return data.map(arr => {
@@ -292,27 +215,27 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[19],      //estaba en 15 para pruebas de Leonel se cambio a 19
+        titulo_revista: arr[19],    
         fecha_publicacion: arr[5],
-        nombre_articulo: arr[15]      //estaba en 19... se cambiara a 15
+        nombre_articulo: arr[15],
+        observaciones_directores: arr[17],
+        observaciones_gestion: arr[18]   
+
         // Sigue mapeando todas las propiedades necesarias
       };
     });
   }
   
-
   trackById(index: number, articulo: any): number {
     return articulo.id;
   }
 
   editarArticulo(articulo: any) {
-    console.log('Editar artículo:', articulo);
     this.router.navigate(['/validar-publicacion', articulo.id_articulo]);
   }
 
   darDeBajaArticulo(articulo: any) {
-    // Lógica para dar de baja el artículo, por ejemplo mostrar un mensaje de confirmación.
-    console.log('Dar de baja artículo:', articulo);
+    console.info('Dar de baja artículo:', articulo);
   }
 
   formatDate(dateString: string): string {
@@ -346,7 +269,6 @@ export class ConsultarPublicacionComponent implements OnInit {
     } else {
       this.profesores = [];
       this.profesoresFiltrados = [];
-      console.log('No se seleccionó ningún instituto, lista de profesores vacía');
     }
   }
 
@@ -367,6 +289,7 @@ export class ConsultarPublicacionComponent implements OnInit {
       );
     }
   }
+
   onCheckboxChange(filter: string): void {
     switch (filter) {
       case 'instituto':
@@ -400,6 +323,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         break;
     }
   }
+
   onTrimestreChange(): void {
     // Verifica que ambos valores no sean nulos o undefined
     if (this.selectedTrimestre !== null && this.selectedAnio !== null) {
@@ -410,7 +334,6 @@ export class ConsultarPublicacionComponent implements OnInit {
       let endDate: string;
       switch (trimestre) {
         case 1:
-          console.log("Trimestre 1");
           startDate = `${anio}-01-01`;
           endDate = `${anio}-03-31`;
           break;
@@ -437,5 +360,17 @@ export class ConsultarPublicacionComponent implements OnInit {
     } else {
       console.warn("No se seleccionaron ambos valores (trimestre o año).");
     }
+  }
+  // Función para bloquear campos si el usuario es un investigador
+  bloquearCamposInvestigador(): void {
+    this.filtrarPorInstituto = false; // Bloquea el filtro de instituto
+    this.filtrarPorProfesor = true;  // Activa el filtro de profesor
+    this.onInstituteChange(); // Filtra automáticamente por su instituto
+  }
+
+  // Función para bloquear campos si el usuario es un director
+  bloquearCamposDirector(): void {
+    this.filtrarPorInstituto = true; // Activa el filtro de instituto
+    this.filtrarPorProfesor = false; // Bloquea el filtro de profesor
   }
 }

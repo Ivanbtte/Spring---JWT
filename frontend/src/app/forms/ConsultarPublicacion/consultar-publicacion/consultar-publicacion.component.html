@@ -160,19 +160,21 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID de Investigación</th>
                 <th>Titulo de publicacion</th>
                 <th>Titulo de revista</th>
                 <th>Fecha de publicación</th>
+                <th>Observaciones Director</th>
+                <th>Observaciones Gestión</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let articulo of articulosFiltrados; trackBy: trackById">
-                <td>{{articulo.id_articulo}}</td>
+            <tr *ngFor="let articulo of articulosFiltrados| paginate: { itemsPerPage: 10, currentPage: p }">
                 <td>{{articulo.nombre_articulo}}</td>
                 <td>{{articulo.titulo_revista}}</td>
                 <td>{{formatDate(articulo.fecha_publicacion)}}</td>
+                <td>{{articulo.observaciones_directores}}</td>
+                <td>{{articulo.observaciones_gestion}}</td>
                 <td>
                     <button class="btn btn-primary" (click)="editarArticulo(articulo)">
                         <i class="fa fa-edit"></i> Revisar
@@ -184,6 +186,7 @@
             </tr>
         </tbody>
     </table>
-
-
+       <!-- Controles de paginación -->
+       <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Siguiente">
+    </pagination-controls>
 </div>
