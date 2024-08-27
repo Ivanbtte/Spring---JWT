@@ -24,9 +24,11 @@ export class LoginService {
       tap((userData) => {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
         const encryptedInstituto = this.encryptionService.encrypt(userData.instituto);
+        const encryptedId = this.encryptionService.encrypt(String(userData.id));
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", encryptedRole);
         sessionStorage.setItem("instituto", encryptedInstituto);
+        sessionStorage.setItem(":-:D", encryptedId);
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -38,6 +40,7 @@ export class LoginService {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("role"); // Quitar el rol del sessionStorage
     sessionStorage.removeItem("instituto");
+    sessionStorage.removeItem(":-:D");
     this.currentUserLoginOn.next(false);
   }
 
@@ -68,5 +71,7 @@ export class LoginService {
   getInstituto(): string {
     return this.encryptionService.decrypt(sessionStorage.getItem("instituto") || ""); 
   }
-
+  getId(): string {
+    return this.encryptionService.decrypt(sessionStorage.getItem(":-:D") || ""); 
+  }
 }
