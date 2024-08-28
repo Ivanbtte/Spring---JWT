@@ -1,10 +1,3 @@
-<nav class="navbar navbar-expand-lg">
-  <a class="navbar-brand" href="#">Menu</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
-  </button>
-</nav>
-
 <div id="contenedor">
   <div id="contenedorcentrado">
     <div id="login">
@@ -13,33 +6,34 @@
           <i class="fa fa-user-circle-o fa-5x"></i>
         </div>
         <p class="text-danger">{{loginError}}</p>
-        
+
         <div class="form-group">
           <label for="exampleInputEmail1"><i class="fa fa-envelope-o"></i> Correo</label>
           <div class="input-group">
-            <input formControlName="username" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Ingresar Correo">
+            <input formControlName="username" type="email" class="form-control" id="exampleInputEmail1"
+              aria-describedby="emailHelp" placeholder="Ingresar Correo">
           </div>
           <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
             <div *ngIf="email.errors?.['required']">El Correo es requerido.</div>
             <div *ngIf="email.errors?.['email']">El Correo debe tener un formato válido.</div>
           </div>
         </div>
-        
-<div class="form-group">
-  <label for="exampleInputPassword1"><i class="fa fa-key"></i> Contraseña</label>
-  <div class="input-group position-relative">
-    <input formControlName="password" [type]="passwordFieldType" class="form-control pr-5" id="exampleInputPassword1" placeholder="Contraseña">
-    <span class="input-group-text position-absolute" style="right: 0px;  top: 40%; transform: translateY(-50%); width: 40px; height: 80%; border-radius: 5px;" (click)="togglePasswordVisibility()">
-      <i [class]="passwordToggleIcon"></i>
-    </span>
-  </div>
-  <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
-    <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
-  </div>
-</div>
 
-        
-        
+        <div class="form-group">
+          <label for="exampleInputPassword1"><i class="fa fa-key"></i> Contraseña</label>
+          <div class="input-group position-relative">
+            <input formControlName="password" [type]="passwordFieldType" class="form-control pr-5"
+              id="exampleInputPassword1" placeholder="Contraseña">
+            <span class="input-group-text position-absolute"
+              style="right: 0px;  top: 40%; transform: translateY(-50%); width: 40px; height: 80%; border-radius: 5px;"
+              (click)="togglePasswordVisibility()">
+              <i [class]="passwordToggleIcon"></i>
+            </span>
+          </div>
+          <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+            <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary btn-block">Iniciar Sesión</button>
       </form>
     </div>

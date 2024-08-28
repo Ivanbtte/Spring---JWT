@@ -19,7 +19,7 @@ import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+  { path: '', redirectTo: '/iniciar-sesion', pathMatch: 'full' },
   { path: 'inicio', component: DashboardComponent },
   { path: 'iniciar-sesion', component: LoginComponent },
   { path: 'consultar-publicacion', component: ConsultarPublicacionComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR', 'ROOT', 'ADMIN', 'COORDINADOR'] } },
