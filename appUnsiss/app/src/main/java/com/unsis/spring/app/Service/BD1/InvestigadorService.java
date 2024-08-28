@@ -1,6 +1,7 @@
 package com.unsis.spring.app.Service.BD1;
 
 import java.util.List;
+import java.io.InputStream;
 
 import com.unsis.spring.app.DTO.InvestigadorDto;
 
@@ -21,5 +22,8 @@ public interface InvestigadorService {
     public List<InvestigadorDto> findInvestigadoresHabilitados();
 
     public List<InvestigadorDto> findInvestigadoresHabilitadosPorInstituto(Long institutoId);
+
+    // Declaración del nuevo método
+    public void cargarInvestigadoresDesdeExcel(InputStream excelInputStream) throws Exception;
 
 }
