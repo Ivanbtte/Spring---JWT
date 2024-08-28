@@ -11,9 +11,14 @@
           <i class="fa fa-user-plus"></i> Investigadores
         </a>
       </li>
-      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'INVESTIGADOR'|| userRole === 'COORDINADOR'">
+      <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'COORDINADOR'">
         <a class="nav-link" [routerLink]="['/consultar-publicacion']">
           <i class="fa fa-search"></i> Consultar Publicaciones
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="userRole === 'INVESTIGADOR' || userRole === 'COORDINADOR'">
+        <a class="nav-link" [routerLink]="['/mis-publicaciones']">
+          <i class="fa fa-file"></i> Mis publicaciones
         </a>
       </li>
       <li class="nav-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'INVESTIGADOR'|| userRole === 'COORDINADOR'">

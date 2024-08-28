@@ -23,7 +23,7 @@ export class LoginService {
     return this.http.post<any>(environment.urlHost + "auth/login", credentials).pipe(
       tap((userData) => {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
-        const encryptedInstituto = this.encryptionService.encrypt(userData.instituto);
+        const encryptedInstituto = this.encryptionService.encrypt(String(userData.instituto));
         const encryptedId = this.encryptionService.encrypt(String(userData.id));
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", encryptedRole);
