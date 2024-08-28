@@ -10,6 +10,7 @@ import { LoginRequest } from 'src/app/services/auth/loginRequest';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  userRole!:string ;
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
   loginError:string="";
@@ -42,28 +43,35 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  login(){
-    if(this.loginForm.valid){
-      this.loginError="";
+  login() {
+    if (this.loginForm.valid) {
+      this.loginError = "";
       this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
         next: (userData) => {
           console.log(userData);
+          this.userRole = this.loginService.getUserRole();
+          if (this.userRole === 'ADMIN' || this.userRole === 'ROOT' || this.userRole === 'COORDINADOR') {
+            this.router.navigateByUrl('/consultar-publicacion');
+          } else if (this.userRole === 'INVESTIGADOR') {
+            this.router.navigateByUrl('/mis-publicaciones');
+          } else {
+            this.router.navigateByUrl('/inicio'); // Ruta predeterminada si el rol no coincide
+          }
+  
+          this.loginForm.reset();
         },
         error: (errorData) => {
           console.error(errorData);
-          this.loginError=errorData;
+          this.loginError = errorData;
         },
         complete: () => {
-          console.info("Login completo");
-          this.router.navigateByUrl('/inicio');
-          this.loginForm.reset();
         }
-      })
-      }
-    else{
+      });
+    } else {
       this.loginForm.markAllAsTouched();
       alert("Error al ingresar los datos.");
     }
   }
+  
 
 }
