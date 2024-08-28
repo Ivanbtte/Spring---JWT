@@ -33,14 +33,14 @@ public class AuthService {
         }
 
         // Inicializar el valor de instituto en null
-        String instituto = null;
+        long instituto = 0;
         int id = 0;
 
         // Verificar el rol del usuario y si es COORDINADOR o INVESTIGADOR, buscar el
         // instituto
         if (user.getRole() == Role.COORDINADOR || user.getRole() == Role.INVESTIGADOR) {
             Investigador investigador = investigadorDao.findByUser(user).orElseThrow();
-            instituto = investigador.getInstituto().getNombre();
+            instituto = investigador.getInstituto().getId();
             id = investigador.getId(); // Obtener el nombre del instituto
         }
 

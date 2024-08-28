@@ -28,6 +28,7 @@ import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-
 import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     CatalogoComponent,
     RegistrarCatalogoComponent,
     UploadFilesComponent,
-    ValidarPublicacionComponent
+    ValidarPublicacionComponent,
+    MisPublicacionesComponent
   ],
   imports: [
     BrowserModule,

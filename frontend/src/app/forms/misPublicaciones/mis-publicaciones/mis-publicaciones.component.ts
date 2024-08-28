@@ -1,21 +1,18 @@
-import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
-import { Investigador } from 'src/app/services/auth/investigador';
 import { AutorService } from 'src/app/services/autor/autor.service';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
-import { saveAs } from 'file-saver';
 import { LoginService } from 'src/app/services/auth/login.service';
-
 @Component({
-  selector: 'app-consultar-publicacion',
-  templateUrl: './consultar-publicacion.component.html',
-  styleUrls: ['./consultar-publicacion.component.css']
+  selector: 'app-mis-publicaciones',
+  templateUrl: './mis-publicaciones.component.html',
+  styleUrls: ['./mis-publicaciones.component.css']
 })
-export class ConsultarPublicacionComponent implements OnInit {
+export class MisPublicacionesComponent implements OnInit {
+
   p: number = 1; // Página inicial
   filtrarPorInstituto: boolean = false;
   filtrarPorPublicacion: boolean = false;
@@ -95,145 +92,54 @@ export class ConsultarPublicacionComponent implements OnInit {
       (error: any) => {
         console.error('Error al obtener los tipos de publicaciones', error);
       })
-
+      
       this.searchPublications();
   }
 
-  reporteExe() {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-  
-    if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
-      const institutoId = this.selectedInstituto;
-  
-      if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
-        const profesorId = this.selectedProfesor;
-  
-        if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-          const tipoPublicacionId = this.selectedTipoPublicacion;
-  
-          if (!isNaN(institutoId) && !isNaN(profesorId) && !isNaN(tipoPublicacionId)) {
-            this.articuloService.reporteExe_Instituto_Investigador_TipoPublicacion(institutoId, profesorId, tipoPublicacionId).subscribe(response => {
-              this.downloadFile(response);
-            });
-          } else {
-            console.error('El ID del instituto, del profesor, o del tipo de publicación no es válido.');
-          }
-  
-        } else if (!isNaN(institutoId) && !isNaN(profesorId)) {
-          this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del profesor no es válido.');
-        }
-  
-      } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-        const tipoPublicacionId = this.selectedTipoPublicacion;
-  
-        if (!isNaN(institutoId) && !isNaN(tipoPublicacionId)) {
-          this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipoPublicacionId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del tipo de publicación no es válido.');
-        }
-  
-      } else if (!isNaN(institutoId)) {
-        this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del instituto no es válido.');
-      }
-    } else if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
-      const profesorId = this.selectedProfesor;
-  
-      if (!isNaN(profesorId)) {
-        this.articuloService.reporteExe_Profesor(profesorId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del profesor no es válido.');
-      }
-    } else {
-      this.articuloService.reporteExe().subscribe(response => {
-        this.downloadFile(response);
-      });
-    }
-  }
-  
-  private downloadFile(response: Blob) {
-    const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Articulos_${new Date().toISOString()}.xlsx`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }
-
   searchPublications(): void {
-       // Obtén los datos del usuario desde el LoginService
-       this.userRole = this.loginService.getUserRole();
-       this.userInstituto = this.loginService.getInstituto();
-       if (this.userRole === 'COORDINADOR') {
-         const searchCriteria = {
-           institutoId: this.userInstituto,
-           autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-           fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
-           fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
-           tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
-         };
-         this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-           this.articulosFiltrados = this.convertirDatos(data);
-             // Ordenar los artículos por nombre_articulo
-         this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
-           const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
-           const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
-           return nombreA.localeCompare(nombreB);
-         });
-       }, error => {
-         console.error('Error al buscar publicaciones:', error);
-       });    
-       }else {
-         const searchCriteria = {
-           institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
-           autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-           fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
-           fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
-           tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
-         };
-         this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-           this.articulosFiltrados = this.convertirDatos(data);
-             // Ordenar los artículos por nombre_articulo
-         this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
-           const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
-           const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
-           return nombreA.localeCompare(nombreB);
-         });
-       }, error => {
-         console.error('Error al buscar publicaciones:', error);
-       });
-       }
-     }
-
-  dowloadZip(): void {
-    const searchCriteria = {
-      institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
-      autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-      fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
-      fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
-      tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
-    };
-
-    this.articuloService.dowloadzip(searchCriteria).subscribe(data => {
-      const blob = new Blob([data], { type: 'application/zip' });
-      saveAs(blob, 'archivos.zip'); // Asigna un nombre al archivo que se descargará
+    // Obtén los datos del usuario desde el LoginService
+    this.userRole = this.loginService.getUserRole();
+    this.userId = Number(this.loginService.getId());
+    this.userInstituto = this.loginService.getInstituto();
+    if (this.userRole === 'INVESTIGADOR'||this.userRole === 'COORDINADOR') {
+      const searchCriteria = {
+        institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+        autorId: this.userId,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      };
+      this.articuloService.searchPublications(searchCriteria).subscribe(data => {
+        this.articulosFiltrados = this.convertirDatos(data);
+          // Ordenar los artículos por nombre_articulo
+      this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
+        const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
+        const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
+        return nombreA.localeCompare(nombreB);
+      });
     }, error => {
-      console.error('Error al descargar el zip', error);
+      console.error('Error al buscar publicaciones:', error);
+    });  
+    }else {
+      const searchCriteria = {
+        institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+        autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      };
+      this.articuloService.searchPublications(searchCriteria).subscribe(data => {
+        this.articulosFiltrados = this.convertirDatos(data);
+          // Ordenar los artículos por nombre_articulo
+      this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
+        const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
+        const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
+        return nombreA.localeCompare(nombreB);
+      });
+    }, error => {
+      console.error('Error al buscar publicaciones:', error);
     });
+    }
   }
 
   convertirDatos(data: any[]): any[] {
