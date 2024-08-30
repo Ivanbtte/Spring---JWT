@@ -21,6 +21,55 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "WHERE a.id_articulo = :id", nativeQuery = true)
         List<Object[]> findArticuloWithAutoresById(@Param("id") Long id);
 
+        // Esta consulta es la mera mera
+        @Query(value = "SELECT " +
+                        "a.id_articulo, "+
+                        "a.compilado, " +
+                        "a.doi, " +
+                        "a.editorial, " +
+                        "a.fecha_publicacion, " +
+                        "a.financiamiento_prodep, " +
+                        "a.indice_miar, " +
+                        "a.isbn_digital, " +
+                        "a.isbn_impreso, " +
+                        "a.nombre_articulo, " +
+                        "a.nombre_capitulo, " +
+                        "a.numero_revista, " +
+                        "a.observaciones_directores, " +
+                        "a.observaciones_gestion, " +
+                        "a.pag_final, " +
+                        "a.pag_inicio, " +
+                        "a.titulo_revista, " +
+                        "a.volumen_revista, " +
+                        "a.id_instituto, " +
+                        "a.id_publicacion_tipo, " +
+                        "a.id_trimestre, " +
+                        "au.id_autor, " +
+                        "au.apellido_materno_autor, " +
+                        "au.apellido_paterno_autor, " +
+                        "au.autor_unsis, " +
+                        "au.nombre_1_autor, " +
+                        "au.nombre_2_autor, " +
+                        "a.aceptado_director, " +
+                        "a.aceptado_gestion, " +
+                        "a.file_metadata_id " +
+                        "FROM Articulos a " +
+                        "LEFT JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "LEFT JOIN public.investigador inv ON inv.id_autor = aa.id_autor " +
+                        "LEFT JOIN autores au ON au.id_autor = aa.id_autor "+
+                        "LEFT JOIN public.instituto i ON i.id = inv.id_instituto " +
+                        "WHERE (:institutoId IS NULL OR a.id_instituto = :institutoId) " +
+                        "AND (:autorId IS NULL OR aa.id_autor = :autorId) " +
+                        "AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
+                        "AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
+                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)", nativeQuery = true)
+        List<Object[]> findAllArticulosWithAutoresPerro(
+                        @Param("institutoId") Long institutoId,
+                        @Param("autorId") Long autorId,
+                        @Param("fechaInicio") String fechaInicio,
+                        @Param("fechaFin") String fechaFin,
+                        @Param("tipo") Integer tipo);
+
         // Consulta general FUNCIONA
         @Query(value = "SELECT a.*, au.* " +
                         "FROM Articulos a " +
@@ -130,10 +179,11 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         @Param("institutoId") Long institutoId,
                         @Param("autorId") Long autorId,
                         @Param("fechaInicio") String fechaInicio,
-                        @Param("fechaFin") String  fechaFin,
+                        @Param("fechaFin") String fechaFin,
                         @Param("tipo") Integer tipo);
 
-// Reemplaza el método original con este
-@Query("SELECT a FROM Articulos a WHERE a.fecha_publicacion = :fechaPublicacion AND LOWER(a.nombre_articulo) = LOWER(:nombreArticulo)")
-Optional<Articulos> findByFechaPublicacionAndNombreArticulo(@Param("fechaPublicacion") Date fechaPublicacion, @Param("nombreArticulo") String nombreArticulo);
+        // Reemplaza el método original con este
+        @Query("SELECT a FROM Articulos a WHERE a.fecha_publicacion = :fechaPublicacion AND LOWER(a.nombre_articulo) = LOWER(:nombreArticulo)")
+        Optional<Articulos> findByFechaPublicacionAndNombreArticulo(@Param("fechaPublicacion") Date fechaPublicacion,
+                        @Param("nombreArticulo") String nombreArticulo);
 }
