@@ -29,7 +29,7 @@ public interface ArticuloService {
 
     public CitaApaDto getCitaApaById(Long id);
 
-    public List<CitaApaDto> getAllCitasApa();
+    public List<CitaApaDto> getAllCitasApa(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo);
 
     public List<CitaApaDto> getAllCitasApaInstituto(Long id);
 

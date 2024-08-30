@@ -235,7 +235,7 @@ public class ArticuloController {
         }
     }
 
-    @GetMapping(value = "/articulos/exportarPDF")
+    /*@GetMapping(value = "/articulos/exportarPDF")
     public void exportarPDFdeArticulo(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
 
@@ -251,10 +251,11 @@ public class ArticuloController {
 
         ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
         exporter.exportar(response);
-    }
+    }*/
 
-    @GetMapping(value = "/articulos/exportarExcel")
-    public void exportarExelDeArticulo(HttpServletResponse response) throws DocumentException, IOException {
+    @PostMapping(value = "/articulos/exportarExcel")
+    public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
+            throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
 
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -265,9 +266,27 @@ public class ArticuloController {
 
         response.setHeader(cabecera, valor);
 
-        List<CitaApaDto> usuarios = articuloService.getAllCitasApa();
+        // Validar las fechas (opcional)
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
+            LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
+            LocalDate fechaFin = LocalDate.parse(criteria.getFechaFin(), formatter);
 
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, usuarios);
+            if (fechaInicio.isAfter(fechaFin)) {
+                throw new IllegalArgumentException("La fecha de inicio no puede ser después de la fecha final.");
+            }
+        }
+
+        // Obtener los artículos filtrados según los criterios proporcionados
+        List<CitaApaDto> citasApa = articuloService.getAllCitasApa(
+                criteria.getInstitutoId(),
+                criteria.getAutorId(),
+                criteria.getFechaInicio(),
+                criteria.getFechaFin(),
+                criteria.getTipo());
+
+        // Exportar a Excel
+        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, citasApa);
         exporter.exportar(response);
     }
 
@@ -402,6 +421,5 @@ public class ArticuloController {
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }
