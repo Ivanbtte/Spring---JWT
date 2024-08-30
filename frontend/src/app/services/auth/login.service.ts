@@ -15,8 +15,8 @@ export class LoginService {
   currentUserData: BehaviorSubject<String> =new BehaviorSubject<String>("");
 
   constructor(private http: HttpClient, private encryptionService: EncryptionServiceService) { 
-    this.currentUserLoginOn=new BehaviorSubject<boolean>(localStorage.getItem("token")!=null);
-    this.currentUserData=new BehaviorSubject<String>(localStorage.getItem("token") || "");
+    this.currentUserLoginOn=new BehaviorSubject<boolean>(sessionStorage.getItem("token")!=null);
+    this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
   }
 
   login(credentials: LoginRequest): Observable<any> {
@@ -25,10 +25,10 @@ export class LoginService {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
         const encryptedInstituto = this.encryptionService.encrypt(String(userData.instituto));
         const encryptedId = this.encryptionService.encrypt(String(userData.id));
-        localStorage.setItem("token", userData.token);
-        localStorage.setItem("role", encryptedRole);
-        localStorage.setItem("instituto", encryptedInstituto);
-        localStorage.setItem(":-:D", encryptedId);
+        sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("role", encryptedRole);
+        sessionStorage.setItem("instituto", encryptedInstituto);
+        sessionStorage.setItem(":-:D", encryptedId);
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -37,10 +37,10 @@ export class LoginService {
     );
   }
   logout(): void {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role"); // Quitar el rol del sessionStorage
-    localStorage.removeItem("instituto");
-    localStorage.removeItem(":-:D");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("role"); // Quitar el rol del sessionStorage
+    sessionStorage.removeItem("instituto");
+    sessionStorage.removeItem(":-:D");
     this.currentUserLoginOn.next(false);
   }
 
@@ -66,12 +66,12 @@ export class LoginService {
     return this.currentUserData.value;
   }
   getUserRole(): string {
-    return this.encryptionService.decrypt(localStorage.getItem("role") || ""); 
+    return this.encryptionService.decrypt(sessionStorage.getItem("role") || ""); 
   }
   getInstituto(): string {
-    return this.encryptionService.decrypt(localStorage.getItem("instituto") || ""); 
+    return this.encryptionService.decrypt(sessionStorage.getItem("instituto") || ""); 
   }
   getId(): string {
-    return this.encryptionService.decrypt(localStorage.getItem(":-:D") || ""); 
+    return this.encryptionService.decrypt(sessionStorage.getItem(":-:D") || ""); 
   }
 }
