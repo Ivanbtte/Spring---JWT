@@ -5,6 +5,7 @@ import  {  Observable, throwError, catchError, BehaviorSubject , tap, map} from 
 import { User } from './user';
 import { environment } from 'src/environments/environment';
 import { EncryptionServiceService } from './encryption-service.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,14 @@ export class LoginService {
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserData: BehaviorSubject<String> =new BehaviorSubject<String>("");
 
-  constructor(private http: HttpClient, private encryptionService: EncryptionServiceService) { 
-    this.currentUserLoginOn=new BehaviorSubject<boolean>(sessionStorage.getItem("token")!=null);
-    this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
+  constructor(
+    private http: HttpClient,
+    private encryptionService: EncryptionServiceService,
+    private cookieService: CookieService // Inyecta el servicio de cookies
+  ) { 
+    const token = this.cookieService.get('token') || sessionStorage.getItem('token');
+    this.currentUserLoginOn = new BehaviorSubject<boolean>(!!token);
+    this.currentUserData = new BehaviorSubject<String>(token || '');
   }
 
   login(credentials: LoginRequest): Observable<any> {
@@ -25,10 +31,19 @@ export class LoginService {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
         const encryptedInstituto = this.encryptionService.encrypt(String(userData.instituto));
         const encryptedId = this.encryptionService.encrypt(String(userData.id));
+
+       // Guardar en sessionStorage
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", encryptedRole);
-        sessionStorage.setItem("instituto", encryptedInstituto);
-        sessionStorage.setItem(":-:D", encryptedId);
+        sessionStorage.setItem("_biz_s_t_y", encryptedInstituto);
+        sessionStorage.setItem("_biz_v_e_z", encryptedId);
+
+        // Guardar en cookies
+        this.cookieService.set('token', userData.token);
+        this.cookieService.set('role', encryptedRole);
+        this.cookieService.set('_biz_s_t_y', encryptedInstituto);
+        this.cookieService.set('_biz_v_e_z', encryptedId);
+
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
       }),
@@ -37,10 +52,18 @@ export class LoginService {
     );
   }
   logout(): void {
+    // Eliminar de sessionStorage
     sessionStorage.removeItem("token");
-    sessionStorage.removeItem("role"); // Quitar el rol del sessionStorage
-    sessionStorage.removeItem("instituto");
-    sessionStorage.removeItem(":-:D");
+    sessionStorage.removeItem("role");
+    sessionStorage.removeItem("_biz_s_t_y");
+    sessionStorage.removeItem("_biz_v_e_z");
+
+    // Eliminar de cookies
+    this.cookieService.delete('token');
+    this.cookieService.delete('role');
+    this.cookieService.delete('_biz_s_t_y');
+    this.cookieService.delete('_biz_v_e_z');
+
     this.currentUserLoginOn.next(false);
   }
 
@@ -66,12 +89,15 @@ export class LoginService {
     return this.currentUserData.value;
   }
   getUserRole(): string {
-    return this.encryptionService.decrypt(sessionStorage.getItem("role") || ""); 
+    const role = this.cookieService.get('role') || sessionStorage.getItem('role');
+    return this.encryptionService.decrypt(role || '');
   }
   getInstituto(): string {
-    return this.encryptionService.decrypt(sessionStorage.getItem("instituto") || ""); 
+    const instituto = this.cookieService.get('_biz_s_t_y') || sessionStorage.getItem('_biz_s_t_y');
+    return this.encryptionService.decrypt(instituto || '');
   }
   getId(): string {
-    return this.encryptionService.decrypt(sessionStorage.getItem(":-:D") || ""); 
+    const id = this.cookieService.get('_biz_v_e_z') || sessionStorage.getItem('_biz_v_e_z');
+    return this.encryptionService.decrypt(id || '');
   }
 }
