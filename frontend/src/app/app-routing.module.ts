@@ -17,6 +17,7 @@ import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-
 import { UploadFilesComponent } from './forms/upload-files/upload-files.component';
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
+import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cambiar-contra.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/iniciar-sesion', pathMatch: 'full' },
@@ -35,7 +36,8 @@ const routes: Routes = [
   { path: 'registrar-catalogo', component: RegistrarCatalogoComponent },
   { path: 'upload', component: UploadFilesComponent },
   { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent },
-  {path: 'mis-publicaciones', component: MisPublicacionesComponent},
+  { path: 'mis-publicaciones', component: MisPublicacionesComponent},
+  { path: 'cmbc', component: CambiarContraComponent},
 ];
 
 @NgModule({

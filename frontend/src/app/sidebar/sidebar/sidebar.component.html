@@ -50,6 +50,13 @@
   <!-- Flex Spacer -->
   <div class="flex-spacer"></div>
   <!-- Cerrar Sesión -->
+  <div class="sidebar-item">
+    <a class="nav-link" [routerLink]="['/cmbc']">
+      <i class="fa fa-user-circle-o"></i>
+      <span class="sidebar-item-title">Cambiar contraseña</span>
+    </a>
+  </div>
+
   <div class="sidebar-item logout-item">
     <div *ngIf="!userLoginOn" class="nav-item">
       <a class="nav-link" routerLink="/iniciar-sesion">

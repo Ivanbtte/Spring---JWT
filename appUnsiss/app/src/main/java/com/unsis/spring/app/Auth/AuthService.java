@@ -35,6 +35,7 @@ public class AuthService {
         // Inicializar el valor de instituto en null
         long instituto = 0;
         int id = 0;
+        int idUser=0;
 
         // Verificar el rol del usuario y si es COORDINADOR o INVESTIGADOR, buscar el
         // instituto
@@ -42,6 +43,7 @@ public class AuthService {
             Investigador investigador = investigadorDao.findByUser(user).orElseThrow();
             instituto = investigador.getInstituto().getId();
             id = investigador.getId(); // Obtener el nombre del instituto
+            idUser = investigador.getUser().getId();
         }
 
         String token = jwtService.getToken(user);
@@ -50,6 +52,7 @@ public class AuthService {
                 .role(user.getRole().name())
                 .instituto(instituto)
                 .id(id) // Añadir el instituto
+                .idUser(idUser)
                 .build();
     }
 

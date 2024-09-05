@@ -1,0 +1,57 @@
+<div class="container">
+    <h3 class="text-center">Cambiar Contraseña</h3>
+    <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+  
+      <div class="form-group">
+        <label for="password">Nueva Contraseña</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" formControlName="password" [type]="passwordFieldType"
+            placeholder="Ingrese su nueva contraseña" required>
+        </div>
+        <div *ngIf="passwordForm.get('password')?.errors?.['required'] && passwordForm.get('password')?.touched"
+          class="text-danger">
+          La contraseña es requerida.
+        </div>
+        <div *ngIf="passwordForm.get('password')?.errors?.['minlength'] && passwordForm.get('password')?.touched"
+          class="text-danger">
+          La contraseña debe tener al menos 8 caracteres.
+        </div>
+        <div *ngIf="passwordForm.get('password')?.errors?.['uppercase'] && passwordForm.get('password')?.touched"
+          class="text-danger">
+          La contraseña debe contener al menos una letra mayúscula.
+        </div>
+        <div *ngIf="passwordForm.get('password')?.errors?.['number'] && passwordForm.get('password')?.touched"
+          class="text-danger">
+          La contraseña debe contener al menos un número.
+        </div>
+        <div *ngIf="passwordForm.get('password')?.errors?.['special'] && passwordForm.get('password')?.touched"
+          class="text-danger">
+          La contraseña debe contener al menos un símbolo especial.
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword"
+            [type]="passwordFieldType" placeholder="Confirme su nueva contraseña" required>
+          <div class="input-group-append">
+            <span class="input-group-text password-toggle" (click)="togglePasswordVisibility()">
+              <i [class]="passwordToggleIcon"></i>
+            </span>
+          </div>
+        </div>
+        <div *ngIf="passwordForm.get('confirmPassword')?.errors?.['required'] && passwordForm.get('confirmPassword')?.touched"
+          class="text-danger">
+          La confirmación de la contraseña es requerida.
+        </div>
+        <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('confirmPassword')?.touched" class="text-danger">
+          Las contraseñas no coinciden.
+        </div>
+      </div>
+  
+      <button type="submit" class="btn btn-primary btn-block">Actualizar Contraseña</button>
+      <button type="button" class="btn btn-danger btn-block" (click)="cancel()">Cancelar</button>
+    </form>
+  </div>
+  

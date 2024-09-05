@@ -15,4 +15,5 @@ public class AuthResponse {
     String role;
     long instituto;
     int id;
+    int idUser;
 }

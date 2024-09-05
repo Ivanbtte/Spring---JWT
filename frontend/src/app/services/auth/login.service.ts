@@ -13,7 +13,7 @@ export class LoginService {
 
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   currentUserData: BehaviorSubject<String> =new BehaviorSubject<String>("");
-
+  private userIdSubject = new BehaviorSubject<number | null>(null);
   constructor(private http: HttpClient, private encryptionService: EncryptionServiceService) { 
     this.currentUserLoginOn=new BehaviorSubject<boolean>(sessionStorage.getItem("token")!=null);
     this.currentUserData=new BehaviorSubject<String>(sessionStorage.getItem("token") || "");
@@ -31,6 +31,7 @@ export class LoginService {
         sessionStorage.setItem(":-:D", encryptedId);
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
+        this.setUserId(userData.id); 
       }),
       map((userData) => ({ token: userData.token, role: userData.role })), // Devolver ambos valores
       catchError(this.handleError)
@@ -72,6 +73,15 @@ export class LoginService {
     return this.encryptionService.decrypt(sessionStorage.getItem("instituto") || ""); 
   }
   getId(): string {
-    return this.encryptionService.decrypt(sessionStorage.getItem(":-:D") || ""); 
+    return this.encryptionService.decrypt(sessionStorage.getItem(":-:D") || ""); //id investigador
   }
+
+  setUserId(id: number): void {
+    this.userIdSubject.next(id);
+  }
+
+  getUserId(): Observable<number | null> {
+    return this.userIdSubject.asObservable();
+  }
+  
 }
