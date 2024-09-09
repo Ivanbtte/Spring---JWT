@@ -22,10 +22,6 @@ export class LoginComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private router: Router, private loginService: LoginService) { }
 
   ngOnInit(): void {
-    // Suscribirse al BehaviorSubject del ID del usuario
-    this.loginService.getUserId().subscribe((id: number | null) => {
-      this.userId = id; // Almacenar el ID del usuario
-    });
   }
 
   get email() {

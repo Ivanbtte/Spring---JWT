@@ -33,10 +33,6 @@ export class CambiarContraComponent implements OnInit {
 
   ngOnInit(): void {
    // Suscribirse al BehaviorSubject del ID del usuario
-   this.loginService.getUserId().subscribe((id: number | null) => {
-    this.userId = id; // Almacenar el ID del usuario
-    console.log('User ID in CambiarContraComponent:', this.userId); // Verifica que se está obteniendo correctamente
-  });
   }
 
   onSubmit() {
