@@ -59,8 +59,9 @@ export class ArticuloService {
     });
   }
 
-   // Nuevo método para agregar un autor no UNSIS
-   agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
+
+  // Nuevo método para agregar un autor no UNSIS
+  agregarAutorNoUnsis(nuevoAutor: any): Observable<any> {
     return this.http.post<any>(environment.urlApi + 'autor', nuevoAutor).pipe(
       catchError(this.handleError)
     );

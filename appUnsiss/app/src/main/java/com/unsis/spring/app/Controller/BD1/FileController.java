@@ -34,7 +34,6 @@ public class FileController {
     @Autowired
     private ArticuloService articuloService;
 
-
     @PostMapping("/upload")
     public ResponseEntity<FileMetadata> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
@@ -77,6 +76,11 @@ public class FileController {
         }
     }
 
+    @GetMapping("/download/{id}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) throws IOException {
+        FileMetadata metadata = fileService.getFileMetadata(id);
+        InputStream resource = fileService.loadFileAsResource(metadata.getFilePath());
+
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(metadata.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getFileName() + "\"")
@@ -85,7 +89,7 @@ public class FileController {
 
     @PostMapping("/download-zip")
     public ResponseEntity<Resource> downloadZipFile(@RequestBody SearchCriteria criteria) {
-    
+
         try {
             // Obtener los artículos filtrados
             List<Object[]> articulos = articuloService.findFilteredArticulos(
@@ -94,15 +98,15 @@ public class FileController {
                     criteria.getFechaInicio(),
                     criteria.getFechaFin(),
                     criteria.getTipo());
-    
+
             // Extraer file_metadata_id de los resultados filtrados
             List<Long> fileMetadataIds = articulos.stream()
                     .map(articulo -> (Long) articulo[23]) // Suponiendo que file_metadata_id está en la posición 22
                     .collect(Collectors.toList());
-    
+
             // Crear y devolver el archivo ZIP
             return fileService.createZipFromFilteredFiles(fileMetadataIds);
-    
+
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

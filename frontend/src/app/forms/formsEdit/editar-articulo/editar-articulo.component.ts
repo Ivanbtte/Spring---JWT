@@ -483,8 +483,8 @@ export class EditarArticuloComponent implements OnInit {
           const articulo: Articulo = {
             id_articulo: idarticulo,
             tipoPublicacion: {
-              id_publicacion_tipo: 2,
-              nombre: 'Capitulo Libro'
+              id_publicacion_tipo: 1,
+              nombre: 'Articulo'
             },
             instituto: {
               id: this.selectedInstitutoPublicacion,
@@ -574,8 +574,8 @@ export class EditarArticuloComponent implements OnInit {
           const articulo: Articulo = {
             id_articulo: idarticulo,
             tipoPublicacion: {
-              id_publicacion_tipo: 1,
-              nombre: 'Artículo'
+              id_publicacion_tipo: 2,
+              nombre: 'Capitulo de libro'
             },
             instituto: {
               id: this.selectedInstitutoPublicacion,
