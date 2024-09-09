@@ -21,7 +21,8 @@ export class ValidarPublicacionComponent implements OnInit {
     private route: ActivatedRoute,
     private articuloService: ArticuloService,
     private loginService: LoginService,
-    private fileService: FileService) { }
+    private fileService: FileService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.rolUsuario = this.loginService.getUserRole();
@@ -40,9 +41,9 @@ export class ValidarPublicacionComponent implements OnInit {
     }
   }
 
-  editarPublicacion(articulo : Articulo): void {
+  editarPublicacion(articulo: Articulo): void {
     console.log("Llevando a editar : ", articulo.id_articulo);
-    //this.router.navigate(['/editar-articulo/', articulo.id_articulo]);
+    this.router.navigate(['/editar-articulo/', articulo.id_articulo]);
   }
 
   rechazarPublicacion() {
@@ -128,6 +129,6 @@ export class ValidarPublicacionComponent implements OnInit {
       a.download = this.articulo.fileMetadata.fileName;
       a.click();
     });
-    }
+  }
 
 }

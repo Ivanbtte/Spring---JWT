@@ -41,7 +41,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       (error) => {
         console.error('Error al obtener institutos', error);
       }
-    );
+    ); 
 
     // Llama al método para obtener los trimestres cuando se inicializa el componente
     this.articuloService.getTrimestres().subscribe(
@@ -91,7 +91,6 @@ export class RegistrarPublicacionComponent implements OnInit {
   urlCapitulo: string = '';
 
   agregarInvestigador() {
-
     this.investigadores.push({
       primerNombre: '',
       id_autor: Number,
@@ -182,6 +181,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   validarRegistroAutores(): boolean {
     return this.investigadores.some(investigador => investigador.agregado);
   }
+
   agregarAutorNoUnsis(investigador: any, index: number) {
     // Validar que nombre1Autor y apellidoPaternoAutor no estén vacíos
     if (!investigador.primerNombre || !investigador.apellidoPaterno) {
@@ -219,6 +219,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
+  
   validarCampos(): boolean {
     // Validar campos obligatorios
     if (!this.titulo.trim()) {

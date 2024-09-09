@@ -22,6 +22,7 @@
         <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista"
           required>
       </div>
+
       <div class="form-group">
         <label for="institutoPublicacion">Instituto de afiliación</label>
         <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion"
@@ -29,6 +30,7 @@
           <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">{{ instituto.nombre }}</option>
         </select>
       </div>
+
       <div class="form-group">
         <label>Autores</label>
         <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
@@ -64,6 +66,7 @@
               </select>
             </div>
           </div>
+
           <ng-template #noAutorUnsis>
             <div class="form-group">
               <label for="primerNombre{{ i }}">Primer nombre:</label>

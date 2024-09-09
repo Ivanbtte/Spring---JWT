@@ -22,6 +22,7 @@ import { JwtInterceptorService } from './services/auth/jwt-interceptor.service';
 import { ErrorInterceptorService } from './services/auth/error-interceptor.service';
 import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { EditarInvestigadorComponent } from './forms/formsEdit/editar-investigador/editar-investigador.component';
+import { EditarArticuloComponent } from './forms/formsEdit/editar-articulo/editar-articulo.component';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
 import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component';
 import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-catalogo/registrar-catalogo.component';
@@ -46,6 +47,7 @@ import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicac
     MenuComponent,
     InvestigadorComponent,
     EditarUsuarioComponent,
+    EditarArticuloComponent,
     EditarInvestigadorComponent,
     NotAuthorizedComponent,
     CatalogoComponent,

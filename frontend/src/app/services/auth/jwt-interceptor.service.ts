@@ -9,9 +9,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class JwtInterceptorService implements HttpInterceptor{
 
-  private excludedUrls = ['/api/v1/files/upload']; // Agrega aquí cualquier URL que no deba tener JWT
-
-
+  private excludedUrls = ['/api/v1/files/upload', '/api/v1/files/update']; // Agrega aquí cualquier URL que no deba tener JWT
   constructor(private loginService: LoginService, private cookieService: CookieService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {

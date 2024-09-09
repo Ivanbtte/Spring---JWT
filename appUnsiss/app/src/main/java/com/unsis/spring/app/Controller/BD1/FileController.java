@@ -52,10 +52,30 @@ public class FileController {
         return new ResponseEntity<>(metadata, HttpStatus.OK);
     }
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id) throws IOException {
-        FileMetadata metadata = fileService.getFileMetadata(id);
-        InputStream resource = fileService.loadFileAsResource(metadata.getFilePath());
+    @PutMapping("/update/{id}")
+    public ResponseEntity<FileMetadata> updateFile(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) throws IOException {
+        // Validar que el archivo no esté vacío
+        if (file.isEmpty()) {
+            logger.error("No file selected for update.");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        // Validar que el tipo de archivo sea PDF
+        if (!file.getContentType().equals("application/pdf")) {
+            logger.error("Invalid file type: " + file.getContentType());
+            return new ResponseEntity<>(HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+        }
+        // Actualizar el archivo y los metadatos correspondientes
+        try {
+            FileMetadata updatedMetadata = fileService.updateFileMetadata(id, file);
+            logger.info("Archivo actualizado");
+            return new ResponseEntity<>(updatedMetadata, HttpStatus.OK);
+        } catch (IOException e) {
+            logger.error("Error updating file: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(metadata.getFileType()))

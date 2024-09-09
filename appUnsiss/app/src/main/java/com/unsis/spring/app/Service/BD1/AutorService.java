@@ -14,4 +14,8 @@ public interface AutorService {
     public void delete(Long id);
     public AutorDto convertToDto(Autor autor);
     public Autor convertToEntity(AutorDto autorDto);
+    public List<AutorDto> findAllArt(Long id);
+    public void deleteAutorArticuloRelation(Long idautor, Long idart);
+    public void deleteAutorNoArticuloRelation(Long idautor, Long idart);
+
 }
