@@ -10,26 +10,30 @@ import { LoginRequest } from 'src/app/services/auth/loginRequest';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  userRole!:string ;
+  userRole!: string;
+  userId!: number | null;
   passwordFieldType: string = 'password';
   passwordToggleIcon: string = 'fa fa-eye';
-  loginError:string="";
-  loginForm=this.formBuilder.group({
-    username:['',[Validators.required,Validators.email]],
-    password: ['',Validators.required],
+  loginError: string = "";
+  loginForm = this.formBuilder.group({
+    username: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
   })
-  constructor(private formBuilder:FormBuilder, private router:Router,private loginService: LoginService) { }
+  constructor(private formBuilder: FormBuilder, private router: Router, private loginService: LoginService) { }
 
   ngOnInit(): void {
+    // Suscribirse al BehaviorSubject del ID del usuario
+    this.loginService.getUserId().subscribe((id: number | null) => {
+      this.userId = id; // Almacenar el ID del usuario
+    });
   }
 
-  get email(){
+  get email() {
     return this.loginForm.controls.username;
   }
 
-  
-  get password()
-  {
+
+  get password() {
     return this.loginForm.controls.password;
   }
 
@@ -57,7 +61,7 @@ export class LoginComponent implements OnInit {
           } else {
             this.router.navigateByUrl('/inicio'); // Ruta predeterminada si el rol no coincide
           }
-  
+
           this.loginForm.reset();
         },
         error: (errorData) => {
@@ -72,6 +76,4 @@ export class LoginComponent implements OnInit {
       alert("Error al ingresar los datos.");
     }
   }
-  
-
 }

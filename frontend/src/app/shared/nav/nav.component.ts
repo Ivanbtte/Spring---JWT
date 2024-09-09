@@ -8,7 +8,9 @@ import { LoginService } from 'src/app/services/auth/login.service';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
+  userRole: string = ''
   userLoginOn:boolean=false;
+  isOpen: boolean = true; // Estado de la sidebar
   constructor(private loginService:LoginService, private router:Router) { }
 
   ngOnInit(): void {
@@ -26,5 +28,7 @@ export class NavComponent implements OnInit {
     this.loginService.logout();
     this.router.navigate(['/iniciar-sesion'])
   }
+
+
 
 }

@@ -46,6 +46,7 @@ export class LoginService {
 
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
+        this.setUserId(userData.id); 
       }),
       map((userData) => ({ token: userData.token, role: userData.role })), // Devolver ambos valores
       catchError(this.handleError)
@@ -100,4 +101,13 @@ export class LoginService {
     const id = this.cookieService.get('_biz_v_e_z') || sessionStorage.getItem('_biz_v_e_z');
     return this.encryptionService.decrypt(id || '');
   }
+
+  setUserId(id: number): void {
+    this.userIdSubject.next(id);
+  }
+
+  getUserId(): Observable<number | null> {
+    return this.userIdSubject.asObservable();
+  }
+  
 }

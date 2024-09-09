@@ -1,6 +1,6 @@
 /* Estilos para la barra de navegación */
 .navbar {
-  background-color: #550603; /* Color de fondo oscuro */
+  background-color: #670300; /* Color de fondo oscuro */
   padding: 10px 20px; /* Aumentado ligeramente para mejorar la visualización */
 }
 
@@ -37,4 +37,11 @@
 }
 .ml-auto {
   margin-left: auto;
+}
+/* Variables */
+:root {
+  --sidebar-border-color: transparent;
+  --sidebar-bg-color: #2e2f33;
+  --sidebar-font-color: #dadada;
+  --sidebar-hover-bg-color: #444;
 }

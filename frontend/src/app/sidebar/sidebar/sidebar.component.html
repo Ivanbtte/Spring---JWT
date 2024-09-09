@@ -1,0 +1,75 @@
+<div class="sidebar" [ngClass]="{'expanded': isOpen}">
+  <div class="sidebar-item no-hover" id="burger" (click)="toggleSidebar()">
+    <i class="fa fa-bars hand" aria-hidden="true"></i>
+    <span class="sidebar-item-title">Menú</span>
+  </div>
+
+  <div class="sidebar-item" *ngIf="userRole === 'ROOT'">
+    <a class="nav-link" [routerLink]="['/usuario']">
+      <i class="fa fa-users"></i>
+      <span class="sidebar-item-title">Usuarios</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN'">
+    <a class="nav-link" [routerLink]="['/investigador']">
+      <i class="fa fa-user-plus"></i>
+      <span class="sidebar-item-title">Investigadores</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'COORDINADOR'">
+    <a class="nav-link" [routerLink]="['/consultar-publicacion']">
+      <i class="fa fa-search"></i>
+      <span class="sidebar-item-title">Consultar Publicaciones</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item" *ngIf="userRole === 'INVESTIGADOR' || userRole === 'COORDINADOR'">
+    <a class="nav-link" [routerLink]="['/mis-publicaciones']">
+      <i class="fa fa-file"></i>
+      <span class="sidebar-item-title">Mis Publicaciones</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item"
+    *ngIf="userRole === 'ROOT' || userRole === 'ADMIN' || userRole === 'INVESTIGADOR' || userRole === 'COORDINADOR'">
+    <a class="nav-link" [routerLink]="['/registrar-publicacion']">
+      <i class="fa fa-pencil-square-o"></i>
+      <span class="sidebar-item-title">Registrar Publicación</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item" *ngIf="userRole === 'ROOT' || userRole === 'ADMIN'">
+    <a class="nav-link" [routerLink]="['/catalogo']">
+      <i class="fa fa-table"></i>
+      <span class="sidebar-item-title">Catálogo</span>
+    </a>
+  </div>
+
+  <!-- Flex Spacer -->
+  <div class="flex-spacer"></div>
+  <!-- Cerrar Sesión -->
+  <div class="sidebar-item">
+    <a class="nav-link" [routerLink]="['/cmbc']">
+      <i class="fa fa-user-circle-o"></i>
+      <span class="sidebar-item-title">Cambiar contraseña</span>
+    </a>
+  </div>
+
+  <div class="sidebar-item logout-item">
+    <div *ngIf="!userLoginOn" class="nav-item">
+      <a class="nav-link" routerLink="/iniciar-sesion">
+        <i class="fa fa-sign-in" aria-hidden="true"></i>
+        <span class="sidebar-item-title">Iniciar Sesión</span>
+      </a>
+    </div>
+    <div *ngIf="userLoginOn" class="nav-item">
+      <a class="nav-link" (click)="logout()" routerLink="/inicio">
+        <i class="fa fa-sign-out" aria-hidden="true"></i>
+        <span class="sidebar-item-title">Cerrar Sesión</span>
+      </a>
+    </div>
+  </div>
+
+</div>

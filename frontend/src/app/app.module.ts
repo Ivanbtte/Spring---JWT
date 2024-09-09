@@ -30,6 +30,8 @@ import { UploadFilesComponent } from './forms/upload-files/upload-files.componen
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
+import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
+import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cambiar-contra.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,9 @@ import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicac
     RegistrarCatalogoComponent,
     UploadFilesComponent,
     ValidarPublicacionComponent,
-    MisPublicacionesComponent
+    MisPublicacionesComponent,
+    SidebarComponent,
+    CambiarContraComponent
   ],
   imports: [
     BrowserModule,
