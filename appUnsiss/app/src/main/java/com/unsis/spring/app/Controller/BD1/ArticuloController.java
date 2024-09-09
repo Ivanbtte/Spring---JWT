@@ -86,7 +86,7 @@ public class ArticuloController {
     }
 
     @PutMapping("/articulo/{id}")
-    public ResponseEntity<Object> update(@RequestBody ArticuloDto articuloDto, @PathVariable Long id) {
+    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody ArticuloDto articuloDto) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             ArticuloDto currentArticulo = articuloService.findById(id);
@@ -118,6 +118,7 @@ public class ArticuloController {
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
+            e.printStackTrace(); // Imprime el stack trace completo en los logs
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -189,18 +190,14 @@ public class ArticuloController {
                 map.put("message", "Artículo no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
-
             Autor autor = autorService.findByIdAutor(autorId);
             if (autor == null) {
-
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
-
             articulo.getAutores().remove(autor);
             Articulos updatedArticulo = articuloService.saveArticulo(articulo);
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
-
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);

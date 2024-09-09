@@ -1,1 +1,554 @@
-<p>editar-articulo works!</p>
+<app-nav></app-nav>
+<app-menu></app-menu>
+<div *ngIf="articulo" class="articulo-formulario">
+    <div class="form-body">
+
+        <!-- Formulario para Artículo -->
+        <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 1">
+            <h3 class="form-header">Editar Articulo</h3>
+            <div class="form-group">
+                <label for="fechaPublicacion"><strong>Fecha de Publicación:</strong></label>
+                <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="articulo.fecha_publicacion">
+            </div>
+            <div class="form-group">
+                <label for="titulo"><strong>Titulo del artículo:</strong></label>
+                <input type="text" id="titulo" class="form-control" [(ngModel)]="articulo.nombre_articulo">
+            </div>
+
+            <div class="form-group">
+                <label for="tituloRevista"><strong>Nombre de la Revista:</strong></label>
+                <input type="text" id="tituloRevista" class="form-control" [(ngModel)]="articulo.titulo_revista">
+            </div>
+            <!-- Instituto -->
+            <div class="form-group">
+                <label for="institutoPublicacion">Instituto de afiliación</label>
+                <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion"
+                    name="institutoPublicacion">
+                    <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                        {{ instituto.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Autores -->
+            <div class="form-group">
+                <label>Autores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div *ngFor="let investigador of investigadores; let i = index;">
+                <div class="card-body">
+                    <h5 class="card-title">Autor {{ i + 1 }}</h5>
+
+                    <div class="form-group">
+                        <label>¿Autor UNSIS?</label>
+                        <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
+                            (change)="onAutorUnsisChange(investigador, i)"
+                            [disabled]="!investigador.editable && investigador.agregado">
+                    </div>
+
+                    <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+                        <div class="form-group">
+                            <label for="instituto{{ i }}">Instituto</label>
+                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                                    {{ instituto.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+                            <select id="listbox{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.autorUnsisSeleccionado" name="listbox{{ i }}"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">
+                                    {{ autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                                    autor.apellido_paterno_1_investigador }} {{ autor.apellido_materno_2_investigador }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <ng-template #noAutorUnsis>
+                        <div class="form-group">
+                            <label for="primerNombre{{ i }}">Primer nombre:</label>
+                            <input type="text" id="primerNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+                            <input type="text" id="segundoNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+                            <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+                            <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                    </ng-template>
+
+                    <br>
+                    <div class="btn-group">
+                        <!-- Mostrar ambos botones solo si los campos son editables -->
+                        <ng-template [ngIf]="investigador.editable">
+                            <button type="button" class="btn btn-secondary" (click)="investigador.autorUnsis ? guardarAutorUnsis(investigador.autorUnsisSeleccionado, i) 
+                                        : investigador.id_autor ? actualizarAutorNoUnsis(investigador, i) 
+                                        : agregarAutorNoUnsis(investigador, i)">
+                                {{ investigador.autorUnsis ? 'Guardar autor UNSIS'
+                                : investigador.id_autor ? 'Actualizar Autor'
+                                : 'Registrar Autor' }}
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+                                <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                            </button>
+                        </ng-template>
+
+                        <!-- Mostrar solo botón de eliminar si los campos están bloqueados -->
+                        <button *ngIf="!investigador.editable" type="button" class="btn btn-danger"
+                            (click)="eliminarInvestigador(i)">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="numeroRevista"><strong>Número de volumen:</strong></label>
+                <input type="text" id="numeroRevista" class="form-control" [(ngModel)]="articulo.volumen_revista">
+            </div>
+
+            <div class="form-group">
+                <label for="volumenRevista"><strong>Numero de emisión:</strong></label>
+                <input type="text" id="volumenRevista" class="form-control" [(ngModel)]="articulo.numero_revista">
+            </div>
+
+            <div class="form-group">
+                <label for="trimestre">Trimestre</label>
+                <select id="trimestre" class="form-control" [(ngModel)]="selectedTrimestre" name="trimestre">
+                    <option *ngFor="let trimestre of trimestres" [value]="trimestre.id_trimestre">{{ trimestre.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="paginas"><strong>Página de inicio:</strong></label>
+                <input type="text" id="paginasInicio" class="form-control" [(ngModel)]="articulo.pag_inicio"
+                    placeholder="Inicio">
+                <label for="paginas"><strong>Página final:</strong></label>
+
+                <input type="text" id="paginasFinal" class="form-control mt-2" [(ngModel)]="articulo.pag_final"
+                    placeholder="Final">
+            </div>
+
+            <div class="form-group">
+                <label for="doi"><strong>DOI:</strong></label>
+                <input type="text" id="doi" class="form-control" [(ngModel)]="articulo.doi">
+            </div>
+
+            <div class="form-group">
+                <label for="indiceMiar"><strong>Índice MIAR:</strong></label>
+                <input type="text" id="indiceMiar" class="form-control" [(ngModel)]="articulo.indice_miar">
+            </div>
+
+            <div class="form-group">
+                <label for="compilado"><strong>Compilado:</strong></label>
+                <select id="compilado" class="form-control" [(ngModel)]="articulo.compilado">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="financiamientoProdep"><strong>Financiamiento PRODEP:</strong></label>
+                <select id="financiamientoProdep" class="form-control" [(ngModel)]="articulo.financiamiento_prodep">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="custom-file-upload">
+                <label for="file-upload" class="file-upload-label">
+                    <i class="fa fa-cloud-upload"></i> Seleccionar archivo
+                </label>
+                <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+            </div>
+            <br>
+            <button type="button" class="btn btn-success" (click)="actualizarArticulo()">
+                <i class="fa fa-check"></i> Actualizar
+            </button>
+        </div>
+
+        <!-- Formulario para Capítulo de Libro -->
+        <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 2">
+            <h3 class="form-header">Editar Capitulo de libro</h3>
+            <div class="form-group">
+                <label for="fechaPublicacion"><strong>Fecha de Publicación:</strong></label>
+                <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="articulo.fecha_publicacion">
+            </div>
+
+            <div class="form-group">
+                <label for="tituloRevista"><strong>Título del Capitulo del Libro:</strong></label>
+                <input type="text" id="tituloRevista" class="form-control" [(ngModel)]="articulo.nombre_capitulo">
+            </div>
+
+            <div class="form-group">
+                <label for="nombreArticulo"><strong>Nombre del Libro:</strong></label>
+                <input type="text" id="nombreLibro" class="form-control" [(ngModel)]="articulo.nombre_articulo">
+            </div>
+            <!-- Instituto -->
+            <div class="form-group">
+                <label for="institutoPublicacion">Instituto de afiliación</label>
+                <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion"
+                    name="institutoPublicacion">
+                    <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                        {{ instituto.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Autores -->
+            <div class="form-group">
+                <label>Autores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div *ngFor="let investigador of investigadores; let i = index;">
+                <div class="card-body">
+                    <h5 class="card-title">Autor {{ i + 1 }}</h5>
+
+                    <div class="form-group">
+                        <label>¿Autor UNSIS?</label>
+                        <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
+                            (change)="onAutorUnsisChange(investigador, i)"
+                            [disabled]="!investigador.editable && investigador.agregado">
+                    </div>
+
+                    <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+                        <div class="form-group">
+                            <label for="instituto{{ i }}">Instituto</label>
+                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                                    {{ instituto.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+                            <select id="listbox{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.autorUnsisSeleccionado" name="listbox{{ i }}"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">
+                                    {{ autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                                    autor.apellido_paterno_1_investigador }} {{ autor.apellido_materno_2_investigador }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <ng-template #noAutorUnsis>
+                        <div class="form-group">
+                            <label for="primerNombre{{ i }}">Primer nombre:</label>
+                            <input type="text" id="primerNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+                            <input type="text" id="segundoNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+                            <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+                            <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                    </ng-template>
+
+                    <br>
+                    <div class="btn-group">
+                        <!-- Mostrar ambos botones solo si los campos son editables -->
+                        <ng-template [ngIf]="investigador.editable">
+                            <button type="button" class="btn btn-secondary" (click)="investigador.autorUnsis ? guardarAutorUnsis(investigador.autorUnsisSeleccionado, i) 
+                                        : investigador.id_autor ? actualizarAutorNoUnsis(investigador, i) 
+                                        : agregarAutorNoUnsis(investigador, i)">
+                                {{ investigador.autorUnsis ? 'Guardar autor UNSIS'
+                                : investigador.id_autor ? 'Actualizar Autor'
+                                : 'Registrar Autor' }}
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+                                <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                            </button>
+                        </ng-template>
+
+                        <!-- Mostrar solo botón de eliminar si los campos están bloqueados -->
+                        <button *ngIf="!investigador.editable" type="button" class="btn btn-danger"
+                            (click)="eliminarInvestigador(i)">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editorial"><strong>Editorial:</strong></label>
+                <input type="text" id="editorial" class="form-control" [(ngModel)]="articulo.editorial">
+            </div>
+
+            <div class="form-group">
+                <label for="paginas"><strong>Página de inicio:</strong></label>
+                <input type="text" id="paginasInicio" class="form-control" [(ngModel)]="articulo.pag_inicio"
+                    placeholder="Inicio">
+                <label for="paginas"><strong>Página final:</strong></label>
+
+                <input type="text" id="paginasFinal" class="form-control mt-2" [(ngModel)]="articulo.pag_final"
+                    placeholder="Final">
+            </div>
+
+            <div class="form-group">
+                <label for="isbnImpreso"><strong>ISBN Impreso:</strong></label>
+                <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="articulo.isbn_impreso">
+            </div>
+
+            <div class="form-group">
+                <label for="isbnDigital"><strong>ISBN Digital:</strong></label>
+                <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="articulo.isbn_digital">
+            </div>
+
+            <div class="form-group">
+                <label for="indiceMiar"><strong>Índice MIAR:</strong></label>
+                <input type="text" id="indiceMiar" class="form-control" [(ngModel)]="articulo.indice_miar">
+            </div>
+
+            <div class="form-group">
+                <label for="compilado"><strong>Compilado:</strong></label>
+                <select id="compilado" class="form-control" [(ngModel)]="articulo.compilado">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="financiamientoProdep"><strong>Financiamiento PRODEP:</strong></label>
+                <select id="financiamientoProdep" class="form-control" [(ngModel)]="articulo.financiamiento_prodep">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="custom-file-upload">
+                <label for="file-upload" class="file-upload-label">
+                    <i class="fa fa-cloud-upload"></i> Seleccionar archivo
+                </label>
+                <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+            </div>
+            <br>
+            <button type="button" class="btn btn-success" (click)="actualizarCapituloLibro()">
+                <i class="fa fa-check"></i> Actualizar
+            </button>
+        </div>
+
+        <!-- Formulario para Libro -->
+        <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 3">
+            <h3 class="form-header">Editar Libro</h3>
+            <div class="form-group">
+                <label for="fechaPublicacion"><strong>Fecha de Publicación:</strong></label>
+                <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="articulo.fecha_publicacion">
+            </div>
+
+            <div class="form-group">
+                <label for="tituloRevista"><strong>Título del Libro:</strong></label>
+                <input type="text" id="tituloRevista" class="form-control" [(ngModel)]="articulo.nombre_articulo">
+            </div>
+
+            <!-- Instituto -->
+            <div class="form-group">
+                <label for="institutoPublicacion">Instituto de afiliación</label>
+                <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion"
+                    name="institutoPublicacion">
+                    <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                        {{ instituto.nombre }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Autores -->
+            <div class="form-group">
+                <label>Autores</label>
+                <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
+                    <i class="fa fa-plus"></i> Agregar persona
+                </button>
+            </div>
+
+            <div *ngFor="let investigador of investigadores; let i = index;">
+                <div class="card-body">
+                    <h5 class="card-title">Autor {{ i + 1 }}</h5>
+
+                    <div class="form-group">
+                        <label>¿Autor UNSIS?</label>
+                        <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
+                            (change)="onAutorUnsisChange(investigador, i)"
+                            [disabled]="!investigador.editable && investigador.agregado">
+                    </div>
+
+                    <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
+                        <div class="form-group">
+                            <label for="instituto{{ i }}">Instituto</label>
+                            <select id="instituto{{ i }}" class="form-control" [(ngModel)]="investigador.instituto"
+                                name="instituto{{ i }}" (change)="onInstitutoChange(investigador.instituto, i)"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">
+                                    {{ instituto.nombre }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="listbox{{ i }}">Lista de autores UNSIS</label>
+                            <select id="listbox{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.autorUnsisSeleccionado" name="listbox{{ i }}"
+                                [disabled]="!investigador.editable">
+                                <!-- Se controla el bloqueo mediante la variable 'editable' -->
+                                <option *ngFor="let autor of autoresPorInstituto[i]" [value]="autor.autor.id_autor">
+                                    {{ autor.nombre_1_investigador }} {{ autor.nombre_2_investigador }} {{
+                                    autor.apellido_paterno_1_investigador }} {{ autor.apellido_materno_2_investigador }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <ng-template #noAutorUnsis>
+                        <div class="form-group">
+                            <label for="primerNombre{{ i }}">Primer nombre:</label>
+                            <input type="text" id="primerNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="segundoNombre{{ i }}">Segundo nombre:</label>
+                            <input type="text" id="segundoNombre{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
+                            <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
+                            <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
+                                [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
+                                [disabled]="!investigador.editable" />
+                        </div>
+                    </ng-template>
+
+                    <br>
+                    <div class="btn-group">
+                        <!-- Mostrar ambos botones solo si los campos son editables -->
+                        <ng-template [ngIf]="investigador.editable">
+                            <button type="button" class="btn btn-secondary" (click)="investigador.autorUnsis ? guardarAutorUnsis(investigador.autorUnsisSeleccionado, i) 
+                                        : investigador.id_autor ? actualizarAutorNoUnsis(investigador, i) 
+                                        : agregarAutorNoUnsis(investigador, i)">
+                                {{ investigador.autorUnsis ? 'Guardar autor UNSIS'
+                                : investigador.id_autor ? 'Actualizar Autor'
+                                : 'Registrar Autor' }}
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="eliminarInvestigador(i)">
+                                <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                            </button>
+                        </ng-template>
+
+                        <!-- Mostrar solo botón de eliminar si los campos están bloqueados -->
+                        <button *ngIf="!investigador.editable" type="button" class="btn btn-danger"
+                            (click)="eliminarInvestigador(i)">
+                            <i class="fa fa-trash" aria-hidden="true"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="editorial"><strong>Editorial:</strong></label>
+                <input type="text" id="editorial" class="form-control" [(ngModel)]="articulo.editorial">
+            </div>
+
+            <div class="form-group">
+                <label for="isbnImpreso"><strong>ISBN Impreso:</strong></label>
+                <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="articulo.isbn_impreso">
+            </div>
+
+            <div class="form-group">
+                <label for="isbnDigital"><strong>ISBN Digital:</strong></label>
+                <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="articulo.isbn_digital">
+            </div>
+
+            <div class="form-group">
+                <label for="indiceMiar"><strong>Índice MIAR:</strong></label>
+                <input type="text" id="indiceMiar" class="form-control" [(ngModel)]="articulo.indice_miar">
+            </div>
+
+            <div class="form-group">
+                <label for="compilado"><strong>Compilado:</strong></label>
+                <select id="compilado" class="form-control" [(ngModel)]="articulo.compilado">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="financiamientoProdep"><strong>Financiamiento PRODEP:</strong></label>
+                <select id="financiamientoProdep" class="form-control" [(ngModel)]="articulo.financiamiento_prodep">
+                    <option [ngValue]="true">Sí</option>
+                    <option [ngValue]="false">No</option>
+                </select>
+            </div>
+
+            <div class="custom-file-upload">
+                <label for="file-upload" class="file-upload-label">
+                    <i class="fa fa-cloud-upload"></i> Seleccionar archivo
+                </label>
+                <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+            </div>
+            <br>
+            <button type="button" class="btn btn-success" (click)="actualizarLibro()">
+                <i class="fa fa-check"></i> Actualizar
+            </button>
+
+
+        </div>
+
+    </div>
+    <div class="form-footer">
+        <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+    </div>
+</div>

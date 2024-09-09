@@ -1,175 +1,183 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 h3 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .publication-form {
-    padding: 20px;
+  padding: 20px;
 }
 
 .publication-form .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .publication-form label {
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-    display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
 }
 
 .publication-form .form-control {
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    transition: border-color 0.3s ease-in-out;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease-in-out;
 }
 
 .publication-form .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
 
 .publication-form .btn {
-    background-color: #007bff;
-    border-color: #007bff;
-    border-radius: 5px;
-    font-size: 16px;
-    padding: 10px 15px;
-    color: #fff;
-    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 10px 15px;
+  color: #fff;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .publication-form .btn:hover {
-    background-color: #0056b3;
-    border-color: #004085;
+  background-color: #0056b3;
+  border-color: #004085;
 }
 
 .form-group-container {
-    display: flex;
-    gap: 20px; /* Añade espacio entre los elementos */
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    margin-bottom: 5px;
-  }
-  .highlighted-field {
-    border: 2px solid #007bff; /* Color del borde */
-    background-color: #e7f1ff; /* Color de fondo */
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Sombra */
-    padding: 10px; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-  }
-  .custom-file-upload {
-    display: inline-block;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .file-upload-label {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
-    display: inline-block;
-  }
-  
-  .file-upload-label:hover {
-    background-color: #0056b3;
-  }
-  
-  .file-upload-label i {
-    margin-right: 10px;
-  }
-  
-  input[type="file"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-  }
+  display: flex;
+  gap: 20px;
+  /* Añade espacio entre los elementos */
+}
 
-  .checkbox-container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    font-size: 18px;
-    user-select: none;
-  }
-  
-  .checkbox-container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-  }
-  
-  .checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 20px;
-    width: 20px;
-    background-color: #eee;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .checkbox-container:hover input ~ .checkmark {
-    background-color: #ccc;
-  }
-  
-  .checkbox-container input:checked ~ .checkmark {
-    background-color: #007bff;
-  }
-  
-  .checkmark:after {
-    content: "";
-    position: absolute;
-    display: none;
-  }
-  
-  .checkbox-container input:checked ~ .checkmark:after {
-    display: block;
-  }
-  
-  .checkbox-container .checkmark:after {
-    left: 7px;
-    top: 3px;
-    width: 6px;
-    height: 12px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-  }
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 5px;
+}
+
+.highlighted-field {
+  border: 2px solid #007bff;
+  /* Color del borde */
+  background-color: #e7f1ff;
+  /* Color de fondo */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  /* Sombra */
+  padding: 10px;
+  /* Espaciado interno */
+  border-radius: 5px;
+  /* Bordes redondeados */
+}
+
+.custom-file-upload {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-upload-label {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center;
+  display: inline-block;
+}
+
+.file-upload-label:hover {
+  background-color: #0056b3;
+}
+
+.file-upload-label i {
+  margin-right: 10px;
+}
+
+input[type="file"] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.checkbox-container:hover input~.checkmark {
+  background-color: #ccc;
+}
+
+.checkbox-container input:checked~.checkmark {
+  background-color: #007bff;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked~.checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 7px;
+  top: 3px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

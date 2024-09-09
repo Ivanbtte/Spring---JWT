@@ -38,7 +38,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       (error) => {
         console.error('Error al obtener institutos', error);
       }
-    );
+    ); 
 
     // Llama al método para obtener los trimestres cuando se inicializa el componente
     this.articuloService.getTrimestres().subscribe(
@@ -88,7 +88,6 @@ export class RegistrarPublicacionComponent implements OnInit {
   urlCapitulo: string = '';
 
   agregarInvestigador() {
-
     this.investigadores.push({
       primerNombre: '',
       id_autor: Number,
@@ -170,6 +169,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   validarRegistroAutores(): boolean {
     return this.investigadores.some(investigador => investigador.agregado);
   }
+
   agregarAutorNoUnsis(investigador: any, index: number) {
     // Validar que nombre1Autor y apellidoPaternoAutor no estén vacíos
     if (!investigador.primerNombre || !investigador.apellidoPaterno) {
@@ -210,6 +210,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
+  
   validarCampos(): boolean {
     // Validar campos obligatorios
     if (!this.titulo.trim()) {
@@ -643,16 +644,16 @@ export class RegistrarPublicacionComponent implements OnInit {
         alert('Solo se permiten archivos PDF');
         return;
       }
-  
+
       // Genera el folio
       const trimestreId = this.selectedTrimestre; // El trimestre seleccionado
       const archivoId = this.generateFileId(); // Función para generar un ID único
       const archivoId2 = this.generateFileId(); // Función para generar un ID único
       const folio = `TRIM${trimestreId}-ID${archivoId}${archivoId2}`;
-      
+
       // Renombra el archivo
       this.renamedFile = new File([this.selectedFile], `${folio}.pdf`, { type: 'application/pdf' });
-  
+
     }
     console.log(this.renamedFile);
   }

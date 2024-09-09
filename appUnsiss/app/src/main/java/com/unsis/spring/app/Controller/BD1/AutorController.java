@@ -105,6 +105,38 @@ public class AutorController {
         }
     }
 
+    @DeleteMapping("/autor-unsis/{idAutor}/articulo/{idArticulo}")
+    public ResponseEntity<Object> deleteAutorUnsisArticuloRelation(
+            @PathVariable Long idAutor,
+            @PathVariable Long idArticulo) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            // Llama al servicio para eliminar la relación entre autor UNSIS y artículo
+            autorService.deleteAutorArticuloRelation(idAutor, idArticulo);
+            map.put("deleted", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/autor-no-unsis/{idAutor}/articulo/{idArticulo}")
+    public ResponseEntity<Object> deleteAutorNoUnsisArticuloRelation(
+            @PathVariable Long idAutor,
+            @PathVariable Long idArticulo) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            // Llama al servicio para eliminar la relación entre autor no UNSIS y artículo
+            autorService.deleteAutorNoArticuloRelation(idAutor, idArticulo);
+            map.put("deleted", true);
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/autor/{id}/articulos/{articuloId}")
     public ResponseEntity<Object> addArticuloToAutor(@PathVariable Long id, @PathVariable Long articuloId) {
         Map<String, Object> map = new HashMap<>();
@@ -151,6 +183,21 @@ public class AutorController {
             return new ResponseEntity<>(updatedAutor, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "/autor/{idArticulo}/autores")
+    public ResponseEntity<Object> getAutoresByArticuloId(@PathVariable Long idArticulo) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            // Llama al servicio para obtener la lista de autores
+            List<AutorDto> list = autorService.findAllArt(idArticulo);
+            // Devuelve la lista en una ResponseEntity con estado OK
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            // Devuelve un mapa con el mensaje de error y estado INTERNAL_SERVER_ERROR
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -22,6 +22,7 @@
         <input type="text" id="nombreRevista" class="form-control" [(ngModel)]="nombreRevista" name="nombreRevista"
           required>
       </div>
+
       <div class="form-group">
         <label for="institutoPublicacion">Instituto de afiliación</label>
         <select id="institutoPublicacion" class="form-control" [(ngModel)]="selectedInstitutoPublicacion"
@@ -29,6 +30,7 @@
           <option *ngFor="let instituto of institutosPublicacion" [value]="instituto.id">{{ instituto.nombre }}</option>
         </select>
       </div>
+
       <div class="form-group">
         <label>Autores</label>
         <button type="button" class="btn btn-primary" (click)="agregarInvestigador()">
@@ -64,37 +66,32 @@
               </select>
             </div>
           </div>
+
           <ng-template #noAutorUnsis>
             <div class="form-group">
               <label for="primerNombre{{ i }}">Primer nombre:</label>
-              <input type="text" id="primerNombre{{ i }}" class="form-control" 
-                [(ngModel)]="investigador.primerNombre" 
-                name="primerNombre{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+              <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
+                name="primerNombre{{ i }}" [disabled]="investigador.agregado"
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -113,11 +110,13 @@
       <div class="form-group-container">
         <div class="form-group">
           <label for="numVolumen">Número de volumen</label>
-          <input type="text" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen" (keypress)="onKeyPressNumber($event)" />
+          <input type="text" id="numVolumen" class="form-control" [(ngModel)]="numVolumen" name="numVolumen"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
         <div class="form-group">
           <label for="numEmision">Número de emisión</label>
-          <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision" (keypress)="onKeyPressNumber($event)"/>
+          <input type="number" id="numEmision" class="form-control" [(ngModel)]="numEmision" name="numEmision"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
       </div>
       <div class="form-group">
@@ -134,11 +133,13 @@
       <div class="form-group-container">
         <div class="form-group">
           <label for="paginaInicio">Página de inicio</label>
-          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio"   (keypress)="onKeyPressNumber($event)" />
+          <input type="number" id="paginaInicio" class="form-control" [(ngModel)]="paginaInicio" name="paginaInicio"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
         <div class="form-group">
           <label for="paginaFin">Página final</label>
-          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin"    (keypress)="onKeyPressNumber($event)"/>
+          <input type="number" id="paginaFin" class="form-control" [(ngModel)]="paginaFin" name="paginaFin"
+            (keypress)="onKeyPressNumber($event)" />
         </div>
       </div>
 
@@ -154,14 +155,16 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
-      
+
       <div class="form-group">
         <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
           <span class="checkmark"></span>
         </label>
       </div>
@@ -236,30 +239,26 @@
               <label for="primerNombre{{ i }}">Primer nombre:</label>
               <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
                 name="primerNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -302,14 +301,16 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
-      
+
       <div class="form-group">
         <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
           <span class="checkmark"></span>
         </label>
       </div>
@@ -389,30 +390,26 @@
               <label for="primerNombre{{ i }}">Primer nombre:</label>
               <input type="text" id="primerNombre{{ i }}" class="form-control" [(ngModel)]="investigador.primerNombre"
                 name="primerNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'primerNombre')"
-                (input)="onInput($event, 'primerNombre')" />
+                (keypress)="onKeyPress($event, 'primerNombre')" (input)="onInput($event, 'primerNombre')" />
             </div>
             <div class="form-group">
               <label for="segundoNombre{{ i }}">Segundo nombre:</label>
               <input type="text" id="segundoNombre{{ i }}" class="form-control" [(ngModel)]="investigador.segundoNombre"
                 name="segundoNombre{{ i }}" [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'segundoNombre')"
-                (input)="onInput($event, 'segundoNombre')" />
+                (keypress)="onKeyPress($event, 'segundoNombre')" (input)="onInput($event, 'segundoNombre')" />
             </div>
             <div class="form-group">
               <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
               <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoPaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoPaterno')"
                 (input)="onInput($event, 'apellidoPaterno')" />
             </div>
             <div class="form-group">
               <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
               <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                [disabled]="investigador.agregado"
-                (keypress)="onKeyPress($event, 'apellidoMaterno')"
+                [disabled]="investigador.agregado" (keypress)="onKeyPress($event, 'apellidoMaterno')"
                 (input)="onInput($event, 'apellidoMaterno')" />
             </div>
           </ng-template>
@@ -465,14 +462,16 @@
       <br>
       <div class="form-group">
         <label class="checkbox-container">Compilado
-          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado" (change)="onCheckboxChange($event, 'compilado')">
+          <input type="checkbox" id="compilado" [(ngModel)]="compilado" name="compilado"
+            (change)="onCheckboxChange($event, 'compilado')">
           <span class="checkmark"></span>
         </label>
       </div>
-      
+
       <div class="form-group">
         <label class="checkbox-container">Financiamiento Prodep
-          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep" (change)="onCheckboxChange($event, 'prodep')">
+          <input type="checkbox" id="prodep" [(ngModel)]="prodep" name="prodep"
+            (change)="onCheckboxChange($event, 'prodep')">
           <span class="checkmark"></span>
         </label>
       </div>

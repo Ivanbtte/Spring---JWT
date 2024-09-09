@@ -1,13 +1,12 @@
 <app-nav></app-nav>
 <app-menu></app-menu>
 <div *ngIf="articulo" class="articulo-card">
-  <h3 class="card-header">Validar Publicación: {{ articulo.nombre_articulo }}</h3>
   <div class="card-body">
-
     <!-- Si el tipo de publicación es 1 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 1">
+      <h3 class="card-header">Validar Articulo: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
-      <p><strong>Título de Revista:</strong> {{ articulo.titulo_revista }}</p>
+      <p><strong>Título de la revista:</strong> {{ articulo.titulo_revista }}</p>
       <p><strong>Número de Revista:</strong> {{ articulo.numero_revista }}</p>
       <p><strong>Volumen:</strong> {{ articulo.volumen_revista }}</p>
       <p><strong>Páginas:</strong> {{ articulo.pag_inicio }} - {{ articulo.pag_final }}</p>
@@ -16,45 +15,45 @@
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 2 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 2">
+      <h3 class="card-header">Validar Capitulo de Libro: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
-      <p><strong>Título de Revista:</strong> {{ articulo.titulo_revista }}</p>
+      <p><strong>Título del Capitulo del Libro:</strong> {{ articulo.nombre_capitulo }}</p>
+      <p><strong>Nombre del Libro:</strong> {{ articulo.nombre_articulo }}</p>
       <p><strong>Páginas:</strong> {{ articulo.pag_inicio }} - {{ articulo.pag_final }}</p>
       <p><strong>ISBN Impreso:</strong> {{ articulo.isbn_impreso }}</p>
       <p><strong>ISBN Digital:</strong> {{ articulo.isbn_digital }}</p>
-      <p><strong>Nombre del Artículo:</strong> {{ articulo.nombre_articulo }}</p>
       <p><strong>Editorial:</strong> {{ articulo.editorial }}</p>
-      <p><strong>Nombre del Capítulo:</strong> {{ articulo.nombre_capitulo }}</p>
-      <p><strong>Observaciones Directores:</strong> {{ articulo.observaciones_directores }}</p>
-      <p><strong>Observaciones Gestión:</strong> {{ articulo.observaciones_gestion }}</p>
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 3 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 3">
+      <h3 class="card-header">Validar Libro: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
-      <p><strong>Título de Revista:</strong> {{ articulo.titulo_revista }}</p>
+      <p><strong>Título del Libro:</strong> {{ articulo.nombre_articulo }}</p>
       <p><strong>ISBN Impreso:</strong> {{ articulo.isbn_impreso }}</p>
       <p><strong>ISBN Digital:</strong> {{ articulo.isbn_digital }}</p>
-      <p><strong>Nombre del Artículo:</strong> {{ articulo.nombre_articulo }}</p>
-      <p><strong>Editorial:</strong> {{ articulo.editorial }}</p>
-      <p><strong>Nombre del Capítulo:</strong> {{ articulo.nombre_capitulo }}</p>
-      <p><strong>Observaciones Directores:</strong> {{ articulo.observaciones_directores }}</p>
-      <p><strong>Observaciones Gestión:</strong> {{ articulo.observaciones_gestion }}</p>
       <p><strong>Índice MIAR:</strong> {{ articulo.indice_miar }}</p>
       <p><strong>Compilado:</strong> {{ articulo.compilado ? 'Sí' : 'No' }}</p>
       <p><strong>Financiamiento PRODEP:</strong> {{ articulo.financiamiento_prodep ? 'Sí' : 'No' }}</p>
-      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{ articulo.observaciones_gestion }}</p>
-      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{ articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'COORDINADOR'"><strong>Observaciones de Gestion académica:</strong> {{
+        articulo.observaciones_gestion }}</p>
+      <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
+        articulo.observaciones_directores }}</p>
     </div>
 
     <!-- Cuadro de Texto para Observaciones -->
@@ -72,15 +71,15 @@
     </div>
 
   </div>
-  <div *ngIf="rolUsuario === 'COORDINADOR'"class="card-footer">
+  <div *ngIf="rolUsuario === 'COORDINADOR'" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
   </div>
-  <div *ngIf="rolUsuario === 'ADMIN'"class="card-footer">
+  <div *ngIf="rolUsuario === 'ADMIN'" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
   </div>
-  <div *ngIf="rolUsuario === 'INVESTIGADOR'" class="card-footer">
+  <div *ngIf="rolUsuario === 'INVESTIGADOR' || rolUsuario==='ROOT'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
   </div>
   <div class="card-footer">
