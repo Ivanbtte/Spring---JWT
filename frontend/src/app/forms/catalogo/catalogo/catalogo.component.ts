@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
+import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
+
 
 @Component({
   selector: 'app-catalogo',
@@ -8,12 +10,15 @@ import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
   styleUrls: ['./catalogo.component.css']
 })
 export class CatalogoComponent implements OnInit {
+
   selectedOption: string | null = null;
   trimestres: any[] = [];
   institutos: any[] = [];
   tiposPublicacion: any[] = [];
+  fileSelected: File | null = null;
+  isUploadButtonEnabled: boolean = false;  // Variable para habilitar/deshabilitar el botón
 
-  constructor(private catalogoService: CatalogoService,  private router: Router) { }
+  constructor(private catalogoService: CatalogoService,  private router: Router, private investigadorService: InvestigadorService) { }
 
   ngOnInit(): void {
     this.loadTrimestres();
@@ -70,12 +75,14 @@ export class CatalogoComponent implements OnInit {
     );
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      this.uploadFile(file);
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.fileSelected = file;
+      this.isUploadButtonEnabled = true;  // Habilita el botón cuando se selecciona un archivo
+    } else {
+      this.fileSelected = null;
+      this.isUploadButtonEnabled = false;  // Deshabilita el botón si no hay archivo
     }
   }
 
@@ -131,4 +138,17 @@ export class CatalogoComponent implements OnInit {
     // Implementar lógica de eliminación de tipo de publicación
   }
 
+  cargarInvestigadores() {
+    if (this.fileSelected) {
+      this.investigadorService.cargarInvestigadoresDesdeExcel(this.fileSelected).subscribe(
+        response => {
+          console.log('Archivo cargado exitosamente');
+          // Aquí puedes manejar la respuesta del backend
+        },
+        error => {
+          console.error('Error al cargar el archivo', error);
+        }
+      );
+    }
+  }
 }

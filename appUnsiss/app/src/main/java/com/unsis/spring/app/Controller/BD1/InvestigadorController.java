@@ -133,7 +133,7 @@ public class InvestigadorController {
     public ResponseEntity<String> cargarInvestigadoresDesdeExcel(@RequestParam("file") MultipartFile file) {
         try {
             investigadorService.cargarInvestigadoresDesdeExcel(file.getInputStream());
-            return ResponseEntity.status(HttpStatus.OK).body("Archivo cargado exitosamente");
+            return ResponseEntity.ok("Archivo cargado exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar el archivo: " + e.getMessage());
         }

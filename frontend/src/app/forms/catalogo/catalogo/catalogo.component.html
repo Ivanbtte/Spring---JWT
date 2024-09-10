@@ -106,9 +106,15 @@
         </table>
       </div>
 
+      <!-- Sección para Cargar Datos en Excel -->
       <div *ngIf="selectedOption === 'cargar-datos'">
         <h2>Cargar Datos en Excel</h2>
-        <input type="file" (change)="onFileSelected($event)">
+
+        <!-- Input para seleccionar archivo -->
+        <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls">
+
+        <!-- Botón para cargar investigadores -->
+        <button [disabled]="!isUploadButtonEnabled" (click)="cargarInvestigadores()">Cargar Investigadores</button>
       </div>
     </form>
   </div>

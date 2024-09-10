@@ -237,7 +237,7 @@ public class InvestigadorServiceImpl implements InvestigadorService {
         Sheet sheet = workbook.getSheetAt(0);
 
         for (Row row : sheet) {
-            if (row.getRowNum() == 0)
+            if (row.getRowNum() < 2)
                 continue; // Salta la fila de encabezado
 
             Investigador investigador = new Investigador();
