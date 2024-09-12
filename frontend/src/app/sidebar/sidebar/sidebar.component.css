@@ -7,56 +7,45 @@
 
 /* Sidebar Styles */
 .sidebar {
-  background-color:#550603;
+  background-color: #550603;
   color: white;
   height: 100vh;
-  width: 44px;
+  width: 44px; /* Ancho del sidebar colapsado */
   position: fixed;
   top: 0;
   left: 0;
   transition: width 0.3s ease;
   overflow: hidden;
-  display: flex; /* Aplicar flexbox */
-  flex-direction: column; /* Organizar elementos en columna */
+  display: flex;
+  flex-direction: column;
+  z-index: 1000; /* Asegúrate de que el sidebar esté por encima del contenido */
 }
 
 /* Flex spacer para empujar el contenido hacia abajo */
 .flex-spacer {
   flex-grow: 1;
 }
-
-
 .sidebar.expanded {
-  width: 240px; /* Ancho cuando está expandido */
+  width: 240px; /* Ancho del sidebar expandido */
 }
 
 .sidebar-item {
   cursor: pointer;
   padding: 10px 15px;
   color: white;
-  height: 50px;
+  height: 50px; /* Ajusta según sea necesario */
   overflow: hidden;
   display: flex;
   align-items: center;
 }
-
-.sidebar-item-2 {
-  cursor: pointer;
-  padding: 10px 15px;
-  color: white;
-  height: 50px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-
 .sidebar-item a {
   text-decoration: none;
   color: white;
   display: flex;
   align-items: center;
+  height: 100%; /* Ocupa toda la altura del contenedor */
+  width: 100%; /* Ocupa todo el ancho del contenedor */
+  padding: 0; /* Elimina el padding para evitar desplazamiento */
 }
 
 .sidebar-item .fa {
@@ -66,79 +55,37 @@
 }
 
 .sidebar-item.active {
-  background-color: #555; /* Color de fondo cuando está activo */
+  background-color: #555;
 }
 
 .sidebar-item.no-hover:hover {
-  background-color: #333; /* Mantener fondo oscuro al pasar el mouse */
+  background-color: #333;
 }
 
 .sidebar-item:hover {
-  background-color: #555; /* Color de fondo al pasar el mouse */
+  background-color: #555;
 }
 
 /* Main Content Styles */
-.page-content {
-  margin-left: 48px; /* Margen para evitar superposición del sidebar */
-  transition: margin-left 0.3s ease; /* Transición suave al expandir sidebar */
-  width: calc(100% - 48px); /* Ajustar ancho de la página */
+.container {
+  margin-left: 44px; /* Margen para evitar superposición del sidebar */
+  transition: margin-left 0.3s ease;
   padding: 20px;
-  display: flex;
-  justify-content: center; /* Centrar contenido horizontalmente */
-  align-items: center; /* Centrar contenido verticalmente */
+  flex-grow: 1; /* Asegúrate de que el contenedor principal ocupe el espacio restante */
+}
+
+.sidebar.expanded + .container {
+  margin-left: 240px; /* Ajuste de margen cuando el sidebar está expandido */
+}
+
+/* Estilos para el contenido de la página */
+.page-content {
+  margin-left: 44px; /* Margen inicial */
+  transition: margin-left 0.3s ease; /* Transición suave al expandir sidebar */
+  padding: 20px;
+  flex-grow: 1; /* Asegúrate de que el contenido ocupe el espacio restante */
 }
 
 .sidebar.expanded + .page-content {
-  margin-left: 300px; /* Ajuste de margen cuando el sidebar está expandido */
-  width: calc(100% - 300px); /* Ajustar ancho de la página cuando el sidebar está expandido */
-}
-
-/* Top Navigation Styles */
-.top-nav {
-  background-color: var(--sidebar-bg-color);
-  height: 50px;
-  border-bottom: 1px solid var(--sidebar-border-color);
-  display: flex;
-  color: var(--sidebar-font-color);
-}
-
-.top-nav-item {
-  padding: 10px;
-  color: var(--sidebar-font-color);
-}
-
-.top-nav-item:hover {
-  background-color: var(--sidebar-hover-bg-color);
-  text-decoration: none;
-  color: var(--sidebar-font-color);
-}
-
-/* Hand Cursor */
-.hand {
-  cursor: pointer;
-}
-
-/* Hide Elements */
-.hide {
-  display: none; /* Oculta completamente el texto */
-  font-size: 0;
-  visibility: hidden;
-}
-
-/* Estilo para el contenedor de cerrar sesión */
-.logout-item {
-  margin-top: auto;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-/* Ajuste para el ícono y el texto */
-.logout-item i {
-  margin-right: 8px;
-}
-
-.sidebar-item-title {
-  white-space: nowrap; /* Previene que el texto se rompa en varias líneas */
-  overflow: hidden; /* Oculta el desbordamiento del texto */
-  transition: opacity 0.3s ease; /* Transición suave al mostrar/ocultar */
+  margin-left: 240px; /* Ajuste de margen cuando el sidebar está expandido */
 }

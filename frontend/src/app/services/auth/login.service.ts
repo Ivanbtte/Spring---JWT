@@ -2,7 +2,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest } from './loginRequest';
 import  {  Observable, throwError, catchError, BehaviorSubject , tap, map} from 'rxjs';
-import { User } from './user';
 import { environment } from 'src/environments/environment';
 import { EncryptionServiceService } from './encryption-service.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -31,18 +30,21 @@ export class LoginService {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
         const encryptedInstituto = this.encryptionService.encrypt(String(userData.instituto));
         const encryptedId = this.encryptionService.encrypt(String(userData.id));
+        const encryptedIdUser = this.encryptionService.encrypt(String(userData.idUser));
 
        // Guardar en sessionStorage
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", encryptedRole);
         sessionStorage.setItem("_biz_s_t_y", encryptedInstituto);
         sessionStorage.setItem("_biz_v_e_z", encryptedId);
+        sessionStorage.setItem("_biz_u_s", encryptedIdUser);
 
         // Guardar en cookies
         this.cookieService.set('token', userData.token);
         this.cookieService.set('role', encryptedRole);
         this.cookieService.set('_biz_s_t_y', encryptedInstituto);
         this.cookieService.set('_biz_v_e_z', encryptedId);
+        this.cookieService.set("_biz_u_s", encryptedIdUser);
 
         this.currentUserData.next(userData.token);
         this.currentUserLoginOn.next(true);
@@ -57,12 +59,14 @@ export class LoginService {
     sessionStorage.removeItem("role");
     sessionStorage.removeItem("_biz_s_t_y");
     sessionStorage.removeItem("_biz_v_e_z");
+    sessionStorage.removeItem("_biz_u_s");
 
     // Eliminar de cookies
     this.cookieService.delete('token');
     this.cookieService.delete('role');
     this.cookieService.delete('_biz_s_t_y');
     this.cookieService.delete('_biz_v_e_z');
+    this.cookieService.delete("_biz_u_s");
 
     this.currentUserLoginOn.next(false);
   }
@@ -101,4 +105,8 @@ export class LoginService {
     return this.encryptionService.decrypt(id || '');
   }
   
+  getIdUser(): string {
+    const idU = this.cookieService.get('_biz_u_s') || sessionStorage.getItem('_biz_u_s');
+    return this.encryptionService.decrypt(idU || '');
+  }
 }

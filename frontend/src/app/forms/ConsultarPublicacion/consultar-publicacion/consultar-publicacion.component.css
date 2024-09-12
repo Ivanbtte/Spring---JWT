@@ -1,7 +1,12 @@
 .content {
   margin-top: 20px;
 }
-
+/* Asegúrate de que el sidebar tenga un ancho fijo o proporcional */
+app-sidebar {
+  width: 250px; /* Ajusta este valor según tus necesidades */
+  float: left;  /* Alinea el sidebar a la izquierda */
+  margin-right: 15px; /* Añade espacio entre el sidebar y el contenido principal */
+}
 label {
   display: block;
   font: 1rem 'Fira Sans', sans-serif;
@@ -64,4 +69,5 @@ label {
   flex-direction: column;
   align-items: flex-start;
 }
+
 
