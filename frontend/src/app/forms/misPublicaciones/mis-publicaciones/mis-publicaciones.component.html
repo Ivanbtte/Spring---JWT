@@ -18,7 +18,7 @@
                     </div>
                     <div *ngIf="filtrarPorInstituto" class="form-group">
                         <label for="instituto">Instituto</label>
-                        <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto" >
+                        <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
                             <option value="">Seleccione un instituto</option>
                             <option *ngFor="let instituto of institutos" [value]="instituto.id"> {{ instituto.nombre }}
                             </option>
@@ -29,7 +29,7 @@
 
             <!--Cuadro inferior III-->
             <div class="card-body">
-               
+
             </div>
         </div>
 
@@ -68,18 +68,19 @@
                     <div *ngIf="filtrarPorTrimestre" class="form-group-container">
                         <div class="form-group">
                             <label for="trimestre">Trimestre</label>
-                            <select id="trimestre" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
+                            <select id="trimestre" [(ngModel)]="selectedTrimestre" name="trimestre"
+                                (change)="onTrimestreChange()">
                                 <option [value]="1">Trimestre 1</option>
                                 <option [value]="2">Trimestre 2</option>
                                 <option [value]="3">Trimestre 3</option>
                                 <option [value]="4">Trimestre 4</option>
-                              </select>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="anio">Seleccionar Año</label>
                             <select id="anio" [(ngModel)]="selectedAnio" name="anio" (change)="onTrimestreChange()">
                                 <option *ngFor="let anio of listaAnios" [value]="anio">{{anio}}</option>
-                              </select>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -136,14 +137,11 @@
                     <button class="btn btn-primary" (click)="editarArticulo(articulo)">
                         <i class="fa fa-edit"></i> Revisar
                     </button>
-                    <button class="btn btn-danger" (click)="darDeBajaArticulo(articulo)">
-                        <i class="fa fa-trash"></i> Dar de baja
-                    </button>
                 </td>
             </tr>
         </tbody>
     </table>
-       <!-- Controles de paginación -->
-       <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Siguiente">
+    <!-- Controles de paginación -->
+    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Siguiente">
     </pagination-controls>
 </div>
