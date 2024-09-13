@@ -29,18 +29,10 @@ public interface ArticuloService {
 
     public CitaApaDto getCitaApaById(Long id);
 
-    public List<CitaApaDto> getAllCitasApa(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo);
+    public List<CitaApaDto> getAllCitasApa(Long idArticulo, Long institutoId, Long autorId, String fechaInicio, String fechaFin,
+            Integer tipo);
 
-    public List<CitaApaDto> getAllCitasApaInstituto(Long id);
-
-    public List<CitaApaDto> getAllCitasApaInstituto_Investigador(Long idInstituto, Long idInvestigador);
-
-    public List<CitaApaDto> getAllCitasApaInstituto_TipoPublicacion(Long idInstituto, Long id_TipoPublicacion);
-
-    public List<CitaApaDto> getAllCitasApaInstituto_Investigador_TipoPublicacion(Long idInstituto, Long idInvestigador, Long id_TipoPublicacion);
-
-    public List<CitaApaDto> getAllCitasApaProfesor(Long id);
-
-    List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin, Integer tipo);
+    List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin,
+            Integer tipo);
 
 }

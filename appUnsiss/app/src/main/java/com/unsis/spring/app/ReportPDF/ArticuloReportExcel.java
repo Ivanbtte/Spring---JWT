@@ -220,7 +220,6 @@ public class ArticuloReportExcel {
         Map<String, String> fechaMap = FechaPublicacionHelper
                 .obtenerFechaPublicacion(articuloDTO.getFechaPublicacion());
         String anio = fechaMap.get("anio");
-        // String fechaPublicacionStr = fechaMap.get("fechaCompleta");
 
         String tituloRevista = String.valueOf(articuloDTO.getTituloRevista());
         String numeroRevista = String.valueOf(articuloDTO.getNumeroRevista());
@@ -246,6 +245,7 @@ public class ArticuloReportExcel {
         normalFont.setFontHeightInPoints((short) 12);
         normalFont.setFontName("Arial");
 
+        // Crear una fuente en negrita
         XSSFFont boldFont = workbook.createFont();
         boldFont.setBold(true);
         boldFont.setFontHeightInPoints((short) 12);
@@ -253,6 +253,7 @@ public class ArticuloReportExcel {
 
         String cita = "";
 
+        // Generar la cita en formato APA según el tipo de publicación
         if (tipoPublicacion.equals(articulos)) {
             cita = String.format("%s (%s). %s. %s, %s(%s), %s. https://doi.org/%s",
                     autores, anio, tituloArticulo, tituloRevista,
@@ -279,33 +280,81 @@ public class ArticuloReportExcel {
         // Aplicar la fuente normal a todo el texto
         richTextString.applyFont(normalFont);
 
-        // Aplicar negrita a los apellidos
+        // Aplicar negrita a los apellidos y las iniciales de los autores UNSIS
         for (AutorDto autor : autoresList) {
             if (autor.getAutorUnsis()) {
-                String apellidoPaterno = autor.getApellidoPaternoAutor();
-                String apellidoMaterno = autor.getApellidoMaternoAutor();
+                String apellidoPaterno = autor.getApellidoPaternoAutor() != null
+                        && !autor.getApellidoPaternoAutor().isEmpty()
+                                ? autor.getApellidoPaternoAutor()
+                                : ""; // Verifica si el apellido paterno existe
 
+                String apellidoMaterno = autor.getApellidoMaternoAutor() != null
+                        && !autor.getApellidoMaternoAutor().isEmpty()
+                                ? autor.getApellidoMaternoAutor()
+                                : ""; // Verifica si el apellido materno existe
+
+                String inicialNombre1 = autor.getNombre1Autor() != null && !autor.getNombre1Autor().isEmpty()
+                        ? autor.getNombre1Autor().substring(0, 1) + "."
+                        : ""; // Inicial del primer nombre, si existe
+
+                String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
+                        ? autor.getNombre2Autor().substring(0, 1) + "."
+                        : ""; // Inicial del segundo nombre, si existe
+
+                // Aplicar negrita al apellido paterno
                 int startApellidoPaterno = cita.indexOf(apellidoPaterno);
                 int endApellidoPaterno = startApellidoPaterno + apellidoPaterno.length();
                 if (startApellidoPaterno >= 0 && endApellidoPaterno <= cita.length()) {
                     richTextString.applyFont(startApellidoPaterno, endApellidoPaterno, boldFont);
                 }
 
+                // Aplicar negrita al apellido materno
                 int startApellidoMaterno = cita.indexOf(apellidoMaterno);
                 int endApellidoMaterno = startApellidoMaterno + apellidoMaterno.length();
                 if (startApellidoMaterno >= 0 && endApellidoMaterno <= cita.length()) {
                     richTextString.applyFont(startApellidoMaterno, endApellidoMaterno, boldFont);
                 }
+
+                // Aplicar negrita a la inicial del primer nombre
+                int startInicialNombre1 = cita.indexOf(inicialNombre1);
+                int endInicialNombre1 = startInicialNombre1 + inicialNombre1.length();
+                if (startInicialNombre1 >= 0 && endInicialNombre1 <= cita.length()) {
+                    richTextString.applyFont(startInicialNombre1, endInicialNombre1, boldFont);
+                }
+
+                // Aplicar negrita a la inicial del segundo nombre, si existe
+                if (!inicialNombre2.isEmpty()) {
+                    int startInicialNombre2 = cita.indexOf(inicialNombre2);
+                    int endInicialNombre2 = startInicialNombre2 + inicialNombre2.length();
+                    if (startInicialNombre2 >= 0 && endInicialNombre2 <= cita.length()) {
+                        richTextString.applyFont(startInicialNombre2, endInicialNombre2, boldFont);
+                    }
+                }
             }
         }
 
         // Aplicar cursiva a las partes correspondientes
-        if (tipoPublicacion.equals(articulos) || tipoPublicacion.equals(capitulo_libro)) {
-            // Cursiva en el título de la revista
-            int startItalic = cita.indexOf(tituloRevista);
-            int endItalic = startItalic + tituloRevista.length();
+        if (tipoPublicacion.equals(articulos)) {
+            // Cursiva en el título del artículo
+            int startItalic = cita.indexOf(tituloArticulo);
+            int endItalic = startItalic + tituloArticulo.length();
             if (startItalic >= 0 && endItalic <= cita.length()) {
                 richTextString.applyFont(startItalic, endItalic, italicFont);
+            }
+        }
+
+        if (tipoPublicacion.equals(capitulo_libro)) {
+            // Cursiva en el título del capítulo y del libro
+            int startItalicCapitulo = cita.indexOf(tituloCapitulo);
+            int endItalicCapitulo = startItalicCapitulo + tituloCapitulo.length();
+            if (startItalicCapitulo >= 0 && endItalicCapitulo <= cita.length()) {
+                richTextString.applyFont(startItalicCapitulo, endItalicCapitulo, italicFont);
+            }
+
+            int startItalicLibro = cita.indexOf(tituloLibro);
+            int endItalicLibro = startItalicLibro + tituloLibro.length();
+            if (startItalicLibro >= 0 && endItalicLibro <= cita.length()) {
+                richTextString.applyFont(startItalicLibro, endItalicLibro, italicFont);
             }
         }
 
@@ -323,11 +372,20 @@ public class ArticuloReportExcel {
 
     private String formatearAutores(List<AutorDto> autoresList) {
         return autoresList.stream()
-                .map(autor -> String.format("%s-%s, %s %s",
-                        autor.getApellidoPaternoAutor(),
-                        autor.getApellidoMaternoAutor(),
-                        autor.getNombre1Autor().charAt(0),
-                        autor.getNombre2Autor() != null ? autor.getNombre2Autor().charAt(0) + "." : ""))
+                .map(autor -> {
+                    String apellidoPaterno = autor.getApellidoPaternoAutor() != null ? autor.getApellidoPaternoAutor()
+                            : "";
+                    String apellidoMaterno = autor.getApellidoMaternoAutor() != null ? autor.getApellidoMaternoAutor()
+                            : "";
+                    String inicialNombre1 = autor.getNombre1Autor() != null
+                            ? autor.getNombre1Autor().substring(0, 1) + "."
+                            : "";
+                    String inicialNombre2 = autor.getNombre2Autor() != null
+                            ? autor.getNombre2Autor().substring(0, 1) + "."
+                            : "";
+                    return String.format("%s %s, %s. %s.", apellidoPaterno, apellidoMaterno, inicialNombre1,
+                            inicialNombre2);
+                })
                 .collect(Collectors.joining(", "));
     }
 }

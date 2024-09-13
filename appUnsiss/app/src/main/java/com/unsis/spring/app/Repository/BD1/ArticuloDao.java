@@ -21,125 +21,59 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "WHERE a.id_articulo = :id", nativeQuery = true)
         List<Object[]> findArticuloWithAutoresById(@Param("id") Long id);
 
-        // Esta consulta es la mera mera
+        // Consulta general
         @Query(value = "SELECT " +
-                        "a.id_articulo, "+
-                        "a.compilado, " +
-                        "a.doi, " +
-                        "a.editorial, " +
-                        "a.fecha_publicacion, " +
-                        "a.financiamiento_prodep, " +
-                        "a.indice_miar, " +
-                        "a.isbn_digital, " +
-                        "a.isbn_impreso, " +
-                        "a.nombre_articulo, " +
-                        "a.nombre_capitulo, " +
-                        "a.numero_revista, " +
-                        "a.observaciones_directores, " +
-                        "a.observaciones_gestion, " +
-                        "a.pag_final, " +
-                        "a.pag_inicio, " +
-                        "a.titulo_revista, " +
-                        "a.volumen_revista, " +
-                        "a.id_instituto, " +
-                        "a.id_publicacion_tipo, " +
-                        "a.id_trimestre, " +
-                        "au.id_autor, " +
-                        "au.apellido_materno_autor, " +
-                        "au.apellido_paterno_autor, " +
-                        "au.autor_unsis, " +
-                        "au.nombre_1_autor, " +
-                        "au.nombre_2_autor, " +
-                        "a.aceptado_director, " +
-                        "a.aceptado_gestion, " +
-                        "a.file_metadata_id " +
-                        "FROM Articulos a " +
-                        "LEFT JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "LEFT JOIN public.investigador inv ON inv.id_autor = aa.id_autor " +
-                        "LEFT JOIN autores au ON au.id_autor = aa.id_autor "+
-                        "LEFT JOIN public.instituto i ON i.id = inv.id_instituto " +
-                        "WHERE (:institutoId IS NULL OR a.id_instituto = :institutoId) " +
-                        "AND (:autorId IS NULL OR aa.id_autor = :autorId) " +
-                        "AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
-                        "AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
-                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresPerro(
+                        "    a.id_articulo, " +
+                        "    a.compilado, " +
+                        "    a.doi, " +
+                        "    a.editorial, " +
+                        "    a.fecha_publicacion, " +
+                        "    a.financiamiento_prodep, " +
+                        "    a.indice_miar, " +
+                        "    a.isbn_digital, " +
+                        "    a.isbn_impreso, " +
+                        "    a.nombre_articulo, " +
+                        "    a.nombre_capitulo, " +
+                        "    a.numero_revista, " +
+                        "    a.observaciones_directores, " +
+                        "    a.observaciones_gestion, " +
+                        "    a.pag_final, " +
+                        "    a.pag_inicio, " +
+                        "    a.titulo_revista, " +
+                        "    a.volumen_revista, " +
+                        "    a.id_instituto, " +
+                        "    a.id_publicacion_tipo, " +
+                        "    a.id_trimestre, " +
+                        "    au.id_autor, " +
+                        "    au.nombre_1_autor, " +
+                        "    au.nombre_2_autor, " +
+                        "    au.apellido_paterno_autor, " +
+                        "    au.apellido_materno_autor, " +
+                        "    au.autor_unsis, " +
+                        "    a.aceptado_director, " +
+                        "    a.aceptado_gestion, " +
+                        "    a.file_metadata_id " +
+                        "FROM " +
+                        "    Articulos a " +
+                        "LEFT JOIN " +
+                        "    articulo_autor aa ON a.id_articulo = aa.id_articulo " +
+                        "LEFT JOIN " +
+                        "    autores au ON au.id_autor = aa.id_autor " +
+                        "WHERE " +
+                        "    (:idArticulo IS NULL OR a.id_articulo = :idArticulo) " +
+                        "    AND (:idArticulo IS NULL OR aa.id_articulo = :idArticulo) " +
+                        "    AND (:idAutor IS NULL OR (aa.id_autor = :idAutor OR a.id_articulo IN (SELECT id_articulo FROM articulo_autor WHERE id_autor = :idAutor))) "
+                        +
+                        "    AND (:institutoId IS NULL OR a.id_instituto = :institutoId) " +
+                        "    AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
+                        "    AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
+                        "    AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)", nativeQuery = true)
+        List<Object[]> findAllArticulosWithAutores(@Param("idArticulo") Long idArticulo,
+                        @Param("idAutor") Long idAutor,
                         @Param("institutoId") Long institutoId,
-                        @Param("autorId") Long autorId,
                         @Param("fechaInicio") String fechaInicio,
                         @Param("fechaFin") String fechaFin,
                         @Param("tipo") Integer tipo);
-
-        // Consulta general FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutores();
-
-        // Consulta de cada instituto FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor " +
-                        "WHERE a.id_instituto = :id", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresInstituto(@Param("id") Long id);
-
-        // Consulta de instituto e investigador FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor " +
-                        "WHERE a.id_articulo IN (" +
-                        "    SELECT aa.id_articulo " +
-                        "    FROM articulo_autor aa " +
-                        "    WHERE a.id_instituto = :idInstituto " +
-                        "    AND aa.id_autor = :idInvestigador " +
-                        ")", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresInstitutoInvestigador(@Param("idInstituto") Long idInstituto,
-                        @Param("idInvestigador") Long idInvestigador);
-
-        // Consulta de instituto y tipo de publicacion FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor " +
-                        "JOIN tipo_publicacion tp ON a.id_publicacion_tipo = tp.id_publicacion_tipo " +
-                        "WHERE a.id_instituto = :idInstituto " +
-                        "AND tp.id_publicacion_tipo = :id_TipoPublicacion", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresInstitutoTipoPublicacion(
-                        @Param("idInstituto") Long idInstituto,
-                        @Param("id_TipoPublicacion") Long id_TipoPublicacion);
-
-        // Consulta de instituto, investigador y tipo de publicacion FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor " +
-                        "JOIN tipo_publicacion tp ON a.id_publicacion_tipo = tp.id_publicacion_tipo " +
-                        "WHERE a.id_articulo IN (" +
-                        "    SELECT aa.id_articulo " +
-                        "    FROM articulo_autor aa " +
-                        "    WHERE a.id_instituto= :idInstituto " +
-                        "    AND  aa.id_autor  = :idInvestigador " +
-                        "    AND tp.id_publicacion_tipo = :id_TipoPublicacion " +
-                        ")", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresInstitutoInvestigadorTipoPublicacion(
-                        @Param("idInstituto") Long idInstituto,
-                        @Param("idInvestigador") Long id_Investigador,
-                        @Param("id_TipoPublicacion") Long id_TipoPublicacion);
-
-        // Consulta de profesor FUNCIONA
-        @Query(value = "SELECT a.*, au.* " +
-                        "FROM Articulos a " +
-                        "JOIN articulo_autor aa ON a.id_articulo = aa.id_articulo " +
-                        "JOIN autores au ON aa.id_autor = au.id_autor " +
-                        "WHERE a.id_articulo IN (" +
-                        "    SELECT aa.id_articulo " +
-                        "    FROM articulo_autor aa " +
-                        "    WHERE aa.id_autor = :id" +
-                        ")", nativeQuery = true)
-        List<Object[]> findAllArticulosWithAutoresByAutorId(@Param("id") Long id);
 
         @Query(value = "SELECT DISTINCT " +
                         "a.compilado, " +

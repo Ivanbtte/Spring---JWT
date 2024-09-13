@@ -7,7 +7,7 @@
         <!--Bloque Taller Izquierdo-->
         <div class="card mt-4 altura">
             <!--Cuadro superior I-->
-            <div class="card-body"*ngIf="userRole === 'ADMIN' || userRole === 'ROOT'">
+            <div class="card-body" *ngIf="userRole === 'ADMIN' || userRole === 'ROOT'">
                 <form (ngSubmit)="searchPublications()">
                     <div class="form-group">
                         <label>
@@ -102,18 +102,19 @@
                     <div *ngIf="filtrarPorTrimestre" class="form-group-container">
                         <div class="form-group">
                             <label for="trimestre">Trimestre</label>
-                            <select id="trimestre" [(ngModel)]="selectedTrimestre" name="trimestre" (change)="onTrimestreChange()">
+                            <select id="trimestre" [(ngModel)]="selectedTrimestre" name="trimestre"
+                                (change)="onTrimestreChange()">
                                 <option [value]="1">Trimestre 1</option>
                                 <option [value]="2">Trimestre 2</option>
                                 <option [value]="3">Trimestre 3</option>
                                 <option [value]="4">Trimestre 4</option>
-                              </select>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="anio">Seleccionar Año</label>
                             <select id="anio" [(ngModel)]="selectedAnio" name="anio" (change)="onTrimestreChange()">
                                 <option *ngFor="let anio of listaAnios" [value]="anio">{{anio}}</option>
-                              </select>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -145,18 +146,19 @@
     </div>
 
     <!-- Botón de búsqueda -->
-    <button type="button" class="btn btn-primary" (click)="searchPublications()"><i class="fa fa-search"
-            aria-hidden="true"></i>
-        Buscar</button>
+    <button type="button" class="btn btn-primary" (click)="searchPublications()">
+        <i class="fa fa-search" aria-hidden="true"></i> Buscar
+    </button>
 
-    <button type="button" class="btn btn-success" (click)="reporteExe()"><i class="fa fa-file-excel-o"
-            aria-hidden="true"></i>
-        Download Exel</button>
+    <!-- Botón para descargar Excel -->
+    <button type="button" class="btn btn-success" (click)="reporteExe()">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar Excel
+    </button>
+
 
     <!-- Botón de descarga de zip-->
-    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-search"
-        aria-hidden="true"></i>
-    Descargar archivos</button>    
+    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-search" aria-hidden="true"></i>
+        Descargar archivos</button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -183,7 +185,7 @@
             </tr>
         </tbody>
     </table>
-       <!-- Controles de paginación -->
-       <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Siguiente">
+    <!-- Controles de paginación -->
+    <pagination-controls (pageChange)="p = $event" previousLabel="Anterior" nextLabel="Siguiente">
     </pagination-controls>
 </div>
