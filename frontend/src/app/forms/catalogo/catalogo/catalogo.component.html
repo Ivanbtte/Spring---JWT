@@ -107,8 +107,14 @@
       </div>
 
       <!-- Sección para Cargar Datos en Excel -->
+      <!-- Botón para descargar el formato de Excel -->
       <div *ngIf="selectedOption === 'cargar-datos'">
-        <h2>Cargar Datos en Excel</h2>
+        <h2>Cargar Investigadores desde Excel</h2>
+
+        <!-- Botón para descargar el formato de Excel -->
+        <button (click)="descargarFormatoExcel()" class="btn btn-success">
+          <i class="fa fa-download"></i> Descargar Formato de Excel
+        </button>
 
         <!-- Input para seleccionar archivo -->
         <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls">

@@ -242,18 +242,43 @@ public class InvestigadorServiceImpl implements InvestigadorService {
 
             Investigador investigador = new Investigador();
 
+            // Primer nombre (obligatorio)
             String nombre1 = row.getCell(0).getStringCellValue();
+            if (nombre1 == null || nombre1.trim().isEmpty()) {
+                throw new RuntimeException("El primer nombre es obligatorio en la fila " + (row.getRowNum() + 1));
+            }
             investigador.setNombre_1_investigador(nombre1);
 
-            String nombre2 = row.getCell(1).getStringCellValue();
-            investigador.setNombre_2_investigador(nombre2);
+            // Inicializar variables opcionales como null
+            String nombre2 = null;
+            String apellidoMaterno = null;
 
+            // Segundo nombre (opcional)
+            Cell nombre2Cell = row.getCell(1);
+            if (nombre2Cell != null && nombre2Cell.getCellType() == CellType.STRING) {
+                nombre2 = nombre2Cell.getStringCellValue();
+                if (!nombre2.trim().isEmpty()) {
+                    investigador.setNombre_2_investigador(nombre2);
+                }
+            }
+
+            // Apellido paterno (obligatorio)
             String apellidoPaterno = row.getCell(2).getStringCellValue();
+            if (apellidoPaterno == null || apellidoPaterno.trim().isEmpty()) {
+                throw new RuntimeException("El apellido paterno es obligatorio en la fila " + (row.getRowNum() + 1));
+            }
             investigador.setApellido_paterno_1_investigador(apellidoPaterno);
 
-            String apellidoMaterno = row.getCell(3).getStringCellValue();
-            investigador.setApellido_materno_2_investigador(apellidoMaterno);
+            // Apellido materno (opcional)
+            Cell apellidoMaternoCell = row.getCell(3);
+            if (apellidoMaternoCell != null && apellidoMaternoCell.getCellType() == CellType.STRING) {
+                apellidoMaterno = apellidoMaternoCell.getStringCellValue();
+                if (!apellidoMaterno.trim().isEmpty()) {
+                    investigador.setApellido_materno_2_investigador(apellidoMaterno);
+                }
+            }
 
+            // Instituto (obligatorio)
             String nombreInstituto = row.getCell(4).getStringCellValue();
             Optional<Instituto> institutoOpt = institutoDao.findByNombre(nombreInstituto);
             if (institutoOpt.isPresent()) {
@@ -262,15 +287,16 @@ public class InvestigadorServiceImpl implements InvestigadorService {
                 throw new RuntimeException("Instituto no encontrado: " + nombreInstituto);
             }
 
-            // Crear y asignar usuario
+            // Usuario (obligatorio)
             User user = new User();
             user.setUsername(row.getCell(5).getStringCellValue());
-            // Convierte el string del Excel a un tipo enum
-            String roleString = row.getCell(6).getStringCellValue().toUpperCase(); // Asegúrate que el valor sea todo con mayúsculas
+
+            // Rol (obligatorio)
+            String roleString = row.getCell(6).getStringCellValue().toUpperCase();
             Role role = Role.valueOf(roleString);
             user.setRole(role);
             user.setPassword(passwordEncoder.encode(row.getCell(7).getStringCellValue()));
-            user.setEnabled(true); // asegúrate de cifrar el password
+            user.setEnabled(true);
             userRepository.save(user);
             investigador.setUser(user);
 

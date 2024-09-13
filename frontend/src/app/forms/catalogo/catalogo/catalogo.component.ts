@@ -151,4 +151,8 @@ export class CatalogoComponent implements OnInit {
       );
     }
   }
+  
+  descargarFormatoExcel() {
+    this.investigadorService.descargarFormato();
+  }
 }

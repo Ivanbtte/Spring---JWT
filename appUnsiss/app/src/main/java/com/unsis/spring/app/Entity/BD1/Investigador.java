@@ -32,7 +32,7 @@ public class Investigador {
     @Column(nullable = false)
     private  String nombre_1_investigador;
 
-    @Column(nullable = false)
+    @Column()
     private String nombre_2_investigador;
 
     @Column(nullable = false)

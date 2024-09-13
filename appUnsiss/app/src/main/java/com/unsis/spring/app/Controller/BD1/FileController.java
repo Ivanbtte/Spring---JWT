@@ -3,6 +3,7 @@ package com.unsis.spring.app.Controller.BD1;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,8 @@ import com.unsis.spring.app.Service.BD1.FileService;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,8 @@ import org.slf4j.LoggerFactory;
 @RestController
 @RequestMapping("/api/v1/files")
 public class FileController {
+
+    private final String UPLOAD_DIR = "./uploads/Static/";
 
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
@@ -109,6 +114,24 @@ public class FileController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/descargar-formato")
+    public ResponseEntity<Resource> descargarFormatoExcel() {
+        try {
+            Path path = Paths.get(UPLOAD_DIR + "CargarUsuarios.xlsx");
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists()) {
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=formato_investigadores.xlsx");
+                return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

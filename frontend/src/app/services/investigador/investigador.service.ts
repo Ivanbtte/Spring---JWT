@@ -69,5 +69,9 @@ export class InvestigadorService {
       catchError(this.handleError)
     );
   }
+  
+  descargarFormato() {
+    window.open(`${environment.urlApi}files/descargar-formato`, '_blank');
+  }
 
 }
