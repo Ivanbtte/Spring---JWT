@@ -57,4 +57,21 @@ export class InvestigadorService {
       catchError(this.handleError)
     );
   }  
+
+   // Método para cargar investigadores desde un archivo Excel
+   cargarInvestigadoresDesdeExcel(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${environment.urlApi}investigador/cargar-excel`, formData, {
+      responseType: 'text' // Especifica que esperas una respuesta en formato texto
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  descargarFormato() {
+    window.open(`${environment.urlApi}files/descargar-formato`, '_blank');
+  }
+
 }
