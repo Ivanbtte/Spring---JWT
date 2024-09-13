@@ -2,6 +2,7 @@ package com.unsis.spring.app.Controller.BD1;
 
 public class SearchCriteria {
     private Long institutoId;
+    private Long idArticulo;
     private Long autorId;
     private String fechaInicio;
     private String fechaFin;
@@ -10,6 +11,10 @@ public class SearchCriteria {
     // Getters
     public Long getInstitutoId() {
         return institutoId;
+    }
+
+    Long getArticuloId(){
+        return idArticulo;
     }
 
     public Long getAutorId() {
@@ -31,6 +36,10 @@ public class SearchCriteria {
     // Setters
     public void setInstitutoId(Long institutoId) {
         this.institutoId = institutoId;
+    }
+
+    public void setArticuloId(Long idArticulo){
+        this.idArticulo = idArticulo;
     }
 
     public void setAutorId(Long autorId) {

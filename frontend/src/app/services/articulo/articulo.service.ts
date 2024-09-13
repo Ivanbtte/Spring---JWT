@@ -4,13 +4,14 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { Articulo } from './articulo';
+import { LoginService } from '../auth/login.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticuloService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/articulos';
+  private apiUrl = 'http://localhost:8080/api/v1/articulo';
 
   constructor(private http: HttpClient) { }
 
@@ -129,46 +130,17 @@ export class ArticuloService {
     return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
   }
 
-  reporteExe() {
+  reporteExe(criterios: any) {
     const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Type': 'application/json' // Aseguramos el tipo de contenido adecuado
     });
-    return this.http.get(`${this.apiUrl}/exportarExcel`, { headers, responseType: 'blob' });
 
+    // Enviamos una solicitud POST con los criterios en el cuerpo
+    return this.http.post(`${this.apiUrl}/exportarExcel`, criterios, {
+      headers: headers,
+      responseType: 'blob' // Esto es para manejar la respuesta del archivo binario
+    });
   }
 
-  reporteExe_Instituto(id: number) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto/${id}`, { headers, responseType: 'blob' });
-  }
-
-  reporteExe_Profesor(id: number) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return this.http.get(`${this.apiUrl}/exportarExcel_Profesor/${id}`, { headers, responseType: 'blob' });
-  }
-
-  reporteExe_Instituto_Investigador(institutoId: number, profesorId: number) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto_Investigador/${institutoId}/${profesorId}`, { headers, responseType: 'blob' });
-  }
-
-  reporteExe_Instituto_TipoPublicacion(institutoId: number, tipo_publicacionId: number) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto_TipoPublicacion/${institutoId}/${tipo_publicacionId}`, { headers, responseType: 'blob' });
-  }
-
-  reporteExe_Instituto_Investigador_TipoPublicacion(institutoId: number, profesorId: number, tipo_publicacionId: number) {
-    const headers = new HttpHeaders({
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    });
-    return this.http.get(`${this.apiUrl}/exportarExcel_Instituto_Investigador_TipoPublicacion/${institutoId}/${profesorId}/${tipo_publicacionId}`, { headers, responseType: 'blob' });
-  }
 }

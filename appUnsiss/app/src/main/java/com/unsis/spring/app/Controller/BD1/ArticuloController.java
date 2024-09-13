@@ -232,37 +232,36 @@ public class ArticuloController {
         }
     }
 
-    /*@GetMapping(value = "/articulos/exportarPDF")
-    public void exportarPDFdeArticulo(HttpServletResponse response) throws DocumentException, IOException {
-        response.setContentType("application/pdf");
+    /*
+     * @GetMapping(value = "/articulos/exportarPDF")
+     * public void exportarPDFdeArticulo(HttpServletResponse response) throws
+     * DocumentException, IOException {
+     * response.setContentType("application/pdf");
+     * 
+     * DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+     * String fechaActual = dateFormatter.format(new Date());
+     * 
+     * String cabecera = "Content-Disposition";
+     * String valor = "attachment; filename=Articulos_" + fechaActual + ".pdf";
+     * 
+     * response.setHeader(cabecera, valor);
+     * 
+     * List<CitaApaDto> articulos = articuloService.getAllCitasApa();
+     * 
+     * ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
+     * exporter.exportar(response);
+     * }
+     */
 
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Articulos_" + fechaActual + ".pdf";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApa();
-
-        ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
-        exporter.exportar(response);
-    }*/
-
-    @PostMapping(value = "/articulos/exportarExcel")
+    @PostMapping(value = "/articulo/exportarExcel")
     public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
             throws DocumentException, IOException {
         response.setContentType("application/octet-stream");
-
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String fechaActual = dateFormatter.format(new Date());
-
         String cabecera = "Content-Disposition";
         String valor = "attachment; filename=General_" + fechaActual + ".xlsx";
-
         response.setHeader(cabecera, valor);
-
         // Validar las fechas (opcional)
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
@@ -273,118 +272,16 @@ public class ArticuloController {
                 throw new IllegalArgumentException("La fecha de inicio no puede ser después de la fecha final.");
             }
         }
-
         // Obtener los artículos filtrados según los criterios proporcionados
         List<CitaApaDto> citasApa = articuloService.getAllCitasApa(
+                criteria.getArticuloId(),
                 criteria.getInstitutoId(),
                 criteria.getAutorId(),
                 criteria.getFechaInicio(),
                 criteria.getFechaFin(),
                 criteria.getTipo());
-
         // Exportar a Excel
         ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, citasApa);
-        exporter.exportar(response);
-    }
-
-    @GetMapping(value = "/articulos/exportarExcel_Instituto/{id}")
-    public void exportarExelDeArticulo_Instituto(@PathVariable Long id, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Intituto_" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto(id);
-
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
-        exporter.exportar(response);
-    }
-
-    @GetMapping(value = "/articulos/exportarExcel_Profesor/{id}")
-    public void exportarExelDeArticulo_Profesor(@PathVariable Long id, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Profesor" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaProfesor(id);
-
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
-        exporter.exportar(response);
-    }
-
-    @GetMapping(value = "/articulos/exportarExcel_Instituto_Investigador/{idInstituto}/{idInvestigador}")
-    public void exportarExelDeArticuloInstituto_Investigador(@PathVariable Long idInstituto,
-            @PathVariable Long idInvestigador, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Instituto_Investigador_" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_Investigador(idInstituto, idInvestigador);
-
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
-        exporter.exportar(response);
-    }
-
-    @GetMapping(value = "/articulos/exportarExcel_Instituto_TipoPublicacion/{idInstituto}/{id_TipoPublicacion}")
-    public void exportarExelDeArticuloInstituto_TipoPublicacion(@PathVariable Long idInstituto,
-            @PathVariable Long id_TipoPublicacion, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Instituto_Tipo_Publicacion" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_TipoPublicacion(idInstituto,
-                id_TipoPublicacion);
-
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
-        exporter.exportar(response);
-    }
-
-    @GetMapping(value = "/articulos/exportarExcel_Instituto_Investigador_TipoPublicacion/{idInstituto}/{idInvestigador}/{id_TipoPublicacion}")
-    public void exportarExelDeArticuloInstituto_Investigador_TipoPublicacion(@PathVariable Long idInstituto,
-            @PathVariable Long idInvestigador, @PathVariable Long id_TipoPublicacion, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Instituto_Investigador_Tipo_Publicacion" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<CitaApaDto> articulos = articuloService.getAllCitasApaInstituto_Investigador_TipoPublicacion(idInstituto,
-                idInvestigador,
-                id_TipoPublicacion);
-
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, articulos);
         exporter.exportar(response);
     }
 
@@ -392,19 +289,15 @@ public class ArticuloController {
     public ResponseEntity<Object> getFilteredArticulos(@RequestBody SearchCriteria criteria) {
         Map<String, Object> map = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
         try {
-
             if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
                 LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
                 LocalDate fechaFin = LocalDate.parse(criteria.getFechaFin(), formatter);
-
                 if (fechaInicio.isAfter(fechaFin)) {
                     map.put("message", "La fecha de inicio no puede ser después de la fecha final.");
                     return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
                 }
             }
-
             List<Object[]> articulos = articuloService.findFilteredArticulos(
                     criteria.getInstitutoId(),
                     criteria.getAutorId(),

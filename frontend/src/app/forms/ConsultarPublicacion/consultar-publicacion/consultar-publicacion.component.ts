@@ -26,7 +26,7 @@ export class ConsultarPublicacionComponent implements OnInit {
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
   selectedTipoPublicacion: number | null = null;
-  selectedInstituteForProfessor:  number | null = null;
+  selectedInstituteForProfessor: number | null = null;
   publicacion: any[] = [];
   tipo_publicaciones: any[] = [];//En uso
   profesores: any[] = [];//En uso
@@ -43,12 +43,12 @@ export class ConsultarPublicacionComponent implements OnInit {
   //Variables extras:
   filtrarPorTrimestre: boolean = false;
   trimestres: number[] = [1, 2, 3, 4];
-  listaAnios: number[] = Array.from({length: (new Date().getFullYear() - 2000 + 1)}, (v, k) => 2000 + k);
+  listaAnios: number[] = Array.from({ length: (new Date().getFullYear() - 2000 + 1) }, (v, k) => 2000 + k);
   selectedTrimestre: number | null = null;
   selectedAnio: number | null = null;
-  userRole!:string ;
-  userInstituto!:string ;
-  userId!: number ;
+  userRole!: string;
+  userInstituto!: string;
+  userId!: number;
 
   constructor(
     private articuloService: ArticuloService,
@@ -96,74 +96,44 @@ export class ConsultarPublicacionComponent implements OnInit {
         console.error('Error al obtener los tipos de publicaciones', error);
       })
 
-      this.searchPublications();
+    this.searchPublications();
   }
 
   reporteExe() {
+    // Obtén los datos del usuario desde el LoginService
+    this.userRole = this.loginService.getUserRole();
+    this.userInstituto = this.loginService.getInstituto();
+
+    // Define los criterios de búsqueda
+    const searchCriteria = this.userRole === 'COORDINADOR'
+      ? {
+        institutoId: this.userInstituto,
+        autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      }
+      : {
+        institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+        autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      };
+
+    // Establecer el encabezado 'Accept' para recibir un archivo Excel
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-  
-    if (this.filtrarPorInstituto && this.selectedInstituto !== null) {
-      const institutoId = this.selectedInstituto;
-  
-      if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
-        const profesorId = this.selectedProfesor;
-  
-        if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-          const tipoPublicacionId = this.selectedTipoPublicacion;
-  
-          if (!isNaN(institutoId) && !isNaN(profesorId) && !isNaN(tipoPublicacionId)) {
-            this.articuloService.reporteExe_Instituto_Investigador_TipoPublicacion(institutoId, profesorId, tipoPublicacionId).subscribe(response => {
-              this.downloadFile(response);
-            });
-          } else {
-            console.error('El ID del instituto, del profesor, o del tipo de publicación no es válido.');
-          }
-  
-        } else if (!isNaN(institutoId) && !isNaN(profesorId)) {
-          this.articuloService.reporteExe_Instituto_Investigador(institutoId, profesorId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del profesor no es válido.');
-        }
-  
-      } else if (this.filtrarPorTipo && this.selectedTipoPublicacion !== null) {
-        const tipoPublicacionId = this.selectedTipoPublicacion;
-  
-        if (!isNaN(institutoId) && !isNaN(tipoPublicacionId)) {
-          this.articuloService.reporteExe_Instituto_TipoPublicacion(institutoId, tipoPublicacionId).subscribe(response => {
-            this.downloadFile(response);
-          });
-        } else {
-          console.error('El ID del instituto o del tipo de publicación no es válido.');
-        }
-  
-      } else if (!isNaN(institutoId)) {
-        this.articuloService.reporteExe_Instituto(institutoId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del instituto no es válido.');
-      }
-    } else if (this.filtrarPorProfesor && this.selectedProfesor !== null) {
-      const profesorId = this.selectedProfesor;
-  
-      if (!isNaN(profesorId)) {
-        this.articuloService.reporteExe_Profesor(profesorId).subscribe(response => {
-          this.downloadFile(response);
-        });
-      } else {
-        console.error('El ID del profesor no es válido.');
-      }
-    } else {
-      this.articuloService.reporteExe().subscribe(response => {
-        this.downloadFile(response);
-      });
-    }
+
+    // Llamada al servicio que exporta el Excel, pasando los criterios de búsqueda
+    this.articuloService.reporteExe(searchCriteria).subscribe(response => {
+      this.downloadFile(response);
+    }, error => {
+      console.error('Error al exportar el reporte:', error);
+    });
   }
-  
+
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);
@@ -175,49 +145,50 @@ export class ConsultarPublicacionComponent implements OnInit {
   }
 
   searchPublications(): void {
-       // Obtén los datos del usuario desde el LoginService
-       this.userRole = this.loginService.getUserRole();
-       this.userInstituto = this.loginService.getInstituto();
-       if (this.userRole === 'COORDINADOR') {
-         const searchCriteria = {
-           institutoId: this.userInstituto,
-           autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-           fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
-           fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
-           tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
-         };
-         this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-           this.articulosFiltrados = this.convertirDatos(data);
-             // Ordenar los artículos por nombre_articulo
-         this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
-           const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
-           const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
-           return nombreA.localeCompare(nombreB);
-         });
-       }, error => {
-         console.error('Error al buscar publicaciones:', error);
-       });    
-       }else {
-         const searchCriteria = {
-           institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
-           autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
-           fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
-           fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
-           tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
-         };
-         this.articuloService.searchPublications(searchCriteria).subscribe(data => {
-           this.articulosFiltrados = this.convertirDatos(data);
-             // Ordenar los artículos por nombre_articulo
-         this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
-           const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
-           const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
-           return nombreA.localeCompare(nombreB);
-         });
-       }, error => {
-         console.error('Error al buscar publicaciones:', error);
-       });
-       }
-     }
+    // Obtén los datos del usuario desde el LoginService
+    this.userRole = this.loginService.getUserRole();
+    this.userInstituto = this.loginService.getInstituto();
+    if (this.userRole === 'COORDINADOR') {
+      const searchCriteria = {
+        institutoId: this.userInstituto,
+        autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      };
+      this.articuloService.searchPublications(searchCriteria).subscribe(data => {
+        this.articulosFiltrados = this.convertirDatos(data);
+        // Ordenar los artículos por nombre_articulo
+        this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
+          const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
+          const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
+          return nombreA.localeCompare(nombreB);
+        });
+      }, error => {
+        console.error('Error al buscar publicaciones:', error);
+      });
+    } else {
+      const searchCriteria = {
+        institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
+        autorId: this.filtrarPorProfesor ? this.selectedProfesor || null : null,
+        fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
+        fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
+        tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+      };
+      this.articuloService.searchPublications(searchCriteria).subscribe(data => {
+        this.articulosFiltrados = this.convertirDatos(data);
+        // Ordenar los artículos por nombre_articulo
+        this.articulosFiltrados = this.articulosFiltrados.sort((a, b) => {
+          const nombreA = a.nombre_articulo?.toLowerCase() ?? '';
+          const nombreB = b.nombre_articulo?.toLowerCase() ?? '';
+          return nombreA.localeCompare(nombreB);
+        });
+      }, error => {
+        console.error('Error al buscar publicaciones:', error);
+      });
+    }
+  }
+
 
   dowloadZip(): void {
     const searchCriteria = {
@@ -244,17 +215,17 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[19],    
+        titulo_revista: arr[19],
         fecha_publicacion: arr[5],
         nombre_articulo: arr[15],
         observaciones_directores: arr[17],
-        observaciones_gestion: arr[18]   
+        observaciones_gestion: arr[18]
 
         // Sigue mapeando todas las propiedades necesarias
       };
     });
   }
-  
+
   trackById(index: number, articulo: any): number {
     return articulo.id;
   }
@@ -336,8 +307,8 @@ export class ConsultarPublicacionComponent implements OnInit {
       case 'fechas':
         if (this.filtrarPorFechas) {
           this.filtrarPorTrimestre = false;
-          this.selectedTrimestre=null;
-          this.selectedAnio=null;
+          this.selectedTrimestre = null;
+          this.selectedAnio = null;
         }
         break;
       case 'trimestre':
@@ -382,7 +353,7 @@ export class ConsultarPublicacionComponent implements OnInit {
           console.error("Trimestre no válido:", trimestre);
           return;
       }
-  
+
       // Asigna las fechas a las propiedades correspondientes
       this.startDate = startDate;
       this.endDate = endDate;
