@@ -42,7 +42,6 @@ export class ValidarPublicacionComponent implements OnInit {
   }
 
   editarPublicacion(articulo: Articulo): void {
-    console.log("Llevando a editar : ", articulo.id_articulo);
     this.router.navigate(['/editar-articulo/', articulo.id_articulo]);
   }
 
