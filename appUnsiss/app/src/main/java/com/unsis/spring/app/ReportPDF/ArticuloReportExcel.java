@@ -78,7 +78,7 @@ public class ArticuloReportExcel {
 
         estilo.setWrapText(true);
         combinarCeldasUniversidad();
-        String rutaImagen = "appUnsiss/app/src/main/resources/logo.png";
+        String rutaImagen = "../app/src/main/resources/logo.png";
         insertarImagen(rutaImagen);
 
         String[] cabeceras = { "ID", "Tipo publicación", "Fecha de publicación", "Folio", "Cita en norma APA 7ed",
@@ -174,7 +174,7 @@ public class ArticuloReportExcel {
         CellStyle estiloFila9 = libro.createCellStyle();
         XSSFFont fuenteFila9 = libro.createFont();
         fuenteFila9.setBold(true);
-        fuenteFila9.setFontHeight(18);
+        fuenteFila9.setFontHeight(16);
         fuenteFila9.setFontName("Arial");
         estiloFila9.setFont(fuenteFila9);
         estiloFila9.setAlignment(HorizontalAlignment.CENTER);
@@ -253,7 +253,7 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(3);
-            celda.setCellValue("Folio");
+            celda.setCellValue(cita.getFechaPublicacion());
             hoja.autoSizeColumn(3);
             celda.setCellStyle(estilo);
 
@@ -264,13 +264,13 @@ public class ArticuloReportExcel {
             celda = fila.createCell(4);
             celda.setCellValue(citaApa);
             hoja.autoSizeColumn(4);
-            hoja.setColumnWidth(4, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad
-                                                          // de carácter.
+            hoja.setColumnWidth(4, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad de carácter.
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(5);
-            celda.setCellValue(cita.getTituloRevista());
+            celda.setCellValue(cita.getNombreArticulo());
             hoja.autoSizeColumn(5);
+            hoja.setColumnWidth(5, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad de carácter.
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(6);
@@ -481,8 +481,7 @@ public class ArticuloReportExcel {
                     }
                 }
             } else {
-                // Si el autor no es UNSIS, no se aplica ningún formato
-                System.out.println("No se aplica formato para el autor no UNSIS: " + autor.getNombre1Autor());
+
             }
         }
 
@@ -535,7 +534,7 @@ public class ArticuloReportExcel {
                     String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
                             ? autor.getNombre2Autor().substring(0, 1) + "."
                             : "";
-                    return String.format("%s-%s, %s %s", apellidoPaterno, apellidoMaterno, inicialNombre1,
+                    return String.format("%s %s, %s %s", apellidoPaterno, apellidoMaterno, inicialNombre1,
                             inicialNombre2);
                 })
                 .collect(Collectors.joining(", "));

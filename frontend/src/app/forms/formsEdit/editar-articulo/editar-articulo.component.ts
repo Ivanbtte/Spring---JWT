@@ -26,6 +26,7 @@ export class EditarArticuloComponent implements OnInit {
   selectedInstitutoPublicacion: any;
   selectedInstitutoAutor: any;
   selectedTrimestre: any;
+
   autoresPorInstituto: any[][] = [];  // Lista de autores por instituto
   trimestres: any[] = [];
   idsAutores: number[] = []; // Variable para almacenar los IDs de autores UNSIS
@@ -43,41 +44,31 @@ export class EditarArticuloComponent implements OnInit {
   ngOnInit(): void {
     this.rolUsuario = this.loginService.getUserRole();
     this.cdRef.detectChanges(); // Forzar la detección de cambios
-
     // Captura el ID de la URL
     const id = this.route.snapshot.paramMap.get('id');
-
     if (id) {
       const articuloId = +id;
-
       // Obtener la lista de institutos
       this.articuloService.getInstitutos().subscribe(
         (institutos: any[]) => {
           this.institutosPublicacion = institutos;
-
           // Obtener información del artículo
           this.articuloService.getArticuloById(articuloId).subscribe(
             articulo => {
-              console.log('Datos del artículo:', articulo);
               this.articulo = articulo;
-
               // Asignar el instituto afiliado al artículo
               this.selectedInstitutoPublicacion = this.articulo?.instituto?.id || null;
               this.selectedTrimestre = this.articulo?.trimestre?.id_trimestre || null;
-
               // Formatear la fecha de publicación
               this.articulo.fecha_publicacion = this.formatDateForInput(this.articulo.fecha_publicacion);
-
               // Cargar los autores asociados al artículo
               this.autorService.getAutorByArticuloById(articuloId).subscribe(
                 autores => {
                   // Obtener investigadores y filtrarlos por coincidencia de id_autor
                   this.investigadorService.getInvestigadores().subscribe(
                     (investigadores: any[]) => {
-
                       // Crear una lista para los autores procesados
                       const autoresProcesados = autores.map((autor: any) => {
-
                         if (autor.autorUnsis) {
                           // Autor UNSIS: buscar en la lista de investigadores
                           const investigador = investigadores.find((inv: any) => inv.autor.id_autor === autor.id_autor);
@@ -111,13 +102,8 @@ export class EditarArticuloComponent implements OnInit {
                           };
                         }
                       });
-
-                      // Verifica los datos en consola
-                      console.log('Autores procesados:', autoresProcesados);
-
                       // Asignar a la variable que usa el HTML
                       this.investigadores = autoresProcesados;
-
                       // Pintar correctamente los campos en el HTML
                       this.investigadores.forEach((investigador, index) => {
                         if (investigador.autorUnsis) {
@@ -126,22 +112,18 @@ export class EditarArticuloComponent implements OnInit {
                       });
                     },
                     (error) => {
-                      console.error('Error al obtener los investigadores habilitados:', error);
                     }
                   );
                 },
                 error => {
-                  console.error('Error al obtener los autores:', error);
                 }
               );
             },
             error => {
-              console.error('Error al obtener el artículo:', error);
             }
           );
         },
         error => {
-          console.error('Error al obtener institutos', error);
         }
       );
 
@@ -151,7 +133,6 @@ export class EditarArticuloComponent implements OnInit {
           this.trimestres = data;
         },
         (error) => {
-          console.error('Error al obtener trimestres', error);
         }
       );
     }
@@ -196,6 +177,7 @@ export class EditarArticuloComponent implements OnInit {
 
   formatDateForInput(dateString: string): string {
     const date = new Date(dateString);
+    date.setDate(date.getDate() - 1); // Resta 1 día
     return date.toISOString().split('T')[0]; // Devuelve el formato YYYY-MM-DD
   }
 
@@ -313,8 +295,6 @@ export class EditarArticuloComponent implements OnInit {
 
   guardarAutorUnsis(idAutor: number, index: number) {
     const investigador = this.investigadores[index];
-    console.log('Instituto seleccionado:', investigador.instituto);
-    console.log('ID del autor seleccionado antes:', idAutor);
     // Verificar si el investigador ha seleccionado un autor UNSIS
     if (!investigador.autorUnsisSeleccionado) {
       Swal.fire('Error', 'Debe seleccionar un autor UNSIS antes de continuar', 'error');
@@ -322,7 +302,6 @@ export class EditarArticuloComponent implements OnInit {
     }
     // Extraer el id_autor del objeto autor seleccionado
     idAutor = idAutor;
-    console.log('ID del autor seleccionado después:', idAutor);
     // Verificar que el instituto y el autor hayan sido seleccionados
     if (!investigador.instituto || !idAutor) {
       Swal.fire('Error', 'Debe seleccionar un instituto y un autor antes de continuar', 'error');
@@ -334,7 +313,6 @@ export class EditarArticuloComponent implements OnInit {
     investigador.editable = false;
     investigador.mostrarGuardar = false;
 
-    console.log("ID de autores agregados: ", this.idsAutores);
   }
 
   agregarAutorNoUnsis(investigador: any, index: number) {
@@ -351,14 +329,12 @@ export class EditarArticuloComponent implements OnInit {
     };
     this.articuloService.agregarAutorNoUnsis(nuevoAutor).subscribe(
       response => {
-        console.log('Autor no UNSIS agregado:', response);
         investigador.id_autor = response.id_autor;
         this.idsAutores.push(response.id_autor);
         investigador.agregado = true;
         investigador.editable = false; // Bloquear campos después de guardar
         investigador.mostrarGuardar = false; // Ocultar botón de "Guardar cambios"
         // Lógica adicional si el autor ya existía y fue editado
-        console.log("ID de autores: ", this.idsAutores);
       },
       error => {
         console.error('Error al agregar autor no UNSIS:', error);
@@ -523,7 +499,6 @@ export class EditarArticuloComponent implements OnInit {
     };
     this.autorService.actualizarAutorNoUnsis(investigador.id_autor, autorActualizado).subscribe(
       response => {
-        console.log('Autor no UNSIS actualizado:', response);
         investigador.editable = false; // Bloquear scampos después de actualizar
         investigador.mostrarGuardar = false; // Ocultar botón de "Guardar cambios"
         Swal.fire('Éxito', 'Autor actualizado correctamente', 'success');
@@ -545,9 +520,7 @@ export class EditarArticuloComponent implements OnInit {
   }
 
   actualizarArticulo() {
-    if (!this.validarCampos()) {
-      return;
-    }
+
     // Verificar que haya al menos un autor registrado
     if (!this.validarRegistroAutores()) {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de actualizar la publicación.', 'error');
@@ -565,14 +538,13 @@ export class EditarArticuloComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
+        const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
+        fechAjustada.setDate(fechAjustada.getDate() + 1);
         // Verificar si el artículo tiene un archivo seleccionado para actualizar
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-              console.log('Archivo actualizado exitosamente', response);
-
               this.file = response.id;
-
               const articulo: Articulo = {
                 id_articulo: idarticulo,
                 tipoPublicacion: {
@@ -595,7 +567,7 @@ export class EditarArticuloComponent implements OnInit {
                   filePath: response.filePath,
                   fileType: response.fileType
                 },
-                fecha_publicacion: this.articulo.fecha_publicacion,
+                fecha_publicacion: fechAjustada,
                 titulo_revista: this.articulo.titulo_revista,
                 numero_revista: this.articulo.numero_revista,
                 volumen_revista: this.articulo.volumen_revista,
@@ -614,12 +586,9 @@ export class EditarArticuloComponent implements OnInit {
               this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
                 next: (response) => {
                   Swal.fire('Éxito', 'Artículo actualizado exitosamente', 'success');
-                  console.log("Autores a agregar: ", this.idsAutores);
-
                   this.idsAutores.forEach((autorId, index) => {
                     this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
                       response => {
-                        console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {
                           this.limpiarCampos();
                           this.router.navigate(['/inicio']);
@@ -632,13 +601,13 @@ export class EditarArticuloComponent implements OnInit {
                   });
                 },
                 error: (error) => {
-                  console.error('Error al actualizar el artículo', error);
+                  console.error('Error al actualizar el articulo', error);
                   Swal.fire('Error', 'Error al actualizar el artículo', 'error');
                 }
               });
             },
             error: (error) => {
-              console.error('Error al actualizar el archivo', error);
+              console.error('Error al actualizar el articulo', error);
               Swal.fire('Error', 'Error al actualizar el archivo', 'error');
             }
           });
@@ -650,9 +619,7 @@ export class EditarArticuloComponent implements OnInit {
   }
 
   actualizarCapituloLibro() {
-    if (!this.validarCap()) {
-      return;
-    }
+
     if (!this.validarRegistroAutores()) {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
@@ -669,11 +636,12 @@ export class EditarArticuloComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
+        const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
+        fechAjustada.setDate(fechAjustada.getDate() + 1);
         // Verificar si el artículo tiene un archivo seleccionado para actualizar
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-              console.log('Archivo actualizado exitosamente', response);
 
               this.file = response.id;
 
@@ -699,7 +667,7 @@ export class EditarArticuloComponent implements OnInit {
                   filePath: response.filePath,
                   fileType: response.fileType
                 },
-                fecha_publicacion: this.articulo.fecha_publicacion,
+                fecha_publicacion: fechAjustada,
                 nombre_capitulo: this.articulo.nombre_capitulo,
                 nombre_articulo: this.articulo.nombre_articulo,
                 editorial: this.articulo.editorial,
@@ -718,12 +686,10 @@ export class EditarArticuloComponent implements OnInit {
               this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
                 next: (response) => {
                   Swal.fire('Éxito', 'Capitulo de libro actualizado exitosamente', 'success');
-                  console.log("Autores a agregar: ", this.idsAutores);
 
                   this.idsAutores.forEach((autorId, index) => {
                     this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
                       response => {
-                        console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {
                           this.limpiarCampos();
                           this.router.navigate(['/inicio']);
@@ -754,9 +720,7 @@ export class EditarArticuloComponent implements OnInit {
   }
 
   actualizarLibro() {
-    if (!this.ValidarLibro()) {
-      return;
-    }
+
     if (!this.validarRegistroAutores()) {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
       return;
@@ -773,12 +737,12 @@ export class EditarArticuloComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
+        const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
+        fechAjustada.setDate(fechAjustada.getDate() + 1);
         // Verificar si el artículo tiene un archivo seleccionado para actualizar
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-              console.log('Archivo actualizado exitosamente', response);
-
               this.file = response.id;
 
               const articulo: Articulo = {
@@ -803,7 +767,7 @@ export class EditarArticuloComponent implements OnInit {
                   filePath: response.filePath,
                   fileType: response.fileType
                 },
-                fecha_publicacion: this.articulo.fecha_publicacion,
+                fecha_publicacion: fechAjustada,
                 nombre_articulo: this.articulo.nombre_articulo,
                 editorial: this.articulo.editorial,
                 isbn_digital: this.articulo.isbn_digital,
@@ -819,12 +783,10 @@ export class EditarArticuloComponent implements OnInit {
               this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
                 next: (response) => {
                   Swal.fire('Éxito', 'Libro actualizado exitosamente', 'success');
-                  console.log("Autores a agregar: ", this.idsAutores);
 
                   this.idsAutores.forEach((autorId, index) => {
                     this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
                       response => {
-                        console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {
                           this.limpiarCampos();
                           this.router.navigate(['/inicio']);
@@ -873,7 +835,9 @@ export class EditarArticuloComponent implements OnInit {
     this.editorialLibro = '';
   }
 
-  cancelar(): void { }
+  cancelar(): void { 
+    this.router.navigate(['/consultar-publicacion']);
+   }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -920,7 +884,7 @@ export class EditarArticuloComponent implements OnInit {
     // Asigna el valor limpio de nuevo al campo de entrada
     inputElement.value = valor;
     // Actualiza el modelo ngModel si es necesario
-//    this[field] = valor;
+    //    this[field] = valor;
   }
 
   onKeyPressNumber(event: KeyboardEvent): void {
