@@ -187,7 +187,6 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articuloDto.getDoi(),
                                 articuloDto.getIsbn_impreso(),
                                 articuloDto.getIsbn_digital(),
-                                new HashSet<>(),
                                 articuloDto.getNombre_articulo(),
                                 articuloDto.getEditorial(),
                                 articuloDto.getNombre_capitulo(),

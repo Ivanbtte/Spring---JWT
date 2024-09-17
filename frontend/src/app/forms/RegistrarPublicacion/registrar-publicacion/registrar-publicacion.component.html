@@ -174,7 +174,7 @@
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
-        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" #fileInput />
       </div>
       <div *ngIf="fileName" class="file-name">
         Archivo seleccionado: {{ fileName }}

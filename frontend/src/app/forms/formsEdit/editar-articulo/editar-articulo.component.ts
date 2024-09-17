@@ -617,7 +617,7 @@ export class EditarArticuloComponent implements OnInit {
                   console.log("Autores a agregar: ", this.idsAutores);
 
                   this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
+                    this.articuloService.agregarAutorArticulo(idarticulo, autorId,"ORGANIZADOR").subscribe(
                       response => {
                         console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {
@@ -721,7 +721,7 @@ export class EditarArticuloComponent implements OnInit {
                   console.log("Autores a agregar: ", this.idsAutores);
 
                   this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
+                    this.articuloService.agregarAutorArticulo(idarticulo, autorId,"ORGANIZADOR").subscribe(
                       response => {
                         console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {
@@ -822,7 +822,7 @@ export class EditarArticuloComponent implements OnInit {
                   console.log("Autores a agregar: ", this.idsAutores);
 
                   this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
+                    this.articuloService.agregarAutorArticulo(idarticulo, autorId,"ORGANIZADOR").subscribe(
                       response => {
                         console.log(`Autor ${autorId} agregado al artículo ${idarticulo}`, response);
                         if (index === this.idsAutores.length - 1) {

@@ -4,9 +4,12 @@ import java.text.Normalizer;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,9 +17,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -78,10 +80,9 @@ public class Articulos {
     @Column
     private String isbn_digital;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "articulo_autor", joinColumns = @JoinColumn(name = "id_articulo"), inverseJoinColumns = @JoinColumn(name = "id_autor"))
-
-    private Set<Autor> autores = new HashSet<>();
+    @OneToMany(mappedBy = "articulo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Articulo_Autor> autoresArticulos = new HashSet<>();
 
     @Column
     private String nombre_articulo;
@@ -119,11 +120,11 @@ public class Articulos {
     // Constructor con todos los parámetros
     public Articulos(Long id_articulo, Tipo_Publicacion tipo_Publicacion, Instituto instituto, Date fecha_publicacion,
             String titulo_revista, Integer numero_revista, String volumen_revista, Integer pag_inicio,
-            Integer pag_final, String doi, String isbn_impreso, String isbn_digital, Set<Autor> autores,
-            String nombre_articulo, String editorial, String nombre_capitulo, String observaciones_directores,
-            String observaciones_gestion, String indice_miar, boolean compilado, Trimestre trimestre,
-            boolean financiamiento_prodep, FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion,
-            Integer estatus) {
+            Integer pag_final, String doi, String isbn_impreso, String isbn_digital, String nombre_articulo,
+            String editorial, String nombre_capitulo, String observaciones_directores, String observaciones_gestion,
+            String indice_miar, boolean compilado, Trimestre trimestre, boolean financiamiento_prodep,
+            FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion, Integer estatus) {
+
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
         this.instituto = instituto;
@@ -136,7 +137,6 @@ public class Articulos {
         this.doi = doi;
         this.isbn_impreso = isbn_impreso;
         this.isbn_digital = isbn_digital;
-        this.autores = autores;
         this.nombre_articulo = nombre_articulo;
         this.editorial = editorial;
         this.nombre_capitulo = nombre_capitulo;
@@ -162,10 +162,23 @@ public class Articulos {
         }
         // Normalizar acentos, convertir a minúsculas y eliminar espacios adicionales
         return Normalizer.normalize(nombre_articulo, Normalizer.Form.NFD)
-                         .replaceAll("\\p{M}", "")
-                         .toLowerCase()
-                         .replaceAll("\\s+", " ")  // Reemplaza múltiples espacios por uno solo
-                         .trim();  // Elimina espacios al inicio y al final
+                .replaceAll("\\p{M}", "")
+                .toLowerCase()
+                .replaceAll("\\s+", " ") // Reemplaza múltiples espacios por uno solo
+                .trim(); // Elimina espacios al inicio y al final
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Articulos articulos = (Articulos) o;
+        return id_articulo != null && id_articulo.equals(articulos.id_articulo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id_articulo);
     }
 
 }
