@@ -45,9 +45,9 @@ public class ArticuloServiceImpl implements ArticuloService {
         @Autowired
         private TrimestreDao trimestreDao;
         @Autowired
-        private InvestigadorDao investigadorDao;
-        @Autowired
         private FileMetadataRepository fileMetadataRepository;
+        @Autowired
+        private InvestigadorDao investigadorDao;
         @Autowired
         private EmailService emailService;
 
@@ -239,6 +239,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                 Long idInstituto = (Long) firstResult[7];
                 Long idTipoPublicacion = (Long) firstResult[8];
                 Long idTrimestre = (Long) firstResult[9];
+                Long idFileMetadata = (Long) firstResult[29];
 
                 articulo.setNombre_articulo((String) firstResult[15]);
                 articulo.setEditorial((String) firstResult[11]);
@@ -255,8 +256,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                 Tipo_Publicacion tipoPublicacion = tipoPublicacionDao.findById(idTipoPublicacion)
                                 .orElseThrow(() -> new ResourceNotFoundException("Tipo_Publicacion not found"));
                 Trimestre trimestre = trimestreDao.findById(idTrimestre)
-                                .orElseThrow(() -> new ResourceNotFoundException("Trimestre not found")); // Buscar el
-                                                                                                          // trimestre
+                                .orElseThrow(() -> new ResourceNotFoundException("Trimestre not found"));
+                FileMetadata fileMetadata = fileMetadataRepository.findById(idFileMetadata)
+                                .orElseThrow(() -> new ResourceNotFoundException("Archivo not found"));
 
                 articulo.setInstituto(instituto);
                 articulo.setTipo_Publicacion(tipoPublicacion);
@@ -286,6 +288,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                         return autorDto;
                 }).collect(Collectors.toList());
 
+                String rolAutor = (String) firstResult[30];
+
                 return new CitaApaDto(
                                 articulo.getId_articulo(),
                                 tipoPublicacionDto.getDescripcion_publicacion_tipo(),
@@ -308,7 +312,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 articulo.getIndice_miar(),
                                 articulo.isCompilado(),
                                 articulo.isFinanciamiento_prodep(),
-                                trimestreDto);
+                                trimestreDto,
+                                fileMetadata.getFileName(),
+                                rolAutor);
         }
 
         public List<CitaApaDto> getAllCitasApa(Long idArticulo, Long institutoId, Long autorId, String fechaInicio,
@@ -351,6 +357,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 Long idInstituto = (Long) result[18];
                                 Long idTipoPublicacion = (Long) result[19];
                                 Long idTrimestre = (Long) result[20];
+                                Long idFileMetadata = (Long) result[29]; //Agregado apenas
 
                                 Instituto instituto = institutoDao.findById(idInstituto)
                                                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -361,6 +368,11 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 Trimestre trimestre = trimestreDao.findById(idTrimestre)
                                                 .orElseThrow(() -> new ResourceNotFoundException(
                                                                 "Trimestre no encontrado"));
+                                FileMetadata fileMetadata = fileMetadataRepository.findById(idFileMetadata)
+                                                .orElseThrow(() -> new ResourceNotFoundException("Archivo not found"));
+                                                //Agregado apenas
+
+                                String rolAutor = (String) result[30];//Agregado apenas
 
                                 articulo.setInstituto(instituto);
                                 articulo.setTipo_Publicacion(tipoPublicacion);
@@ -401,7 +413,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.getIndice_miar(),
                                                 articulo.isCompilado(),
                                                 articulo.isFinanciamiento_prodep(),
-                                                trimestreDto);
+                                                trimestreDto,
+                                                fileMetadata.getFileName(),
+                                                rolAutor);
 
                                 articulosMap.put(articuloId, citaApaDto);
                         }

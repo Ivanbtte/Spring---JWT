@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import java.util.Date;
 import java.util.List;
 
+import com.unsis.spring.app.Entity.BD1.FileMetadata;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,4 +35,6 @@ public class CitaApaDto {
     private Boolean compilado;
     private Boolean financiamientoProdep;
     private TrimestreDto trimestre;
+    private String fileMetadata;
+    private String rolAutor;
 }
