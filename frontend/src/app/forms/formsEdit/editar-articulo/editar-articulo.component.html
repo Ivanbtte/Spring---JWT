@@ -235,7 +235,7 @@
                     <div class="form-group">
                         <label for="rolInvestigador{{ i }}">Rol del Investigador</label>
                         <select id="rolInvestigador{{ i }}" class="form-control" [(ngModel)]="investigador.rol"
-                            name="rolInvestigador{{ i }}" [disabled]="investigador.agregado">
+                            name="rolInvestigador{{ i }}" [disabled]="!investigador.editable && investigador.agregado">
                             <option value="Autor">Autor</option>
                             <option value="Editor">Editor</option>
                             <option value="Coordinador">Coordinador</option>
