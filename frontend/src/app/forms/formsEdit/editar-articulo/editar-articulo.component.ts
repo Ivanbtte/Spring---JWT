@@ -520,15 +520,16 @@ export class EditarArticuloComponent implements OnInit {
   }
 
   actualizarArticulo() {
-
     // Verificar que haya al menos un autor registrado
     if (!this.validarRegistroAutores()) {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de actualizar la publicación.', 'error');
       return;
     }
+
+    // Confirmar si desea continuar con la actualización
     Swal.fire({
       title: '¿Está seguro?',
-      text: "Está a punto de actualizar el Artículo. ¿Desea continuar?",
+      text: 'Está a punto de actualizar el Artículo. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -540,79 +541,91 @@ export class EditarArticuloComponent implements OnInit {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
         const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
         fechAjustada.setDate(fechAjustada.getDate() + 1);
-        // Verificar si el artículo tiene un archivo seleccionado para actualizar
+
+        // Función para crear el objeto artículo
+        const crearArticulo = (fileMetadata: any) => {
+          return {
+            id_articulo: idarticulo,
+            tipoPublicacion: {
+              id_publicacion_tipo: 1,
+              nombre: 'Articulo'
+            },
+            instituto: {
+              id: this.selectedInstitutoPublicacion,
+              nombre: ''
+            },
+            trimestre: {
+              id_trimestre: this.selectedTrimestre,
+              nombre: '',
+              fecha_inicio: new Date('2024-05-12'),
+              fecha_fin: new Date('2024-08-12')
+            },
+            fileMetadata: {
+              id: fileMetadata.id,
+              fileName: fileMetadata.fileName,
+              filePath: fileMetadata.filePath,
+              fileType: fileMetadata.fileType
+            },
+            fecha_publicacion: fechAjustada,
+            titulo_revista: this.articulo.titulo_revista,
+            numero_revista: this.articulo.numero_revista,
+            volumen_revista: this.articulo.volumen_revista,
+            pag_inicio: this.articulo.pag_inicio,
+            pag_final: this.articulo.pag_final,
+            doi: this.articulo.doi,
+            nombre_articulo: this.articulo.nombre_articulo,
+            indice_miar: this.articulo.indice_miar,
+            compilado: this.articulo.compilado,
+            financiamiento_prodep: this.articulo.financiamiento_prodep,
+            aceptado_director: false,
+            aceptado_gestion: false,
+            estatus: 1
+          };
+        };
+
+        // Actualizar artículo en base a la existencia de un archivo
+        const actualizarArticuloConAutores = (fileMetadata: any) => {
+          const articulo = crearArticulo(fileMetadata);
+          this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
+            next: () => {
+              // Actualizamos los autores después del artículo
+              let autoresActualizados = this.idsAutores.map((autorId, index) => {
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+              });
+
+              // Cuando todas las promesas se resuelvan, redirigimos
+              Promise.all(autoresActualizados)
+                .then(() => {
+                  Swal.fire('Éxito', 'Artículo y autores actualizados exitosamente', 'success');
+                  this.limpiarCampos();
+                  this.router.navigate(['/consultar-publicacion']); // Redirigir después de actualizar todo
+                })
+                .catch((error) => {
+                  console.error('Error al agregar los autores', error);
+                  Swal.fire('Error', 'Error al actualizar los autores', 'error');
+                });
+            },
+            error: (error) => {
+              console.error('Error al actualizar el artículo', error);
+              Swal.fire('Error', 'Error al actualizar el artículo', 'error');
+            }
+          });
+        };
+
+        // Si hay un archivo seleccionado, lo actualizamos
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-              this.file = response.id;
-              const articulo: Articulo = {
-                id_articulo: idarticulo,
-                tipoPublicacion: {
-                  id_publicacion_tipo: 1,
-                  nombre: 'Articulo'
-                },
-                instituto: {
-                  id: this.selectedInstitutoPublicacion,
-                  nombre: ''
-                },
-                trimestre: {
-                  id_trimestre: this.selectedTrimestre,
-                  nombre: '',
-                  fecha_inicio: new Date('2024-05-12'),
-                  fecha_fin: new Date('2024-08-12')
-                },
-                fileMetadata: {
-                  id: this.file,
-                  fileName: this.articulo.file.name,
-                  filePath: response.filePath,
-                  fileType: response.fileType
-                },
-                fecha_publicacion: fechAjustada,
-                titulo_revista: this.articulo.titulo_revista,
-                numero_revista: this.articulo.numero_revista,
-                volumen_revista: this.articulo.volumen_revista,
-                pag_inicio: this.articulo.pag_inicio,
-                pag_final: this.articulo.pag_final,
-                doi: this.articulo.doi,
-                nombre_articulo: this.articulo.nombre_articulo,
-                indice_miar: this.articulo.indice_miar,
-                compilado: this.articulo.compilado,
-                financiamiento_prodep: this.articulo.financiamiento_prodep,
-                aceptado_director: false,
-                aceptado_gestion: false,
-                estatus: 1
-              };
-
-              this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
-                next: (response) => {
-                  Swal.fire('Éxito', 'Artículo actualizado exitosamente', 'success');
-                  this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
-                      response => {
-                        if (index === this.idsAutores.length - 1) {
-                          this.limpiarCampos();
-                          this.router.navigate(['/inicio']);
-                        }
-                      },
-                      error => {
-                        console.error(`Error al agregar autor ${autorId} al artículo ${idarticulo}`, error);
-                      }
-                    );
-                  });
-                },
-                error: (error) => {
-                  console.error('Error al actualizar el articulo', error);
-                  Swal.fire('Error', 'Error al actualizar el artículo', 'error');
-                }
-              });
+              actualizarArticuloConAutores(response); // Llamamos a la función con el nuevo archivo
             },
             error: (error) => {
-              console.error('Error al actualizar el articulo', error);
+              console.error('Error al actualizar el archivo', error);
               Swal.fire('Error', 'Error al actualizar el archivo', 'error');
             }
           });
         } else {
-          Swal.fire('Error', 'No hay archivo para actualizar', 'error');
+          // Si no hay archivo, conservamos los metadatos existentes
+          actualizarArticuloConAutores(this.articulo.fileMetadata);
         }
       }
     });
@@ -620,92 +633,98 @@ export class EditarArticuloComponent implements OnInit {
 
   actualizarCapituloLibro() {
 
+    // Verificar que haya al menos un autor registrado
     if (!this.validarRegistroAutores()) {
-      Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
+      Swal.fire('Error', 'Debe registrar al menos un autor antes de actualizar la publicación.', 'error');
       return;
     }
+
+    // Confirmar si desea continuar con la actualización
     Swal.fire({
       title: '¿Está seguro?',
-      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      text: 'Está a punto de actualizar el capítulo de libro. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, registrar',
+      confirmButtonText: 'Sí, actualizar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
         const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
         fechAjustada.setDate(fechAjustada.getDate() + 1);
-        // Verificar si el artículo tiene un archivo seleccionado para actualizar
+
+        // Función para crear el objeto del capítulo de libro
+        const crearCapitulo = (fileMetadata: any) => {
+          return {
+            id_articulo: idarticulo,
+            tipoPublicacion: {
+              id_publicacion_tipo: 2,
+              nombre: 'Capítulo de libro'
+            },
+            instituto: {
+              id: this.selectedInstitutoPublicacion,
+              nombre: ''
+            },
+            trimestre: {
+              id_trimestre: this.selectedTrimestre,
+              nombre: '',
+              fecha_inicio: new Date('2024-05-12'),
+              fecha_fin: new Date('2024-08-12')
+            },
+            fileMetadata: fileMetadata,
+            fecha_publicacion: fechAjustada,
+            nombre_capitulo: this.articulo.nombre_capitulo,
+            nombre_articulo: this.articulo.nombre_articulo,
+            editorial: this.articulo.editorial,
+            pag_inicio: this.articulo.pag_inicio,
+            pag_final: this.articulo.pag_final,
+            isbn_digital: this.articulo.isbn_digital,
+            isbn_impreso: this.articulo.isbn_impreso,
+            indice_miar: this.articulo.indice_miar,
+            compilado: this.articulo.compilado,
+            financiamiento_prodep: this.articulo.financiamiento_prodep,
+            aceptado_director: false,
+            aceptado_gestion: false,
+            estatus: 1
+          };
+        };
+
+        // Función para actualizar el capítulo de libro con los autores
+        const actualizarCapituloConAutores = (fileMetadata: any) => {
+          const articulo = crearCapitulo(fileMetadata);
+          this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
+            next: () => {
+              // Actualizamos los autores después del artículo
+              let autoresActualizados = this.idsAutores.map((autorId, index) => {
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+              });
+
+              // Cuando todas las promesas se resuelvan, redirigimos
+              Promise.all(autoresActualizados)
+                .then(() => {
+                  Swal.fire('Éxito', 'Capítulo de libro y autores actualizados exitosamente', 'success');
+                  this.limpiarCampos();
+                  this.router.navigate(['/consultar-publicacion']); // Redirigir después de actualizar todo
+                })
+                .catch((error) => {
+                  console.error('Error al agregar los autores', error);
+                  Swal.fire('Error', 'Error al actualizar los autores', 'error');
+                });
+            },
+            error: (error) => {
+              console.error('Error al actualizar el capítulo de libro', error);
+              Swal.fire('Error', 'Error al actualizar el capítulo de libro', 'error');
+            }
+          });
+        };
+
+        // Si hay un archivo seleccionado, lo actualizamos
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-
-              this.file = response.id;
-
-              const articulo: Articulo = {
-                id_articulo: idarticulo,
-                tipoPublicacion: {
-                  id_publicacion_tipo: 2,
-                  nombre: 'Capitulo de libro'
-                },
-                instituto: {
-                  id: this.selectedInstitutoPublicacion,
-                  nombre: ''
-                },
-                trimestre: {
-                  id_trimestre: this.selectedTrimestre,
-                  nombre: '',
-                  fecha_inicio: new Date('2024-05-12'),
-                  fecha_fin: new Date('2024-08-12')
-                },
-                fileMetadata: {
-                  id: this.file,
-                  fileName: this.articulo.file.name,
-                  filePath: response.filePath,
-                  fileType: response.fileType
-                },
-                fecha_publicacion: fechAjustada,
-                nombre_capitulo: this.articulo.nombre_capitulo,
-                nombre_articulo: this.articulo.nombre_articulo,
-                editorial: this.articulo.editorial,
-                pag_inicio: this.articulo.pag_inicio,
-                pag_final: this.articulo.pag_final,
-                isbn_digital: this.articulo.isbn_digital,
-                isbn_impreso: this.articulo.isbn_impreso,
-                indice_miar: this.articulo.indice_miar,
-                compilado: this.articulo.compilado,
-                financiamiento_prodep: this.articulo.financiamiento_prodep,
-                aceptado_director: false,
-                aceptado_gestion: false,
-                estatus: 1
-              };
-
-              this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
-                next: (response) => {
-                  Swal.fire('Éxito', 'Capitulo de libro actualizado exitosamente', 'success');
-
-                  this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
-                      response => {
-                        if (index === this.idsAutores.length - 1) {
-                          this.limpiarCampos();
-                          this.router.navigate(['/inicio']);
-                        }
-                      },
-                      error => {
-                        console.error(`Error al agregar autor ${autorId} al artículo ${idarticulo}`, error);
-                      }
-                    );
-                  });
-                },
-                error: (error) => {
-                  console.error('Error al actualizar el capitulo de libro', error);
-                  Swal.fire('Error', 'Error al actualizar el capitulo de libro', 'error');
-                }
-              });
+              actualizarCapituloConAutores(response); // Llamamos a la función con el nuevo archivo
             },
             error: (error) => {
               console.error('Error al actualizar el archivo', error);
@@ -713,7 +732,8 @@ export class EditarArticuloComponent implements OnInit {
             }
           });
         } else {
-          Swal.fire('Error', 'No hay archivo para actualizar', 'error');
+          // Si no hay archivo, conservamos los metadatos existentes
+          actualizarCapituloConAutores(this.articulo.fileMetadata);
         }
       }
     });
@@ -721,88 +741,98 @@ export class EditarArticuloComponent implements OnInit {
 
   actualizarLibro() {
 
+    // Verificar que haya al menos un autor registrado
     if (!this.validarRegistroAutores()) {
-      Swal.fire('Error', 'Debe registrar al menos un autor antes de registrar la publicación.', 'error');
+      Swal.fire('Error', 'Debe registrar al menos un autor antes de actualizar la publicación.', 'error');
       return;
     }
+
+    // Confirmar si desea continuar con la actualización
     Swal.fire({
       title: '¿Está seguro?',
-      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      text: 'Está a punto de actualizar el libro. ¿Desea continuar?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, registrar',
+      confirmButtonText: 'Sí, actualizar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         const idarticulo = Number(this.route.snapshot.paramMap.get('id'));
         const fechAjustada = this.articulo.fecha_publicacion ? new Date(this.articulo.fecha_publicacion) : new Date();
         fechAjustada.setDate(fechAjustada.getDate() + 1);
-        // Verificar si el artículo tiene un archivo seleccionado para actualizar
+
+        // Función para actualizar el libro con los metadatos del archivo
+        const actualizarArticulo = (fileMetadata: any) => {
+          const articulo: Articulo = {
+            id_articulo: idarticulo,
+            tipoPublicacion: {
+              id_publicacion_tipo: 3,
+              nombre: 'Libro'
+            },
+            instituto: {
+              id: this.selectedInstitutoPublicacion,
+              nombre: ''
+            },
+            trimestre: {
+              id_trimestre: this.selectedTrimestre,
+              nombre: '',
+              fecha_inicio: new Date('2024-05-12'),
+              fecha_fin: new Date('2024-08-12')
+            },
+            fileMetadata: fileMetadata,
+            fecha_publicacion: fechAjustada,
+            nombre_articulo: this.articulo.nombre_articulo,
+            editorial: this.articulo.editorial,
+            isbn_digital: this.articulo.isbn_digital,
+            isbn_impreso: this.articulo.isbn_impreso,
+            indice_miar: this.articulo.indice_miar,
+            compilado: this.articulo.compilado,
+            financiamiento_prodep: this.articulo.financiamiento_prodep,
+            aceptado_director: false,
+            aceptado_gestion: false,
+            estatus: 1
+          };
+
+          this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
+            next: () => {
+              Swal.fire('Éxito', 'Libro actualizado exitosamente', 'success');
+
+              // Actualizar los autores
+              const actualizarAutores = this.idsAutores.map((autorId, index) => {
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+              });
+
+              // Esperar a que todas las promesas se resuelvan
+              Promise.all(actualizarAutores)
+                .then(() => {
+                  this.limpiarCampos();
+                  this.router.navigate(['/consultar-publicacion']); // Redirigir después de actualizar todo
+                })
+                .catch((error) => {
+                  console.error('Error al agregar los autores', error);
+                  Swal.fire('Error', 'Error al actualizar los autores', 'error');
+                });
+            },
+            error: (error) => {
+              console.error('Error al actualizar el libro', error);
+              Swal.fire('Error', 'Error al actualizar el libro', 'error');
+            }
+          });
+        };
+
+        // Verificar si el libro tiene un archivo seleccionado para actualizar
         if (this.articulo && this.articulo.file) {
           this.fileService.updateFile(this.articulo.fileMetadata.id, this.articulo.file).subscribe({
             next: (response) => {
-              this.file = response.id;
-
-              const articulo: Articulo = {
-                id_articulo: idarticulo,
-                tipoPublicacion: {
-                  id_publicacion_tipo: 3,
-                  nombre: 'Libro'
-                },
-                instituto: {
-                  id: this.selectedInstitutoPublicacion,
-                  nombre: ''
-                },
-                trimestre: {
-                  id_trimestre: this.selectedTrimestre,
-                  nombre: '',
-                  fecha_inicio: new Date('2024-05-12'),
-                  fecha_fin: new Date('2024-08-12')
-                },
-                fileMetadata: {
-                  id: this.file,
-                  fileName: this.articulo.file.name,
-                  filePath: response.filePath,
-                  fileType: response.fileType
-                },
-                fecha_publicacion: fechAjustada,
-                nombre_articulo: this.articulo.nombre_articulo,
-                editorial: this.articulo.editorial,
-                isbn_digital: this.articulo.isbn_digital,
-                isbn_impreso: this.articulo.isbn_impreso,
-                indice_miar: this.articulo.indice_miar,
-                compilado: this.articulo.compilado,
-                financiamiento_prodep: this.articulo.financiamiento_prodep,
-                aceptado_director: false,
-                aceptado_gestion: false,
-                estatus: 1
+              const fileMetadata = {
+                id: response.id,
+                fileName: this.articulo.file.name,
+                filePath: response.filePath,
+                fileType: response.fileType
               };
-
-              this.articuloService.actualizarArticulo(idarticulo, articulo).subscribe({
-                next: (response) => {
-                  Swal.fire('Éxito', 'Libro actualizado exitosamente', 'success');
-
-                  this.idsAutores.forEach((autorId, index) => {
-                    this.articuloService.agregarAutorArticulo(idarticulo, autorId).subscribe(
-                      response => {
-                        if (index === this.idsAutores.length - 1) {
-                          this.limpiarCampos();
-                          this.router.navigate(['/inicio']);
-                        }
-                      },
-                      error => {
-                        console.error(`Error al agregar autor ${autorId} al artículo ${idarticulo}`, error);
-                      }
-                    );
-                  });
-                },
-                error: (error) => {
-                  console.error('Error al actualizar el libro', error);
-                  Swal.fire('Error', 'Error al actualizar el libro', 'error');
-                }
-              });
+              actualizarArticulo(fileMetadata); // Actualizar el libro con el nuevo archivo
             },
             error: (error) => {
               console.error('Error al actualizar el archivo', error);
@@ -810,7 +840,8 @@ export class EditarArticuloComponent implements OnInit {
             }
           });
         } else {
-          Swal.fire('Error', 'No hay archivo para actualizar', 'error');
+          // Si no hay archivo seleccionado, usar los metadatos existentes
+          actualizarArticulo(this.articulo.fileMetadata);
         }
       }
     });
@@ -835,9 +866,9 @@ export class EditarArticuloComponent implements OnInit {
     this.editorialLibro = '';
   }
 
-  cancelar(): void { 
+  cancelar(): void {
     this.router.navigate(['/consultar-publicacion']);
-   }
+  }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -897,4 +928,5 @@ export class EditarArticuloComponent implements OnInit {
       event.preventDefault();
     }
   }
+
 }
