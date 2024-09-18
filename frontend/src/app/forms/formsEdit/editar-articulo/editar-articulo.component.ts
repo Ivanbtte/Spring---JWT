@@ -76,6 +76,7 @@ export class EditarArticuloComponent implements OnInit {
                             autorUnsis: true,
                             autorUnsisSeleccionado: investigador ? investigador.autor.id_autor : null,
                             instituto: investigador ? investigador.instituto.id : null,
+                            rol: autor.rol_autor || 'Autor', // Asignar el rol del autor
                             primerNombre: '',
                             segundoNombre: '',
                             apellidoPaterno: '',
@@ -91,6 +92,7 @@ export class EditarArticuloComponent implements OnInit {
                             autorUnsis: false,
                             autorUnsisSeleccionado: null,
                             instituto: null,
+                            rol: autor.rol_autor || 'Autor', // Asignar el rol del autor
                             primerNombre: autor.nombre1Autor,
                             segundoNombre: autor.nombre2Autor,
                             apellidoPaterno: autor.apellidoPaternoAutor,
@@ -702,7 +704,8 @@ export class EditarArticuloComponent implements OnInit {
             next: () => {
               // Actualizamos los autores después del artículo
               let autoresActualizados = this.idsAutores.map((autorId, index) => {
-                return this.articuloService.agregarAutorArticulo(idarticulo, autorId, "Autor").toPromise(); // Convertimos las llamadas a promesas
+                const investigador = this.investigadores[index]; // Obtener el investigador correspondiente
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId, investigador.rol).toPromise(); // Convertimos las llamadas a promesas
               });
 
               // Cuando todas las promesas se resuelvan, redirigimos
