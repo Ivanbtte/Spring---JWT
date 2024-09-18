@@ -368,11 +368,11 @@ export class EditarArticuloComponent implements OnInit {
 
   validarCampos(): boolean {
     // Validar campos obligatorios
-    if (!this.titulo.trim()) {
+    if (!this.articulo.nombre_articulo.trim()) {
       Swal.fire('Error', 'El título del artículo es obligatorio', 'error');
       return false;
     }
-    if (!this.nombreRevista.trim()) {
+    if (!this.articulo.titulo_revista.trim()) {
       Swal.fire('Error', 'El nombre de la revista es obligatorio', 'error');
       return false;
     }
@@ -380,7 +380,7 @@ export class EditarArticuloComponent implements OnInit {
       Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
       return false;
     }
-    if (!this.fechaPublicacion) {
+    if (!this.articulo.fecha_publicacion) {
       Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
       return false;
     }
@@ -388,28 +388,28 @@ export class EditarArticuloComponent implements OnInit {
       Swal.fire('Error', 'El trimestre es obligatorio', 'error');
       return false;
     }
-    const numVolumen = Number(this.numVolumen);
+    const numVolumen = Number(this.articulo.volumen_revista);
     if (numVolumen <= 0 || !Number.isInteger(numVolumen)) {
       Swal.fire('Error', 'El número de volumen debe ser un número positivo', 'error');
       return false;
     }
-    if (!this.numEmision || this.numEmision <= 0) {
+    if (!this.articulo.numero_revista || this.articulo.numero_revista <= 0) {
       Swal.fire('Error', 'El número de emisión debe ser un número positivo', 'error');
       return false;
     }
-    if (!this.paginaInicio || this.paginaInicio <= 0) {
+    if (!this.articulo.pag_inicio || this.articulo.pag_inicio <= 0) {
       Swal.fire('Error', 'La página de inicio debe ser un número positivo', 'error');
       return false;
     }
-    if (!this.paginaFin || this.paginaFin <= this.paginaInicio) {
+    if (!this.articulo.pag_final || this.articulo.pag_final <= this.articulo.pag_inicio) {
       Swal.fire('Error', 'La página final debe ser mayor a la página de inicio', 'error');
       return false;
     }
-    if (!this.doi.trim()) {
+    if (!this.articulo.doi.trim()) {
       Swal.fire('Error', 'El DOI es obligatorio', 'error');
       return false;
     }
-
+  
     // Validar investigadores no UNSIS
     for (const investigador of this.investigadores) {
       if (!investigador.autorUnsis) {
@@ -423,39 +423,40 @@ export class EditarArticuloComponent implements OnInit {
         }
       }
     }
-
+  
     return true;
   }
+  
 
   ValidarLibro(): boolean {
     // Validar campos obligatorios
-    if (!this.tituloLibro || !this.tituloLibro.trim()) {
+    if (!this.articulo.nombre_articulo || !this.articulo.nombre_articulo.trim()) {
       Swal.fire('Error', 'El título del libro es obligatorio', 'error');
       return false;
     }
-
-    if (!this.editorialLibro || !this.editorialLibro.trim()) {
+  
+    if (!this.articulo.editorial || !this.articulo.editorial.trim()) {
       Swal.fire('Error', 'La editorial del libro es obligatoria', 'error');
       return false;
     }
-
+  
     if (!this.selectedInstitutoPublicacion) {
       Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
       return false;
     }
-
+  
     if (!this.selectedTrimestre) {
       Swal.fire('Error', 'El trimestre es obligatorio', 'error');
       return false;
     }
-
-    if (!this.fechaPublicacion) {
+  
+    if (!this.articulo.fecha_publicacion) {
       Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
       return false;
     }
-
+  
     // Validar que al menos uno de los ISBN esté presente
-    if (!this.isbnImpreso && !this.isbnDigital) {
+    if (!this.articulo.isbn_impreso && !this.articulo.isbn_digital) {
       Swal.fire('Error', 'Debe proporcionar al menos un ISBN (impreso o digital)', 'error');
       return false;
     }
@@ -466,17 +467,18 @@ export class EditarArticuloComponent implements OnInit {
     }
     return true;
   }
+  
 
   validarCap(): boolean {
-    if (!this.tituloCapitulo) {
+    if (!this.articulo.nombre_capitulo) {
       Swal.fire('Error', 'El título del capítulo es obligatorio.', 'error');
       return false;
     }
-    if (!this.tituloLibro) {
+    if (!this.articulo.nombre_articulo) {
       Swal.fire('Error', 'El título del libro es obligatorio.', 'error');
       return false;
     }
-    if (!this.editorialCapitulo) {
+    if (!this.articulo.editorial) {
       Swal.fire('Error', 'La editorial es obligatoria.', 'error');
       return false;
     }
@@ -488,26 +490,25 @@ export class EditarArticuloComponent implements OnInit {
       Swal.fire('Error', 'El trimestre es obligatorio.', 'error');
       return false;
     }
-    if (!this.fechaPublicacion) {
+    if (!this.articulo.fecha_publicacion) {
       Swal.fire('Error', 'La fecha de publicación es obligatoria.', 'error');
       return false;
     }
-    if (this.paginaFin < this.paginaInicio) {
+    if (this.articulo.pag_final < this.articulo.pag_inicio) {
       Swal.fire('Error', 'La página final debe ser mayor o igual a la página de inicio.', 'error');
       return false;
     }
-    if (!this.isbnImpreso && !this.isbnDigital) {
+    if (!this.articulo.isbn_impreso && !this.articulo.isbn_digital) {
       Swal.fire('Error', 'Debes proporcionar al menos un ISBN (impreso o digital).', 'error');
       return false;
     }
-    // Validar que un archivo PDF haya sido seleccionado
     if (!this.renamedFile) {
       Swal.fire('Error', 'Debe subir su evidencia en PDF antes de registrar la publicación', 'error');
       return false;
     }
     return true;
   }
-
+  
   actualizarAutorNoUnsis(investigador: any, index: number) {
     if (!investigador.primerNombre || !investigador.apellidoPaterno) {
       Swal.fire('Error', 'El primer nombre y el apellido paterno son obligatorios', 'error');
@@ -545,12 +546,13 @@ export class EditarArticuloComponent implements OnInit {
   }
 
   actualizarArticulo() {
-    if (!this.validarCampos()) {
-      return;
-    }
+
     // Verificar que haya al menos un autor registrado
     if (!this.validarRegistroAutores()) {
       Swal.fire('Error', 'Debe registrar al menos un autor antes de actualizar la publicación.', 'error');
+      return;
+    }
+    if (!this.validarCampos()) {
       return;
     }
     Swal.fire({
@@ -919,8 +921,6 @@ export class EditarArticuloComponent implements OnInit {
     valor = valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
     // Asigna el valor limpio de nuevo al campo de entrada
     inputElement.value = valor;
-    // Actualiza el modelo ngModel si es necesario
-//    this[field] = valor;
   }
 
   onKeyPressNumber(event: KeyboardEvent): void {
@@ -932,5 +932,9 @@ export class EditarArticuloComponent implements OnInit {
       // Prevenir la entrada de caracteres no permitidos
       event.preventDefault();
     }
+  }
+
+  cancel(): void {
+    this.router.navigate(['/consultar-publicacion']);
   }
 }

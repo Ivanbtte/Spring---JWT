@@ -80,25 +80,28 @@
                             <label for="primerNombre{{ i }}">Primer nombre:</label>
                             <input type="text" id="primerNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'primerNombre')"
+                                (input)="onInput($event, 'primerNombre')" />
                         </div>
                         <div class="form-group">
                             <label for="segundoNombre{{ i }}">Segundo nombre:</label>
                             <input type="text" id="segundoNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'segundoNombre')"
+                                (input)="onInput($event, 'segundoNombre')" />
+
                         </div>
                         <div class="form-group">
                             <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
                             <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoPaterno')" />
                         </div>
                         <div class="form-group">
                             <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
                             <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoMaterno')" />
                         </div>
                     </ng-template>
 
@@ -129,12 +132,14 @@
 
             <div class="form-group">
                 <label for="numeroRevista"><strong>Número de volumen:</strong></label>
-                <input type="text" id="numeroRevista" class="form-control" [(ngModel)]="articulo.volumen_revista">
+                <input type="text" id="numeroRevista" class="form-control" [(ngModel)]="articulo.volumen_revista"
+                    (keypress)="onKeyPressNumber($event)" />
             </div>
 
             <div class="form-group">
                 <label for="volumenRevista"><strong>Numero de emisión:</strong></label>
-                <input type="text" id="volumenRevista" class="form-control" [(ngModel)]="articulo.numero_revista">
+                <input type="text" id="volumenRevista" class="form-control" [(ngModel)]="articulo.numero_revista"
+                    (keypress)="onKeyPressNumber($event)" />
             </div>
 
             <div class="form-group">
@@ -148,11 +153,11 @@
             <div class="form-group">
                 <label for="paginas"><strong>Página de inicio:</strong></label>
                 <input type="text" id="paginasInicio" class="form-control" [(ngModel)]="articulo.pag_inicio"
-                    placeholder="Inicio">
+                    placeholder="Inicio" (keypress)="onKeyPressNumber($event)" />
                 <label for="paginas"><strong>Página final:</strong></label>
 
                 <input type="text" id="paginasFinal" class="form-control mt-2" [(ngModel)]="articulo.pag_final"
-                    placeholder="Final">
+                    placeholder="Final" (keypress)="onKeyPressNumber($event)" />
             </div>
 
             <div class="form-group">
@@ -265,25 +270,31 @@
                             <label for="primerNombre{{ i }}">Primer nombre:</label>
                             <input type="text" id="primerNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'primerNombre')"
+                                (input)="onInput($event, 'primerNombre')" />
+
                         </div>
                         <div class="form-group">
                             <label for="segundoNombre{{ i }}">Segundo nombre:</label>
                             <input type="text" id="segundoNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'segundoNombre')"
+                                (input)="onInput($event, 'segundoNombre')" />
+
                         </div>
                         <div class="form-group">
                             <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
                             <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoPaterno')" />
+
                         </div>
                         <div class="form-group">
                             <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
                             <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoMaterno')" />
+
                         </div>
                     </ng-template>
 
@@ -437,25 +448,29 @@
                             <label for="primerNombre{{ i }}">Primer nombre:</label>
                             <input type="text" id="primerNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.primerNombre" name="primerNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'primerNombre')"
+                                (input)="onInput($event, 'primerNombre')" />
+
                         </div>
                         <div class="form-group">
                             <label for="segundoNombre{{ i }}">Segundo nombre:</label>
                             <input type="text" id="segundoNombre{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.segundoNombre" name="segundoNombre{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (keypress)="onKeyPress($event, 'segundoNombre')"
+                                (input)="onInput($event, 'segundoNombre')" />
                         </div>
                         <div class="form-group">
                             <label for="apellidoPaterno{{ i }}">Apellido paterno:</label>
                             <input type="text" id="apellidoPaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoPaterno" name="apellidoPaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoPaterno')" />
                         </div>
                         <div class="form-group">
                             <label for="apellidoMaterno{{ i }}">Apellido materno:</label>
                             <input type="text" id="apellidoMaterno{{ i }}" class="form-control"
                                 [(ngModel)]="investigador.apellidoMaterno" name="apellidoMaterno{{ i }}"
-                                [disabled]="!investigador.editable" />
+                                [disabled]="!investigador.editable" (input)="onInput($event, 'apellidoMaterno')" />
+
                         </div>
                     </ng-template>
 
@@ -522,12 +537,9 @@
             <button type="button" class="btn btn-success" (click)="actualizarLibro()">
                 <i class="fa fa-check"></i> Actualizar
             </button>
-
-
         </div>
-
     </div>
     <div class="form-footer">
-        <button class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+        <button type="button" class="btn btn-danger btn-block" (click)="cancel()">Cancelar</button>
     </div>
 </div>
