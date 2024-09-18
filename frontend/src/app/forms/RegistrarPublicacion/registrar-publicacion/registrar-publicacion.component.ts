@@ -441,7 +441,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,"ORGANIZADOR").subscribe(
+                this.articuloService.agregarAutorArticulo(articuloId, autorId,"Autor").subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
@@ -530,7 +530,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,"ORGANIZADOR").subscribe(
+                this.articuloService.agregarAutorArticulo(articuloId, autorId,"Autor").subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
@@ -622,7 +622,8 @@ export class RegistrarPublicacionComponent implements OnInit {
               Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,"ORGANIZADOR").subscribe(
+                const investigador = this.investigadores[index]; // Obtener el investigador correspondiente
+                this.articuloService.agregarAutorArticulo(articuloId, autorId,investigador.rol).subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
