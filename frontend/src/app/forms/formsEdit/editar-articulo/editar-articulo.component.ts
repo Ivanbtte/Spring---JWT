@@ -594,7 +594,7 @@ export class EditarArticuloComponent implements OnInit {
             next: () => {
               // Actualizamos los autores después del artículo
               let autoresActualizados = this.idsAutores.map((autorId, index) => {
-                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId, "Autor").toPromise(); // Convertimos las llamadas a promesas
               });
 
               // Cuando todas las promesas se resuelvan, redirigimos
@@ -702,7 +702,7 @@ export class EditarArticuloComponent implements OnInit {
             next: () => {
               // Actualizamos los autores después del artículo
               let autoresActualizados = this.idsAutores.map((autorId, index) => {
-                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId, "Autor").toPromise(); // Convertimos las llamadas a promesas
               });
 
               // Cuando todas las promesas se resuelvan, redirigimos
@@ -805,7 +805,7 @@ export class EditarArticuloComponent implements OnInit {
 
               // Actualizar los autores
               const actualizarAutores = this.idsAutores.map((autorId, index) => {
-                return this.articuloService.agregarAutorArticulo(idarticulo, autorId).toPromise(); // Convertimos las llamadas a promesas
+                return this.articuloService.agregarAutorArticulo(idarticulo, autorId, "Autor").toPromise(); // Convertimos las llamadas a promesas
               });
 
               // Esperar a que todas las promesas se resuelvan
