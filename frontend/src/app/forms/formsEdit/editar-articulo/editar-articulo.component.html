@@ -231,7 +231,17 @@
             <div *ngFor="let investigador of investigadores; let i = index;">
                 <div class="card-body">
                     <h5 class="card-title">Autor {{ i + 1 }}</h5>
-
+                    <!-- Selección de Rol del Investigador -->
+                    <div class="form-group">
+                        <label for="rolInvestigador{{ i }}">Rol del Investigador</label>
+                        <select id="rolInvestigador{{ i }}" class="form-control" [(ngModel)]="investigador.rol"
+                            name="rolInvestigador{{ i }}" [disabled]="investigador.agregado">
+                            <option value="Autor">Autor</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Coordinador">Coordinador</option>
+                            <option value="Organizador">Organizador</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>¿Autor UNSIS?</label>
                         <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
