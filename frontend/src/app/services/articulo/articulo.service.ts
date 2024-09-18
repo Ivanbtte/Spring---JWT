@@ -87,8 +87,9 @@ export class ArticuloService {
     );
   }
 
-  agregarAutorArticulo(articuloId: number, autorId: number): Observable<any> {
-    return this.http.post(environment.urlApi + 'articulo/' + articuloId + '/autores/' + autorId, {});
+  agregarAutorArticulo(articuloId: number, autorId: number, rolAutor: string): Observable<any> {
+    return this.http.post(environment.urlApi + 'articulo/' + articuloId + '/autores/' + autorId, rolAutor).pipe(
+      catchError(this.handleError));
   }
 
   getArticuloById(id: number): Observable<any> {

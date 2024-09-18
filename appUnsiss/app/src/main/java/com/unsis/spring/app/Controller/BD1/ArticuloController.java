@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lowagie.text.DocumentException;
 import com.unsis.spring.app.DTO.ArticuloDto;
 import com.unsis.spring.app.DTO.CitaApaDto;
+import com.unsis.spring.app.Entity.BD1.Articulo_Autor;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.ReportPDF.ArticuloReportExcel;
@@ -157,7 +158,8 @@ public class ArticuloController {
     }
 
     @PostMapping("/articulo/{id}/autores/{autorId}")
-    public ResponseEntity<Object> addAutorToArticulo(@PathVariable Long id, @PathVariable Long autorId) {
+    public ResponseEntity<Object> addAutorToArticulo(@PathVariable Long id, @PathVariable Long autorId,
+            @RequestBody String rolAutor) {
         Map<String, Object> map = new HashMap<>();
         try {
             Articulos articulo = articuloService.findByIdArticulo(id);
@@ -167,11 +169,20 @@ public class ArticuloController {
             }
             Autor autor = autorService.findByIdAutor(autorId);
             if (autor == null) {
-
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
-            articulo.getAutores().add(autor);
+
+            // Crear nueva instancia de Articulo_Autor
+            Articulo_Autor articuloAutor = new Articulo_Autor();
+            articuloAutor.setArticulo(articulo);
+            articuloAutor.setAutor(autor);
+            articuloAutor.setRol_autor(rolAutor); // Asignar el rol del autor
+
+            // Agregar la relación al artículo
+            articulo.getAutoresArticulos().add(articuloAutor);
+
+            // Guardar el artículo con la relación añadida
             Articulos updatedArticulo = articuloService.saveArticulo(articulo);
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
         } catch (Exception e) {
@@ -194,7 +205,22 @@ public class ArticuloController {
                 map.put("message", "Autor no encontrado");
                 return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
             }
-            articulo.getAutores().remove(autor);
+
+            // Buscar la relación Articulo_Autor
+            Articulo_Autor articuloAutor = articulo.getAutoresArticulos().stream()
+                    .filter(aa -> aa.getAutor().getId_autor().equals(autorId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (articuloAutor == null) {
+                map.put("message", "Relación Autor-Artículo no encontrada");
+                return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            }
+
+            // Eliminar la relación
+            articulo.getAutoresArticulos().remove(articuloAutor);
+
+            // Guardar los cambios
             Articulos updatedArticulo = articuloService.saveArticulo(articulo);
             return new ResponseEntity<>(updatedArticulo, HttpStatus.OK);
         } catch (Exception e) {

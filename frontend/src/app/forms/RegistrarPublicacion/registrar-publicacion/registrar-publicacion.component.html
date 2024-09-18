@@ -174,7 +174,7 @@
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
-        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" #fileInput />
       </div>
       <div *ngIf="fileName" class="file-name">
         Archivo seleccionado: {{ fileName }}
@@ -286,20 +286,20 @@
         </select>
       </div>
       <div class="form-group-container">
-      <div class="form-group">
-        <label for="fechaPublicacion">Fecha de publicación</label>
-        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
-          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
-          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
-      </div>
-      <div class="form-group">
-        <label for="isbn">ISBN impreso</label>
-        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
-      </div>
-      <div class="form-group">
-        <label for="isbn">ISBN digital</label>
-        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
-      </div>
+        <div class="form-group">
+          <label for="fechaPublicacion">Fecha de publicación</label>
+          <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+            [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
+            [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
+        </div>
+        <div class="form-group">
+          <label for="isbn">ISBN impreso</label>
+          <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
+        </div>
+        <div class="form-group">
+          <label for="isbn">ISBN digital</label>
+          <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
+        </div>
       </div>
       <div class="form-group">
         <label for="doi">Indice MIAR</label>
@@ -324,7 +324,7 @@
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
-        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" #fileInput />
       </div>
       <div *ngIf="fileName" class="file-name">
         Archivo seleccionado: {{ fileName }}
@@ -368,6 +368,17 @@
       <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
         <div class="card-body">
           <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+          <!-- Selección de Rol del Investigador -->
+          <div class="form-group">
+            <label for="rolInvestigador{{ i }}" >Rol del Investigador</label>
+            <select id="rolInvestigador{{ i }}" class="form-control" [(ngModel)]="investigador.rol"
+              name="rolInvestigador{{ i }}" [disabled]="investigador.agregado">
+              <option value="Autor">Autor</option>
+              <option value="Editor">Editor</option>
+              <option value="Coordinador">Coordinador</option>
+              <option value="Organizador">Organizador</option>
+            </select>
+          </div>
           <div class="form-group">
             <label>¿Autor UNSIS?</label>
             <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
@@ -441,21 +452,21 @@
         </select>
       </div>
       <div class="form-group-container">
-      <div class="form-group">
-        <label for="fechaPublicacion">Fecha de publicación</label>
-        <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
-          [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
-          [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
+        <div class="form-group">
+          <label for="fechaPublicacion">Fecha de publicación</label>
+          <input type="date" id="fechaPublicacion" class="form-control" [(ngModel)]="fechaPublicacion"
+            [attr.min]="fechaInicioPermitida ? fechaInicioPermitida.toISOString().split('T')[0] : ''"
+            [attr.max]="fechaFinPermitida ? fechaFinPermitida.toISOString().split('T')[0] : ''" name="fechaPublicacion">
+        </div>
+        <div class="form-group">
+          <label for="isbn">ISBN impreso</label>
+          <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
+        </div>
+        <div class="form-group">
+          <label for="isbn">ISBN digital</label>
+          <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
+        </div>
       </div>
-      <div class="form-group">
-        <label for="isbn">ISBN impreso</label>
-        <input type="text" id="isbnImpreso" class="form-control" [(ngModel)]="isbnImpreso" name="isbnImpreso">
-      </div>
-      <div class="form-group">
-        <label for="isbn">ISBN digital</label>
-        <input type="text" id="isbnDigital" class="form-control" [(ngModel)]="isbnDigital" name="isbnDigital">
-      </div>
-    </div>
       <div class="form-group-container">
         <div class="form-group">
           <label for="paginaInicio">Página de inicio</label>
@@ -490,7 +501,7 @@
         <label for="file-upload" class="file-upload-label">
           <i class="fa fa-cloud-upload"></i> Seleccionar archivo
         </label>
-        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+        <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" #fileInput />
 
       </div>
       <div *ngIf="fileName" class="file-name">
