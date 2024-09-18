@@ -75,32 +75,48 @@ export class EditarUsuarioComponent implements OnInit {
     }
 
     if (this.userForm.valid) {
-      const user = {
-        id: this.userId,
-        username: this.userForm.value.email,
-        password: this.userForm.value.password,
-        role: this.userForm.value.role.toUpperCase(),
-      };
-      this.registrarusuarioService.updateUserPass(this.userId, user).subscribe(
-        userResponse => {
-          // Redirigir al usuario a la página de usuarios
-          this.router.navigate(['/usuario']);
-          Swal.fire({
-            icon: "success",
-            title: "¡Exitoso!",
-            text: "El usuario ha sido editado correctamente.",
-          });
+      // Obtener los datos actuales del usuario para no sobrescribir campos innecesariamente
+      this.registrarusuarioService.getUserById(this.userId).subscribe(
+        currentUserData => {
+          // Crear un objeto con los valores actuales del usuario y solo modificar lo que cambió
+          const updatedUser = {
+            id: this.userId,
+            username: this.userForm.value.email || currentUserData.username, // Actualiza si el campo fue modificado
+            password: this.userForm.value.password || currentUserData.password, // Actualiza si el campo fue modificado
+            role: this.userForm.value.role ? this.userForm.value.role.toUpperCase() : currentUserData.role, // Actualiza si el campo fue modificado
+          };
+
+          // Enviar la actualización del usuario con solo los campos que fueron modificados
+          this.registrarusuarioService.updateUserPass(this.userId, updatedUser).subscribe(
+            userResponse => {
+              // Redirigir al usuario a la página de usuarios
+              this.router.navigate(['/usuario']);
+              Swal.fire({
+                icon: "success",
+                title: "¡Exitoso!",
+                text: "El usuario ha sido editado correctamente.",
+              });
+            },
+            error => {
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Algo salió mal!",
+              });
+            }
+          );
         },
         error => {
           Swal.fire({
             icon: "error",
-            title: "Oops...",
-            text: "Algo salió mal!",
+            title: "Error al obtener los datos del usuario",
+            text: "No se pudieron cargar los datos actuales del usuario.",
           });
         }
       );
     }
   }
+
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
