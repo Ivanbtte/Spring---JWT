@@ -21,81 +21,77 @@ import com.unsis.spring.app.DTO.InstitutoDto;
 import com.unsis.spring.app.Service.BD1.InstitutoService;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = { "http://localhost:4200" })
 @RequestMapping("/api/v1")
 public class InstitutoController {
-    
+
     @Autowired
-	private InstitutoService institutoService;
+    private InstitutoService institutoService;
 
-    @GetMapping(value="/instituto")
-	public ResponseEntity<Object> get(){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			List<InstitutoDto> list  = institutoService.findAll();
-			return new ResponseEntity<Object>(list,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+    @GetMapping(value = "/instituto")
+    public ResponseEntity<Object> get() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            List<InstitutoDto> list = institutoService.findAll();
+            return new ResponseEntity<Object>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-     @GetMapping(value="/instituto/{id}")
-     public ResponseEntity<Object> getById(@PathVariable Long id){ 
-         try {
-			InstitutoDto data  = institutoService.findById(id);
-             return new ResponseEntity<Object>(data,HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             Map<String, Object> map = new HashMap<String, Object>();
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
+    @GetMapping(value = "/instituto/{id}")
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        try {
+            InstitutoDto data = institutoService.findById(id);
+            return new ResponseEntity<Object>(data, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-	@PostMapping(value="/instituto")
-	public ResponseEntity<Object> create(@RequestBody InstitutoDto institutoDto){ 
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			InstitutoDto  res = institutoService.save(institutoDto);  
-			return new ResponseEntity<Object>(res,HttpStatus.OK);
-		} 
-		catch (Exception e) {
-			map.put("message", e.getMessage());
-			return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
- 	}
+    @PostMapping(value = "/instituto")
+    public ResponseEntity<Object> create(@RequestBody InstitutoDto institutoDto) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            InstitutoDto res = institutoService.save(institutoDto);
+            return new ResponseEntity<Object>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-     @PutMapping("/instituto/{id}")
-     public ResponseEntity<Object> update(@RequestBody InstitutoDto institutoDto, @PathVariable Long id){ 
-         Map<String, Object> map = new HashMap<String, Object>();
-         try {
-             
-			InstitutoDto currentrInstituto = institutoService.findById(id);
-             
+    @PutMapping("/instituto/{id}")
+    public ResponseEntity<Object> update(@RequestBody InstitutoDto institutoDto, @PathVariable Long id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+
+            InstitutoDto currentrInstituto = institutoService.findById(id);
+
             currentrInstituto.setNombre(institutoDto.getNombre());
-             
-			InstitutoDto updatedInstituto = institutoService.save(currentrInstituto);
-             
-            return new ResponseEntity<Object>(updatedInstituto,HttpStatus.OK);
-         } 
-         catch (Exception e) {
-             map.put("message", e.getMessage());
-             return new ResponseEntity<>( map, HttpStatus.INTERNAL_SERVER_ERROR);
-         } 
-      }
 
-      @DeleteMapping("/instituto/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id){ 
+            InstitutoDto updatedInstituto = institutoService.save(currentrInstituto);
+
+            return new ResponseEntity<Object>(updatedInstituto, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("message", e.getMessage());
+            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/instituto/{id}")
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>();
-        try { 
+        try {
             institutoService.delete(id);
             map.put("deleted", true);
             return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-        } 
+        }
     }
 }

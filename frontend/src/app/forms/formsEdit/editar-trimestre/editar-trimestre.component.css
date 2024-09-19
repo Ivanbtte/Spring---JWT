@@ -1,11 +1,5 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    margin: 0;
-    padding: 0;
-}
-
-.form-container {
+/* Estilos generales para el formulario */
+.container {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
@@ -13,62 +7,42 @@ body {
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h2 {
+  }
+  
+  /* Estilo para el título */
+  h2 {
     text-align: center;
+    margin-bottom: 20px;
     color: #333;
-    margin-bottom: 20px;
-}
-
-.form-container .form-group {
-    margin-bottom: 20px;
-}
-
-.form-container label {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Estilos para los labels */
+  label {
     font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.form-container .form-control {
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    transition: border-color 0.3s ease-in-out;
-}
-
-.form-container .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-}
-
-.form-container .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-    border-radius: 5px;
-    font-size: 16px;
-    padding: 10px 15px;
-    color: #fff;
-    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    color: #555;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Estilos para los inputs */
+  input[type="text"],
+  input[type="date"] {
     width: 100%;
-}
-
-.form-container .btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-/* Alinear el botón de regresar a la derecha */
-.btn-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-
+    padding: 10px;
+    margin: 8px 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  input:focus {
+    border: 1px solid #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
   /* Estilos para los botones */
   button {
     background-color: #007bff;
@@ -118,3 +92,21 @@ body {
     display: flex;
     justify-content: space-between;
   }
+  
+  /* Adaptabilidad para pantallas más pequeñas */
+  @media (max-width: 600px) {
+    .container {
+      width: 90%;
+      padding: 15px;
+    }
+  
+    button {
+      font-size: 14px;
+      width: 100%;
+    }
+  
+    .form-group.buttons {
+      flex-direction: column;
+    }
+  }
+  

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
+import { Instituto } from 'src/app/services/instituto/instituto';
 import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
+import { Trimestre } from 'src/app/services/trimestre/trimestre';
 
 
 @Component({
@@ -18,7 +20,7 @@ export class CatalogoComponent implements OnInit {
   fileSelected: File | null = null;
   isUploadButtonEnabled: boolean = false;  // Variable para habilitar/deshabilitar el botón
 
-  constructor(private catalogoService: CatalogoService,  private router: Router, private investigadorService: InvestigadorService) { }
+  constructor(private catalogoService: CatalogoService, private router: Router, private investigadorService: InvestigadorService) { }
 
   ngOnInit(): void {
     this.loadTrimestres();
@@ -98,44 +100,30 @@ export class CatalogoComponent implements OnInit {
   }
 
   onSubmit(): void {
-   // Redirige al componente de registro con el parámetro adecuado
-  switch (this.selectedOption) {
-    case 'trimestre':
-      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'trimestre' } });
-      break;
-    case 'instituto':
-      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'instituto' } });
-      break;
-    case 'tipo-publicacion':
-      this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'tipo-publicacion' } });
-      break;
-    default:
-      break;
+    // Redirige al componente de registro con el parámetro adecuado
+    switch (this.selectedOption) {
+      case 'trimestre':
+        this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'trimestre' } });
+        break;
+      case 'instituto':
+        this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'instituto' } });
+        break;
+      case 'tipo-publicacion':
+        this.router.navigate(['/registrar-catalogo'], { queryParams: { form: 'tipo-publicacion' } });
+        break;
+      default:
+        break;
     }
   }
 
-  editarTrimestre(trimestre: any): void {
-    // Implementar lógica de edición de trimestre
+  editarTrimestre(trimestre: Trimestre): void {
+    console.log("Llevando a editar: ", trimestre.id_trimestre);
+    this.router.navigate(['/editar-trimestre/', trimestre.id_trimestre]);
   }
 
-  eliminarTrimestre(trimestre: any): void {
-    // Implementar lógica de eliminación de trimestre
-  }
-
-  editarInstituto(instituto: any): void {
-    // Implementar lógica de edición de instituto
-  }
-
-  eliminarInstituto(instituto: any): void {
-    // Implementar lógica de eliminación de instituto
-  }
-
-  editarTipoPublicacion(tipoPublicacion: any): void {
-    // Implementar lógica de edición de tipo de publicación
-  }
-
-  eliminarTipoPublicacion(tipoPublicacion: any): void {
-    // Implementar lógica de eliminación de tipo de publicación
+  editarInstituto(instituto: Instituto): void {
+    console.log("Llevando a editar: ", instituto.id);
+    this.router.navigate(['/editar-instituto/', instituto.id]);
   }
 
   cargarInvestigadores() {
@@ -151,7 +139,7 @@ export class CatalogoComponent implements OnInit {
       );
     }
   }
-  
+
   descargarFormatoExcel() {
     this.investigadorService.descargarFormato();
   }

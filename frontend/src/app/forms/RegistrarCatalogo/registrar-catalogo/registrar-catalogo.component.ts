@@ -50,8 +50,6 @@ export class RegistrarCatalogoComponent implements OnInit {
       this.registrarTrimestre();
     } else if (this.selectedForm === 'instituto') {
       this.registrarInstituto();
-    } else if (this.selectedForm === 'tipo-publicacion') {
-      this.registrarTipoPublicacion();
     }
   }
 
@@ -127,39 +125,8 @@ export class RegistrarCatalogoComponent implements OnInit {
     }
   }
 
-  registrarTipoPublicacion() {
-    if (this.tipoPublicacionForm.valid) {
-      const tipoPublicacion = {
-        descripcion_publicacion_tipo: this.tipoPublicacionForm.value.descripcion
-      };
 
-      this.catalogoService.addTipoPublicacion(tipoPublicacion).subscribe(
-        response => {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Registro Exitoso!',
-            text: 'El tipo de publicación ha sido registrado correctamente.',
-          });
-          this.router.navigate(['/catalogo']);
-        },
-        error => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Algo salió mal: ' + error.error.message,
-          });
-        }
-      );
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Formulario Incompleto',
-        text: 'Por favor, complete todos los campos del formulario de tipo de publicación.',
-      });
-    }
-  }
-
-  goBack(): void {
+  cancelar(): void {
     this.router.navigate(['/catalogo']);
   }
 }

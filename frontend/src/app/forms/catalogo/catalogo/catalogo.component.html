@@ -8,9 +8,6 @@
     <button (click)="selectOption('instituto')">
       <i class="fa fa-university"></i> Instituto
     </button>
-    <button (click)="selectOption('tipo-publicacion')">
-      <i class="fa fa-book"></i> Tipo de publicación
-    </button>
     <button (click)="selectOption('cargar-datos')">
       <i class="fa fa-file-excel-o"></i> Cargar datos en Excel
     </button>
@@ -41,9 +38,6 @@
                 <button class="btn btn-primary" (click)="editarTrimestre(trimestre)">
                   <i class="fa fa-edit"></i> Editar
                 </button>
-                <button class="btn btn-danger" (click)="eliminarTrimestre(trimestre)">
-                  <i class="fa fa-trash"></i> Eliminar
-                </button>
               </td>
             </tr>
           </tbody>
@@ -68,37 +62,6 @@
               <td>
                 <button class="btn btn-primary" (click)="editarInstituto(instituto)">
                   <i class="fa fa-edit"></i> Editar
-                </button>
-                <button class="btn btn-danger" (click)="eliminarInstituto(instituto)">
-                  <i class="fa fa-trash"></i> Eliminar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div *ngIf="selectedOption === 'tipo-publicacion'">
-        <h2>Tipo de Publicación</h2>
-        <button type="submit" class="btn btn-primary">Registrar</button>
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>ID del tipo de publicación</th>
-              <th>Nombre</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tipoPublicacion of tiposPublicacion">
-              <td>{{ tipoPublicacion.id_publicacion_tipo }}</td>
-              <td>{{ tipoPublicacion.descripcion_publicacion_tipo }}</td>
-              <td>
-                <button class="btn btn-primary" (click)="editarTipoPublicacion(tipoPublicacion)">
-                  <i class="fa fa-edit"></i> Editar
-                </button>
-                <button class="btn btn-danger" (click)="eliminarTipoPublicacion(tipoPublicacion)">
-                  <i class="fa fa-trash"></i> Eliminar
                 </button>
               </td>
             </tr>
