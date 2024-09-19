@@ -1,14 +1,13 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { saveAs } from 'file-saver';
 import { ArticuloService } from 'src/app/services/articulo/articulo.service';
-import { Investigador } from 'src/app/services/auth/investigador';
+import { LoginService } from 'src/app/services/auth/login.service';
 import { AutorService } from 'src/app/services/autor/autor.service';
 import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { InstitutoService } from 'src/app/services/instituto/instituto.service';
 import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
-import { saveAs } from 'file-saver';
-import { LoginService } from 'src/app/services/auth/login.service';
 
 @Component({
   selector: 'app-consultar-publicacion',
@@ -41,6 +40,8 @@ export class ConsultarPublicacionComponent implements OnInit {
   profesoresFiltrados: any[] = [];
   dataService: any;
   //Variables extras:
+  filtrarPorEstado: boolean = false;
+  selectedEstado: string | null = null;
   filtrarPorTrimestre: boolean = false;
   trimestres: number[] = [1, 2, 3, 4];
   listaAnios: number[] = Array.from({ length: (new Date().getFullYear() - 2000 + 1) }, (v, k) => 2000 + k);
@@ -156,6 +157,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+        estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
       };
       this.articuloService.searchPublications(searchCriteria).subscribe(data => {
         this.articulosFiltrados = this.convertirDatos(data);
@@ -175,6 +177,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+        estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
       };
       this.articuloService.searchPublications(searchCriteria).subscribe(data => {
         this.articulosFiltrados = this.convertirDatos(data);
@@ -272,7 +275,11 @@ export class ConsultarPublicacionComponent implements OnInit {
       this.profesoresFiltrados = [];
     }
   }
-
+  onEstadoChange() {
+    // Lógica para manejar el cambio de estado.
+    console.log('Estado cambiado:', this.selectedEstado);
+  }
+  
   onFilterChange(): void {
     if (this.filtrarPorInstituto && this.selectedInstituto) {
       this.investigadorService.getInvestigadorByInstitute(this.selectedInstituto).subscribe(
@@ -322,6 +329,11 @@ export class ConsultarPublicacionComponent implements OnInit {
           this.selectedTipoPublicacion = null;
         }
         break;
+      case 'estado':
+          if (!this.filtrarPorEstado) {
+            this.selectedEstado = null;
+          }
+          break;
     }
   }
 

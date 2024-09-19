@@ -7,6 +7,7 @@ public class SearchCriteria {
     private String fechaInicio;
     private String fechaFin;
     private Integer tipo;
+    private Integer estatus;
 
     // Getters
     public Long getInstitutoId() {
@@ -33,6 +34,10 @@ public class SearchCriteria {
         return tipo;
     }
 
+    public Integer getEstatus(){
+        return estatus;
+    }
+
     // Setters
     public void setInstitutoId(Long institutoId) {
         this.institutoId = institutoId;
@@ -57,4 +62,9 @@ public class SearchCriteria {
     public void setTipo(Integer tipo) {
         this.tipo = tipo;
     }
+
+    public void setEstatus(Integer estatus) {
+        this.estatus = estatus;
+    }
+
 }

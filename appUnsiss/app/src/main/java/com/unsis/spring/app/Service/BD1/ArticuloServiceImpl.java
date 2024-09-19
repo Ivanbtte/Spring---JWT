@@ -436,8 +436,8 @@ public class ArticuloServiceImpl implements ArticuloService {
 
         @Override
         public List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin,
-                        Integer tipo) {
-                return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo);
+                        Integer tipo, Integer estatus) {
+                return articuloDao.findFilteredArticulos(institutoId, autorId, fechaInicio, fechaFin, tipo, estatus);
         }
 
 }
