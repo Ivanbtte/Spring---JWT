@@ -1,0 +1,34 @@
+<app-sidebar></app-sidebar>
+<app-nav></app-nav>
+<div class="container">
+    <h2>Editar Trimestre</h2>
+
+    <form>
+        <!-- Campo Nombre -->
+        <div class="form-group">
+            <label for="nombreTrimestre"><strong>Nombre del Trimestre:</strong></label>
+            <input type="text" id="nombreTrimestre" class="form-control" [(ngModel)]="trimestre.nombre"
+                [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <!-- Campo Fecha de Inicio -->
+        <div class="form-group">
+            <label for="fechaInicio"><strong>Fecha de Inicio:</strong></label>
+            <input type="date" id="fechaInicio" class="form-control" [(ngModel)]="trimestre.fecha_inicio"
+                [value]="trimestre.fecha_inicio | date:'yyyy-MM-dd'" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <!-- Campo Fecha de Fin -->
+        <div class="form-group">
+            <label for="fechaFin"><strong>Fecha de Fin:</strong></label>
+            <input type="date" id="fechaFin" class="form-control" [(ngModel)]="trimestre.fecha_fin"
+                [value]="trimestre.fecha_fin | date:'yyyy-MM-dd'" [ngModelOptions]="{standalone: true}">
+        </div>
+
+        <div class="form-group buttons">
+            <button type="button" (click)="guardarCambios()">Guardar Cambios</button>
+            <button type="button" (click)="cancelar()" class="cancel-button">Cancelar</button>
+        </div>
+
+    </form>
+</div>

@@ -18,6 +18,8 @@ import { UploadFilesComponent } from './forms/upload-files/upload-files.componen
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
 import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cambiar-contra.component';
+import { EditarTrimestreComponent } from './forms/formsEdit/editar-trimestre/editar-trimestre.component';
+import { EditarInstitutoComponent } from './forms/formsEdit/editar-instituto/editar-instituto.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/iniciar-sesion', pathMatch: 'full' },
@@ -31,13 +33,15 @@ const routes: Routes = [
   { path: 'editar-usuario/:id', component: EditarUsuarioComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'editar-investigador/:id', component: EditarInvestigadorComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'ADMIN'] } },
   { path: 'editar-articulo/:id', component: EditarArticuloComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT', 'INVESTIGADOR'] } },
+  { path: 'editar-trimestre/:id', component: EditarTrimestreComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
+  { path: 'editar-instituto/:id', component: EditarInstitutoComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'no-authorized', component: NotAuthorizedComponent },
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'registrar-catalogo', component: RegistrarCatalogoComponent },
   { path: 'upload', component: UploadFilesComponent },
   { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent },
-  { path: 'mis-publicaciones', component: MisPublicacionesComponent},
-  { path: 'cmbc', component: CambiarContraComponent},
+  { path: 'mis-publicaciones', component: MisPublicacionesComponent },
+  { path: 'cmbc', component: CambiarContraComponent },
 ];
 
 @NgModule({

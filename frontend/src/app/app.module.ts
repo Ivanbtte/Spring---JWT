@@ -32,6 +32,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
 import { SidebarComponent } from './sidebar/sidebar/sidebar.component';
 import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cambiar-contra.component';
+import { EditarTrimestreComponent } from './forms/formsEdit/editar-trimestre/editar-trimestre.component';
+import { EditarInstitutoComponent } from './forms/formsEdit/editar-instituto/editar-instituto.component';
 
 @NgModule({
   declarations: [
@@ -58,7 +60,9 @@ import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cam
     ValidarPublicacionComponent,
     MisPublicacionesComponent,
     SidebarComponent,
-    CambiarContraComponent
+    CambiarContraComponent,
+    EditarTrimestreComponent,
+    EditarInstitutoComponent
   ],
   imports: [
     BrowserModule,

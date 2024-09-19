@@ -72,7 +72,9 @@ public class TrimestreController {
             TrimestreDto currentrTrimestre = trimestreService.findById(id);
 
             currentrTrimestre.setNombre(trimestreDto.getNombre());
-
+            currentrTrimestre.setFecha_inicio(trimestreDto.getFecha_inicio());
+            currentrTrimestre.setFecha_fin(trimestreDto.getFecha_fin());
+            
             TrimestreDto updatedTrimestre = trimestreService.save(currentrTrimestre);
 
             return new ResponseEntity<Object>(updatedTrimestre, HttpStatus.OK);
