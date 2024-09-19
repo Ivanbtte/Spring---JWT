@@ -10,6 +10,8 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -45,6 +47,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ArticuloReportExcel {
     private XSSFWorkbook libro;
     private XSSFSheet hoja;
+    private final String UPLOAD_DIR = "./uploads/Static/";
 
     private List<CitaApaDto> listarArticulos;
 
@@ -78,8 +81,11 @@ public class ArticuloReportExcel {
 
         estilo.setWrapText(true);
         combinarCeldasUniversidad();
-        String rutaImagen = "../app/src/main/resources/logo.png";
-        insertarImagen(rutaImagen);
+        Path rutabase = Paths.get(UPLOAD_DIR + "logo.png");
+
+        String rutaArchivo = rutabase.toString();
+        System.out.println("Ruta" + rutaArchivo);
+        // insertarImagen(rutaArchivo);
 
         String[] cabeceras = { "ID", "Tipo publicación", "Fecha de publicación", "Folio", "Cita en norma APA 7ed",
                 "Nombre del producto", "Instituto", "Financiamiento PRODEP (Si/No)", "Trimestre", "Compilado (Si/No)",
@@ -124,7 +130,7 @@ public class ArticuloReportExcel {
         // 7 cm de ancho = 252,000 EMU
         // 5.95 cm de alto = 214,200 EMU
         picture.resize(250.0 / picture.getImageDimension().getWidth(),
-                250.0 / picture.getImageDimension().getHeight());
+                300.0 / picture.getImageDimension().getHeight());
     }
 
     private void combinarCeldasUniversidad() {
@@ -253,7 +259,7 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(3);
-            celda.setCellValue(cita.getFechaPublicacion());
+            celda.setCellValue(cita.getFileMetadata());
             hoja.autoSizeColumn(3);
             celda.setCellStyle(estilo);
 
@@ -264,13 +270,15 @@ public class ArticuloReportExcel {
             celda = fila.createCell(4);
             celda.setCellValue(citaApa);
             hoja.autoSizeColumn(4);
-            hoja.setColumnWidth(4, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad de carácter.
+            hoja.setColumnWidth(4, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad
+                                                          // de carácter.
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(5);
             celda.setCellValue(cita.getNombreArticulo());
             hoja.autoSizeColumn(5);
-            hoja.setColumnWidth(5, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad de carácter.
+            hoja.setColumnWidth(5, characterWidth * 256); // La API de Excel usa 256 unidades internas por cada unidad
+                                                          // de carácter.
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(6);
@@ -520,7 +528,6 @@ public class ArticuloReportExcel {
     }
 
     private String formatearAutores(List<AutorDto> autoresList) {
-
         return autoresList.stream()
                 .map(autor -> {
                     String apellidoPaterno = autor.getApellidoPaternoAutor() != null ? autor.getApellidoPaternoAutor()

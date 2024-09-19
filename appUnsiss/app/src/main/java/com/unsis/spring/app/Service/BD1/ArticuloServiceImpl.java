@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -320,10 +321,10 @@ public class ArticuloServiceImpl implements ArticuloService {
         public List<CitaApaDto> getAllCitasApa(Long idArticulo, Long institutoId, Long autorId, String fechaInicio,
                         String fechaFin,
                         Integer tipo) {
-                List<Object[]> results = articuloDao.findAllArticulosWithAutores(idArticulo, institutoId, autorId,
+
+                List<Object[]> results = articuloDao.findAllArticulosWithAutores(idArticulo, autorId, institutoId, 
                                 fechaInicio,
                                 fechaFin, tipo);
-
                 if (results.isEmpty()) {
                         throw new ResourceNotFoundException("No se encontraron artículos");
                 }
@@ -357,7 +358,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 Long idInstituto = (Long) result[18];
                                 Long idTipoPublicacion = (Long) result[19];
                                 Long idTrimestre = (Long) result[20];
-                                Long idFileMetadata = (Long) result[29]; //Agregado apenas
+                                Long idFileMetadata = (Long) result[29]; // Agregado apenas
 
                                 Instituto instituto = institutoDao.findById(idInstituto)
                                                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -370,9 +371,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                                 "Trimestre no encontrado"));
                                 FileMetadata fileMetadata = fileMetadataRepository.findById(idFileMetadata)
                                                 .orElseThrow(() -> new ResourceNotFoundException("Archivo not found"));
-                                                //Agregado apenas
+                                // Agregado apenas
 
-                                String rolAutor = (String) result[30];//Agregado apenas
+                                String rolAutor = (String) result[30];// Agregado apenas
 
                                 articulo.setInstituto(instituto);
                                 articulo.setTipo_Publicacion(tipoPublicacion);
