@@ -103,7 +103,7 @@ export class ConsultarPublicacionComponent implements OnInit {
     // Obtén los datos del usuario desde el LoginService
     this.userRole = this.loginService.getUserRole();
     this.userInstituto = this.loginService.getInstituto();
-
+  
     // Define los criterios de búsqueda
     const searchCriteria = this.userRole === 'COORDINADOR'
       ? {
@@ -125,7 +125,7 @@ export class ConsultarPublicacionComponent implements OnInit {
     const headers = new HttpHeaders({
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
-
+  
     // Llamada al servicio que exporta el Excel, pasando los criterios de búsqueda
     this.articuloService.reporteExe(searchCriteria).subscribe(response => {
       this.downloadFile(response);
@@ -133,6 +133,7 @@ export class ConsultarPublicacionComponent implements OnInit {
       console.error('Error al exportar el reporte:', error);
     });
   }
+  
 
   private downloadFile(response: Blob) {
     const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
