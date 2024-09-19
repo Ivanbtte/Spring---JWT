@@ -62,7 +62,21 @@
                             </div>
                         </div>
                     </div>
-                    <!--<pre>{{ institutos | json }}</pre>-->
+                    <label>
+                        <input type="checkbox" [(ngModel)]="filtrarPorEstado" [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('estado')" />
+                        Estado de la publicaciòn
+                      </label>
+                      <div *ngIf="filtrarPorEstado" class="form-group-container">
+                        <div class="form-group">
+                          <label for="estado">Estado de la publicación</label>
+                          <select id="estado" [(ngModel)]="selectedEstado" name="estado" (change)="onEstadoChange()">
+                            <option [value]="1">Recientes</option>
+                            <option [value]="2">Rechazados</option>
+                            <option [value]="3">Sin Revisar</option>
+                            <option [value]="4">Aceptados</option>
+                          </select>
+                        </div>
+                      </div>                      
                 </form>
             </div>
         </div>

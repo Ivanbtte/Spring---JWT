@@ -33,6 +33,6 @@ public interface ArticuloService {
             Integer tipo);
 
     List<Object[]> findFilteredArticulos(Long institutoId, Long autorId, String fechaInicio, String fechaFin,
-            Integer tipo);
+            Integer tipo, Integer estatus);
 
 }

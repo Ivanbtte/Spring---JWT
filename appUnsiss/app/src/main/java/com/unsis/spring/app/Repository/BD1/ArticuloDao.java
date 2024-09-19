@@ -1,8 +1,9 @@
 package com.unsis.spring.app.Repository.BD1;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -97,6 +98,7 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "a.observaciones_gestion, " +
                         "a.titulo_revista, " +
                         "a.volumen_revista, " +
+                        "a.estatus,"+
                         "a.aceptado_director, " +
                         "a.aceptado_gestion, " +
                         "a.file_metadata_id " +
@@ -108,13 +110,15 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "AND (:autorId IS NULL OR aa.id_autor = :autorId) " +
                         "AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
                         "AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
-                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)", nativeQuery = true)
+                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)"+
+                        "AND (:estatus IS NULL OR a.estatus = :estatus)", nativeQuery = true)
         List<Object[]> findFilteredArticulos(
                         @Param("institutoId") Long institutoId,
                         @Param("autorId") Long autorId,
                         @Param("fechaInicio") String fechaInicio,
                         @Param("fechaFin") String fechaFin,
-                        @Param("tipo") Integer tipo);
+                        @Param("tipo") Integer tipo,
+                        @Param("estatus") Integer estatus);
 
         // Reemplaza el método original con este
         @Query("SELECT a FROM Articulos a WHERE a.fecha_publicacion = :fechaPublicacion AND LOWER(a.nombre_articulo) = LOWER(:nombreArticulo)")
