@@ -7,7 +7,9 @@ import { CatalogoComponent } from './forms/catalogo/catalogo/catalogo.component'
 import { ConsultarPublicacionComponent } from './forms/ConsultarPublicacion/consultar-publicacion/consultar-publicacion.component';
 import { CrearUsuarioComponent } from './forms/CrearUsuario/crear-usuario/crear-usuario.component';
 import { EditarArticuloComponent } from './forms/formsEdit/editar-articulo/editar-articulo.component';
+import { EditarInstitutoComponent } from './forms/formsEdit/editar-instituto/editar-instituto.component';
 import { EditarInvestigadorComponent } from './forms/formsEdit/editar-investigador/editar-investigador.component';
+import { EditarTrimestreComponent } from './forms/formsEdit/editar-trimestre/editar-trimestre.component';
 import { EditarUsuarioComponent } from './forms/formsEdit/editar-usuario/editar-usuario.component';
 import { InvestigadorComponent } from './forms/investigador/investigador.component';
 import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
@@ -15,10 +17,8 @@ import { RegistrarCatalogoComponent } from './forms/RegistrarCatalogo/registrar-
 import { RegistrarPublicacionComponent } from './forms/RegistrarPublicacion/registrar-publicacion/registrar-publicacion.component';
 import { UsuarioComponent } from './forms/usuario/usuario.component';
 import { ValidarPublicacionComponent } from './forms/validar-publicacion/validar-publicacion.component';
-import { MisPublicacionesComponent } from './forms/misPublicaciones/mis-publicaciones/mis-publicaciones.component';
-import { CambiarContraComponent } from './forms/cambiarContra/cambiar-contra/cambiar-contra.component';
-import { EditarTrimestreComponent } from './forms/formsEdit/editar-trimestre/editar-trimestre.component';
-import { EditarInstitutoComponent } from './forms/formsEdit/editar-instituto/editar-instituto.component';
+import { NotAuthorizedComponent } from './not-authorized/not-authorized/not-authorized.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/iniciar-sesion', pathMatch: 'full' },
@@ -43,12 +43,9 @@ const routes: Routes = [
   { path: 'no-authorized', component: NotAuthorizedComponent },
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'registrar-catalogo', component: RegistrarCatalogoComponent },
-  { path: 'upload', component: UploadFilesComponent },
   { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent },
   { path: 'mis-publicaciones', component: MisPublicacionesComponent },
-  { path: 'cmbc', component: CambiarContraComponent },
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
