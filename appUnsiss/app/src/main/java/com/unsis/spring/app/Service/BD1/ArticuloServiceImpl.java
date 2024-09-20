@@ -289,7 +289,11 @@ public class ArticuloServiceImpl implements ArticuloService {
                         return autorDto;
                 }).collect(Collectors.toList());
 
-                String rolAutor = (String) firstResult[30];
+                List<String> rolAutor = results.stream().map(result -> {
+                        String rolAutores = (String) firstResult[30];
+
+                        return rolAutores;
+                }).collect(Collectors.toList());
 
                 return new CitaApaDto(
                                 articulo.getId_articulo(),
@@ -322,7 +326,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                         String fechaFin,
                         Integer tipo) {
 
-                List<Object[]> results = articuloDao.findAllArticulosWithAutores(idArticulo, autorId, institutoId, 
+                List<Object[]> results = articuloDao.findAllArticulosWithAutores(idArticulo, autorId, institutoId,
                                 fechaInicio,
                                 fechaFin, tipo);
                 if (results.isEmpty()) {
@@ -373,8 +377,6 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 .orElseThrow(() -> new ResourceNotFoundException("Archivo not found"));
                                 // Agregado apenas
 
-                                String rolAutor = (String) result[30];// Agregado apenas
-
                                 articulo.setInstituto(instituto);
                                 articulo.setTipo_Publicacion(tipoPublicacion);
 
@@ -416,7 +418,7 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.isFinanciamiento_prodep(),
                                                 trimestreDto,
                                                 fileMetadata.getFileName(),
-                                                rolAutor);
+                                                new ArrayList<>());
 
                                 articulosMap.put(articuloId, citaApaDto);
                         }
@@ -430,6 +432,12 @@ public class ArticuloServiceImpl implements ArticuloService {
                         autorDto.setAutorUnsis((Boolean) result[26]);
 
                         articulosMap.get(articuloId).getAutores().add(autorDto);
+
+                        // Agrega el rol del autor al artículo
+                        String rolAutor = (String) result[30]; // Agrega el rol del autor que se encuentra en la
+                                                               // posición [30]
+                        articulosMap.get(articuloId).getRolAutor().add(rolAutor); // Añade el rol a la lista de roles
+
                 }
                 return new ArrayList<>(articulosMap.values());
         }
