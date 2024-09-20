@@ -30,7 +30,8 @@
   .btn-aceptar,
   .btn-rechazar,
   .btn-editar,
-  .btn-descargar{
+  .btn-descargar, 
+  .btn-cancelar{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -39,8 +40,12 @@
     font-weight: bold;
   }
   
+  .btn-cancelar {
+    background-color: #8b0000; 
+  }
+
   .btn-descargar {
-    background-color: #21c6ef; /* Green */
+    background-color: #21c6ef; 
   }
 
   .btn-aceptar {
@@ -70,3 +75,20 @@
   .btn-rechazar:hover {
     background-color: #e53935;
   }
+
+  .btn-cancelar:hover {
+    background-color: #7a2322;
+  }
+
+  /* Clases de color para los diferentes estatus */
+.text-warning {
+  color: #ff9800; /* Naranja para advertencia (pendiente) */
+}
+
+.text-danger {
+  color: #f44336; /* Rojo para rechazado */
+}
+
+.text-success {
+  color: #4caf50; /* Verde para aceptado */
+}

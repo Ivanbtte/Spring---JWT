@@ -2,10 +2,28 @@
 <app-sidebar></app-sidebar>
 <div *ngIf="articulo" class="articulo-card">
   <h3 class="card-header">Título de la Publicación: {{ articulo.nombre_articulo }}</h3>
+<!-- Mostrar el mensaje dependiendo del estatus del artículo -->
+<div class="estatus-articulo">
+  <p>
+    <strong style="color: black;">Estado de la publicación:</strong>
+    <span *ngIf="articulo.estatus === 1" class="text-warning">
+      Pendiente de revisión Director de instituto
+    </span>
+    <span *ngIf="articulo.estatus === 2" class="text-danger">
+      Rechazado
+    </span>
+    <span *ngIf="articulo.estatus === 3" class="text-warning">
+      Pendiente de revisión Gestión académica
+    </span>
+    <span *ngIf="articulo.estatus === 4" class="text-success">
+      Aceptado
+    </span>
+  </p>
+</div>
+
   <div class="card-body">
     <!-- Si el tipo de publicación es 1 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 1">
-      <h3 class="card-header">Validar Articulo: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
       <p><strong>Título de la revista:</strong> {{ articulo.titulo_revista }}</p>
       <p><strong>Número de Revista:</strong> {{ articulo.numero_revista }}</p>
@@ -23,7 +41,6 @@
 
     <!-- Si el tipo de publicación es 2 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 2">
-      <h3 class="card-header">Validar Capitulo de Libro: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
       <p><strong>Título del Capitulo del Libro:</strong> {{ articulo.nombre_capitulo }}</p>
       <p><strong>Nombre del Libro:</strong> {{ articulo.nombre_articulo }}</p>
@@ -41,7 +58,6 @@
 
     <!-- Si el tipo de publicación es 3 -->
     <div *ngIf="articulo.tipoPublicacion.id_publicacion_tipo === 3">
-      <h3 class="card-header">Validar Libro: {{ articulo.nombre_articulo }}</h3>
       <p><strong>Fecha de Publicación:</strong> {{ articulo.fecha_publicacion | date }}</p>
       <p><strong>Título del Libro:</strong> {{ articulo.nombre_articulo }}</p>
       <p><strong>ISBN Impreso:</strong> {{ articulo.isbn_impreso }}</p>
@@ -74,14 +90,17 @@
   <div *ngIf="rolUsuario === 'COORDINADOR' && articulo.estatus === 1" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
+    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
   </div>
   <div *ngIf="rolUsuario === 'ADMIN' && articulo.estatus === 3" class="card-footer">
     <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
     <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
+    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
 
   </div>
   <div *ngIf="rolUsuario === 'INVESTIGADOR' || rolUsuario==='ROOT'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
+    <button class="btn-cancelar" (click)="cancelarInves()">Regresar</button> <!-- Botón Cancelar -->
   </div>
   <div class="card-footer">
     <button class="btn-descargar" (click)="descargarPublicacion(articulo.fileMetadata.id)">Descargar Archivo</button>

@@ -29,7 +29,9 @@ export class RegistrarPublicacionComponent implements OnInit {
   fileName: string = '';
 
 
-  constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) { }
+  constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) {
+    this.investigadores.push({ rol: 'Autor', agregado: false });
+   }
 
   ngOnInit(): void {
     // Llama al método para obtener los institutos cuando se inicializa el componente
@@ -95,6 +97,7 @@ export class RegistrarPublicacionComponent implements OnInit {
       primerNombre: '',
       id_autor: Number,
       apellido: '',
+      rol: 'Autor', // Aquí se inicializa el rol por defecto
       agregado: false, // Bandera para verificar si el autor UNSIS ha sido agregado
       autorUnsis: false,
       instituto: '',
@@ -393,10 +396,23 @@ export class RegistrarPublicacionComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        // Mostrar la alerta de carga
+        Swal.fire({
+          title: 'Cargando...',
+          text: 'Su publicación está siendo procesada, por favor espere.',
+          allowOutsideClick: false,  // No permite cerrar la alerta al hacer clic fuera
+          allowEscapeKey: false,     // No permite cerrar la alerta con la tecla escape
+          showConfirmButton: false,  // No muestra botón de confirmación
+          willOpen: () => {
+            Swal.showLoading();     // Muestra el indicador de carga
+          }
+        });
+  
+        // Asegurarse de que this.fechaPublicacion no sea undefined, y asignar una fecha predeterminada si es necesario
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
+  
+        // Subir archivo
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
             this.file = response.id;
@@ -436,17 +452,21 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-
+  
+            // Crear el artículo
             this.articuloService.crearArticulo(articulo).subscribe(response => {
-              Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,"Autor").subscribe(
+                // Agregar autores al artículo
+                this.articuloService.agregarAutorArticulo(articuloId, autorId, "Autor").subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
+                      // Limpiar campos y redirigir después de agregar el último autor
                       this.limpiarCampos();
-                      this.router.navigate(['/mis-publicaciones']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                      Swal.close();  // Cerrar la alerta de carga
+                      Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
+                      this.router.navigate(['/mis-publicaciones']); // Redirigir a las publicaciones
                     }
                   },
                   error => {
@@ -455,11 +475,14 @@ export class RegistrarPublicacionComponent implements OnInit {
                 );
               });
             }, error => {
+              Swal.close();  // Cerrar la alerta de carga si hay un error
               Swal.fire('Error', 'Error al registrar el artículo', 'error');
             });
           },
           error: (error) => {
-            console.error('Upload failed', error);
+            console.error('Error al subir el archivo', error);
+            Swal.close();  // Cerrar la alerta de carga si hay un error
+            Swal.fire('Error', 'Error al subir el archivo', 'error');
           }
         });
       }
@@ -476,7 +499,7 @@ export class RegistrarPublicacionComponent implements OnInit {
     }
     Swal.fire({
       title: '¿Está seguro?',
-      text: "Está a punto de registrar el capítulo. ¿Desea continuar?",
+      text: "Está a punto de registrar el libro. ¿Desea continuar?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -485,10 +508,21 @@ export class RegistrarPublicacionComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        // Mostrar la alerta de carga
+        Swal.fire({
+          title: 'Cargando...',
+          text: 'Su publicación está siendo procesada, por favor espere.',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+  
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
+  
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
             this.file = response.id;
@@ -504,8 +538,8 @@ export class RegistrarPublicacionComponent implements OnInit {
               trimestre: {
                 id_trimestre: this.selectedTrimestre,
                 nombre: '',
-                fecha_inicio: new Date('2024-05-12'), //fecha falsa
-                fecha_fin: new Date('2024-08-12') //fecha falsa
+                fecha_inicio: new Date('2024-05-12'), // fecha falsa
+                fecha_fin: new Date('2024-08-12') // fecha falsa
               },
               fileMetadata: {
                 id: this.file,
@@ -525,17 +559,18 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-
+  
             this.articuloService.crearArticulo(articulo).subscribe(response => {
-              Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,"Autor").subscribe(
+                this.articuloService.agregarAutorArticulo(articuloId, autorId, "Autor").subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
                       this.limpiarCampos();
-                      this.router.navigate(['/mis-publicaciones']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                      Swal.close();  // Cerrar la alerta de carga
+                      Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
+                      this.router.navigate(['/mis-publicaciones']);
                     }
                   },
                   error => {
@@ -544,11 +579,14 @@ export class RegistrarPublicacionComponent implements OnInit {
                 );
               });
             }, error => {
-              console.error('Error al registrar el artículo', error);
+              Swal.close();  // Cerrar la alerta de carga si hay un error
+              Swal.fire('Error', 'Error al registrar el libro', 'error');
             });
           },
           error: (error) => {
-            console.error('Upload failed', error);
+            console.error('Error al subir el archivo', error);
+            Swal.close();  // Cerrar la alerta de carga si hay un error
+            Swal.fire('Error', 'Error al subir el archivo', 'error');
           }
         });
       }
@@ -574,17 +612,28 @@ export class RegistrarPublicacionComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Asegurarse de que this.fechaPublicacion no es undefined, y asignar una fecha predeterminada en caso de que lo sea
+        // Mostrar la alerta de carga
+        Swal.fire({
+          title: 'Cargando...',
+          text: 'Su publicación está siendo procesada, por favor espere.',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          willOpen: () => {
+            Swal.showLoading();
+          }
+        });
+  
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-
+  
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
             this.file = response.id;
             const articulo: Articulo = {
               tipoPublicacion: {
                 id_publicacion_tipo: 2,
-                nombre: 'capitulo'
+                nombre: 'Capítulo'
               },
               instituto: {
                 id: this.selectedInstitutoPublicacion,
@@ -593,8 +642,8 @@ export class RegistrarPublicacionComponent implements OnInit {
               trimestre: {
                 id_trimestre: this.selectedTrimestre,
                 nombre: '',
-                fecha_inicio: new Date('2024-05-12'), //fecha falsa
-                fecha_fin: new Date('2024-08-12') //fecha falsa
+                fecha_inicio: new Date('2024-05-12'), // fecha falsa
+                fecha_fin: new Date('2024-08-12') // fecha falsa
               },
               fileMetadata: {
                 id: this.file,
@@ -617,18 +666,19 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-
+  
             this.articuloService.crearArticulo(articulo).subscribe(response => {
-              Swal.fire('Éxito', 'Capitulo de libro registrado exitosamente', 'success');
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
-                const investigador = this.investigadores[index]; // Obtener el investigador correspondiente
-                this.articuloService.agregarAutorArticulo(articuloId, autorId,investigador.rol).subscribe(
+                const investigador = this.investigadores[index];  // Obtener el investigador correspondiente
+                this.articuloService.agregarAutorArticulo(articuloId, autorId, investigador.rol).subscribe(
                   response => {
                     console.log(`Autor ${autorId} agregado al artículo ${articuloId}`, response);
                     if (index === this.idsAutores.length - 1) {
                       this.limpiarCampos();
-                      this.router.navigate(['/mis-publicaciones']); // Redirige al inicio después de registrar el artículo y agregar los autores
+                      Swal.close();  // Cerrar la alerta de carga
+                      Swal.fire('Éxito', 'Capítulo registrado exitosamente', 'success');
+                      this.router.navigate(['/mis-publicaciones']);
                     }
                   },
                   error => {
@@ -637,11 +687,14 @@ export class RegistrarPublicacionComponent implements OnInit {
                 );
               });
             }, error => {
-              console.error('Error al registrar el capitulo ', error);
+              Swal.close();  // Cerrar la alerta de carga si hay un error
+              Swal.fire('Error', 'Error al registrar el capítulo', 'error');
             });
           },
           error: (error) => {
-            console.error('Upload failed', error);
+            console.error('Error al subir el archivo', error);
+            Swal.close();  // Cerrar la alerta de carga si hay un error
+            Swal.fire('Error', 'Error al subir el archivo', 'error');
           }
         });
       }

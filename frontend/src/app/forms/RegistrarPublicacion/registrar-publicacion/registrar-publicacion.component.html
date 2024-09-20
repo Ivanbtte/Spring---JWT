@@ -41,10 +41,13 @@
       <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
         <div class="card-body">
           <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+<br>
           <div class="form-group">
-            <label>¿Autor UNSIS?</label>
-            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
+            <label class="checkbox-container">¿El Autor pertenece a la UNSIS?
+              <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
               [disabled]="investigador.agregado" (change)="onAutorUnsisChange(investigador, i)">
+              <span class="checkmark"></span>
+            </label>
           </div>
 
           <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
@@ -213,10 +216,13 @@
       <div class="card mt-3" *ngFor="let investigador of investigadores; let i = index">
         <div class="card-body">
           <h5 class="card-title">Investigador {{ i + 1 }}</h5>
+          <br>
           <div class="form-group">
-            <label>¿Autor UNSIS?</label>
-            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
+            <label class="checkbox-container">¿El Autor pertenece a la UNSIS?
+              <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
               [disabled]="investigador.agregado" (change)="onAutorUnsisChange(investigador, i)">
+              <span class="checkmark"></span>
+            </label>
           </div>
 
           <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
@@ -379,10 +385,13 @@
               <option value="Organizador">Organizador</option>
             </select>
           </div>
+          <br>
           <div class="form-group">
-            <label>¿Autor UNSIS?</label>
-            <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
+            <label class="checkbox-container">¿El Autor pertenece a la UNSIS?
+              <input type="checkbox" id="autorUnsis{{ i }}" [(ngModel)]="investigador.autorUnsis" name="autorUnsis{{ i }}"
               [disabled]="investigador.agregado" (change)="onAutorUnsisChange(investigador, i)">
+              <span class="checkmark"></span>
+            </label>
           </div>
 
           <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
