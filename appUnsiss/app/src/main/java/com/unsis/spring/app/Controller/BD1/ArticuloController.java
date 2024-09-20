@@ -279,37 +279,42 @@ public class ArticuloController {
      * }
      */
 
-    @PostMapping(value = "/articulo/exportarExcel")
-    public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
-            throws DocumentException, IOException {
-        response.setContentType("application/octet-stream");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaActual = dateFormatter.format(new Date());
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=General_" + fechaActual + ".xlsx";
-        response.setHeader(cabecera, valor);
-        // Validar las fechas (opcional)
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
-            LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
-            LocalDate fechaFin = LocalDate.parse(criteria.getFechaFin(), formatter);
+     @PostMapping(value = "/articulo/exportarExcel")
+     public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
+             throws DocumentException, IOException {
 
-            if (fechaInicio.isAfter(fechaFin)) {
-                throw new IllegalArgumentException("La fecha de inicio no puede ser después de la fecha final.");
-            }
-        }
-        // Obtener los artículos filtrados según los criterios proporcionados
-        List<CitaApaDto> citasApa = articuloService.getAllCitasApa(
-                criteria.getArticuloId(),
-                criteria.getInstitutoId(),
-                criteria.getAutorId(),
-                criteria.getFechaInicio(),
-                criteria.getFechaFin(),
-                criteria.getTipo());
-        // Exportar a Excel
-        ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, citasApa);
-        exporter.exportar(response);
-    }
+         response.setContentType("application/octet-stream");
+         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+         String fechaActual = dateFormatter.format(new Date());
+         String cabecera = "Content-Disposition";
+         String valor = "attachment; filename=General_" + fechaActual + ".xlsx";
+         response.setHeader(cabecera, valor);
+     
+         // Validar las fechas (opcional)
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+         if (criteria.getFechaInicio() != null && criteria.getFechaFin() != null) {
+             LocalDate fechaInicio = LocalDate.parse(criteria.getFechaInicio(), formatter);
+             LocalDate fechaFin = LocalDate.parse(criteria.getFechaFin(), formatter);
+     
+             if (fechaInicio.isAfter(fechaFin)) {
+                 throw new IllegalArgumentException("La fecha de inicio no puede ser después de la fecha final.");
+             }
+         }
+     
+         // Obtener los artículos filtrados según los criterios proporcionados
+         List<CitaApaDto> citasApa = articuloService.getAllCitasApa(
+                 criteria.getArticuloId(),
+                 criteria.getInstitutoId(),
+                 criteria.getAutorId(),
+                 criteria.getFechaInicio(),
+                 criteria.getFechaFin(),
+                 criteria.getTipo());
+     
+         // Exportar a Excel
+         ArticuloReportExcel exporter = new ArticuloReportExcel(null, null, citasApa);
+         exporter.exportar(response);
+     }
+     
 
     @PostMapping(value = "/articulosfiltro")
     public ResponseEntity<Object> getFilteredArticulos(@RequestBody SearchCriteria criteria) {
@@ -329,7 +334,9 @@ public class ArticuloController {
                     criteria.getAutorId(),
                     criteria.getFechaInicio(),
                     criteria.getFechaFin(),
-                    criteria.getTipo());
+                    criteria.getTipo(),
+                    criteria.getEstatus()
+                    );
             return new ResponseEntity<>(articulos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
