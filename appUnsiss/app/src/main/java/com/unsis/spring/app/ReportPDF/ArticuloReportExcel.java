@@ -15,12 +15,14 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -84,7 +86,6 @@ public class ArticuloReportExcel {
         Path rutabase = Paths.get(UPLOAD_DIR + "logo.png");
 
         String rutaArchivo = rutabase.toString();
-        System.out.println("Ruta" + rutaArchivo);
         // insertarImagen(rutaArchivo);
 
         String[] cabeceras = { "ID", "Tipo publicación", "Fecha de publicación", "Folio", "Cita en norma APA 7ed",
@@ -354,10 +355,45 @@ public class ArticuloReportExcel {
         String articulos = "Articulos";
         String capitulo_libro = "Capitulo Libro";
         String libro = "Libro";
-
-        // Obtiene una lista de autores que después separa con el uso de comas
+        // Obtiene la lista de autores del artículo
         List<AutorDto> autoresList = articuloDTO.getAutores();
-        String autores = formatearAutores(autoresList);
+
+        // Obtiene la lista de roles para los autores
+        List<String> rolesList = articuloDTO.getRolAutor();
+
+        // Inicializa las listas de autores y de editores/coordinadores/organizadores
+        List<AutorDto> autoresFiltradosA = new ArrayList<>();
+        List<AutorDto> autoresFiltradosECO = new ArrayList<>();
+        List<String> rolesFiltradosECO = new ArrayList<>();
+
+        // Verifica que ambas listas (autores y roles) tengan el mismo tamaño
+        if (autoresList.size() == rolesList.size()) {
+            // Recorre la lista de autores y roles al mismo tiempo
+            for (int i = 0; i < autoresList.size(); i++) {
+                AutorDto autor = autoresList.get(i);
+                String rolAutor = rolesList.get(i); // Obtén el rol correspondiente al autor actual
+                // Clasifica el autor según su rol
+                if ("Autor".equalsIgnoreCase(rolAutor)) {
+                    // Si el rol es "Autor", lo agregamos a la lista de autores
+                    autoresFiltradosA.add(autor);
+                } else if ("Editor".equalsIgnoreCase(rolAutor) ||
+                        "Coordinador".equalsIgnoreCase(rolAutor) ||
+                        "Organizador".equalsIgnoreCase(rolAutor)) {
+                    // Si es "Editor", "Coordinador" o "Organizador", lo agregamos a la lista de
+                    // autores ECO
+                    autoresFiltradosECO.add(autor);
+                    rolesFiltradosECO.add(rolAutor); // También guardamos el rol correspondiente
+                }
+            }
+        } else {
+            // Si las listas no coinciden en tamaño, lanza una excepción o maneja el error
+            // adecuadamente
+            System.err.println("Error: La lista de autores y la lista de roles tienen tamaños diferentes.");
+        }
+
+        String autores = formatearAutores(autoresFiltradosA);
+
+        String autoresplus = formatearAutoresConRoles(autoresFiltradosECO, rolesFiltradosECO);
 
         String tipoPublicacion = String.valueOf(articuloDTO.getTipoPublicacion());
 
@@ -405,8 +441,8 @@ public class ArticuloReportExcel {
 
         } else if (tipoPublicacion.equals(capitulo_libro)) {
             cita = String.format(
-                    "%s (%s). %s. En %s (Ed.), %s (pp. %s). %s. https://doi.org/%s",
-                    autores, anio, tituloCapitulo, "editoresList",
+                    "%s (%s). %s. En %s , %s (pp. %s). %s. https://doi.org/%s",
+                    autores, anio, tituloCapitulo, autoresplus,
                     tituloLibro, paginas, editorial, doi);
 
         } else if (tipoPublicacion.equals(libro)) {
@@ -546,4 +582,46 @@ public class ArticuloReportExcel {
                 })
                 .collect(Collectors.joining(", "));
     }
+
+    private String formatearAutoresConRoles(List<AutorDto> autoresFiltradosECO, List<String> rolesFiltradosECO) {
+        // Concatenamos todos los autores
+        String autoresConcatenados = IntStream.range(0, autoresFiltradosECO.size())
+                .mapToObj(i -> {
+                    AutorDto autor = autoresFiltradosECO.get(i);
+
+                    String apellidoPaterno = autor.getApellidoPaternoAutor() != null ? autor.getApellidoPaternoAutor()
+                            : "";
+                    String apellidoMaterno = autor.getApellidoMaternoAutor() != null ? autor.getApellidoMaternoAutor()
+                            : "";
+                    String inicialNombre1 = autor.getNombre1Autor() != null && !autor.getNombre1Autor().isEmpty()
+                            ? autor.getNombre1Autor().substring(0, 1) + "."
+                            : "";
+                    String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
+                            ? autor.getNombre2Autor().substring(0, 1) + "."
+                            : "";
+
+                    // Formatea el nombre completo del autor
+                    return String.format("%s %s, %s %s", apellidoPaterno, apellidoMaterno, inicialNombre1,
+                            inicialNombre2);
+                })
+                .collect(Collectors.joining(", "));
+
+        // Verificar si es un solo autor o varios
+        boolean esUnSoloAutor = autoresFiltradosECO.size() == 1;
+
+        // Obtener el primer rol (la sigla será la misma para todos los autores)
+        String rol = rolesFiltradosECO.isEmpty() ? "" : rolesFiltradosECO.get(0);
+
+        // Añadir la sigla correcta basada en el rol y la cantidad de autores
+        if ("Editor".equalsIgnoreCase(rol)) {
+            autoresConcatenados += esUnSoloAutor ? " (Ed.)" : " (Eds.)";
+        } else if ("Coordinador".equalsIgnoreCase(rol)) {
+            autoresConcatenados += esUnSoloAutor ? " (Coord.)" : " (Coords.)";
+        } else if ("Organizador".equalsIgnoreCase(rol)) {
+            autoresConcatenados += esUnSoloAutor ? " (Org.)" : " (Orgs.)";
+        }
+
+        return autoresConcatenados;
+    }
+
 }

@@ -36,5 +36,5 @@ public class CitaApaDto {
     private Boolean financiamientoProdep;
     private TrimestreDto trimestre;
     private String fileMetadata;
-    private String rolAutor;
+    private List<String> rolAutor;
 }
