@@ -130,4 +130,12 @@ export class ValidarPublicacionComponent implements OnInit {
     });
   }
 
+  cancelarAdmin() {
+    this.router.navigate(['/consultar-publicacion']); // Ajusta la ruta según tu aplicación
+  }
+
+  cancelarInves() {
+    this.router.navigate(['/mis-publicaciones']); // Ajusta la ruta según tu aplicación
+  }
+
 }
