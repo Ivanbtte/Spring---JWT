@@ -37,4 +37,5 @@ public class CitaApaDto {
     private TrimestreDto trimestre;
     private String fileMetadata;
     private List<String> rolAutor;
+    private Integer estatus;
 }

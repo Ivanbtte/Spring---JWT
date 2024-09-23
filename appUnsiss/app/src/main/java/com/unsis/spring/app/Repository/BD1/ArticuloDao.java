@@ -25,9 +25,9 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
         // Consulta general
         @Query(value = "SELECT " +
                         "    a.id_articulo, " +
-                        "    a.compilado, " +
                         "    a.doi, " +
                         "    a.editorial, " +
+                        "    a.estatus, " +
                         "    a.fecha_publicacion, " +
                         "    a.financiamiento_prodep, " +
                         "    a.indice_miar, " +
@@ -69,13 +69,15 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "    AND (:institutoId IS NULL OR a.id_instituto = :institutoId) " +
                         "    AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
                         "    AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
-                        "    AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)", nativeQuery = true)
+                        "    AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)" +
+                        "    AND (:estatus IS NULL OR a.estatus = :estatus)", nativeQuery = true)
         List<Object[]> findAllArticulosWithAutores(@Param("idArticulo") Long idArticulo,
                         @Param("idAutor") Long idAutor,
                         @Param("institutoId") Long institutoId,
                         @Param("fechaInicio") String fechaInicio,
                         @Param("fechaFin") String fechaFin,
-                        @Param("tipo") Integer tipo);
+                        @Param("tipo") Integer tipo,
+                        @Param("estatus") Integer estatus);
 
         @Query(value = "SELECT DISTINCT " +
                         "a.compilado, " +
@@ -99,7 +101,7 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "a.observaciones_gestion, " +
                         "a.titulo_revista, " +
                         "a.volumen_revista, " +
-                        "a.estatus,"+
+                        "a.estatus," +
                         "a.aceptado_director, " +
                         "a.aceptado_gestion, " +
                         "a.file_metadata_id " +
@@ -111,7 +113,7 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "AND (:autorId IS NULL OR aa.id_autor = :autorId) " +
                         "AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
                         "AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
-                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)"+
+                        "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)" +
                         "AND (:estatus IS NULL OR a.estatus = :estatus)", nativeQuery = true)
         List<Object[]> findFilteredArticulos(
                         @Param("institutoId") Long institutoId,

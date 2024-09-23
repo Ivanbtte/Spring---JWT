@@ -214,121 +214,13 @@ public class ArticuloServiceImpl implements ArticuloService {
                 return articuloDao.save(articulo);
         }
 
-        @Override
-        public CitaApaDto getCitaApaById(Long id) {
-                List<Object[]> results = articuloDao.findArticuloWithAutoresById(id);
-
-                if (results.isEmpty()) {
-                        throw new ResourceNotFoundException("Articulo not found");
-                }
-
-                Object[] firstResult = results.get(0);
-
-                Articulos articulo = new Articulos();
-                articulo.setId_articulo((Long) firstResult[6]);
-                articulo.setDoi((String) firstResult[10]);
-                articulo.setFecha_publicacion((Date) firstResult[5]);
-                articulo.setIsbn_digital((String) firstResult[13]);
-                articulo.setIsbn_impreso((String) firstResult[14]);
-                articulo.setNumero_revista((Integer) firstResult[2]);
-                articulo.setPag_final((Integer) firstResult[3]);
-                articulo.setPag_inicio((Integer) firstResult[4]);
-                articulo.setTitulo_revista((String) firstResult[19]);
-                articulo.setVolumen_revista((String) firstResult[20]);
-
-                // Obtener los IDs de las llaves foráneas
-                Long idInstituto = (Long) firstResult[7];
-                Long idTipoPublicacion = (Long) firstResult[8];
-                Long idTrimestre = (Long) firstResult[9];
-                Long idFileMetadata = (Long) firstResult[29];
-
-                articulo.setNombre_articulo((String) firstResult[15]);
-                articulo.setEditorial((String) firstResult[11]);
-                articulo.setNombre_capitulo((String) firstResult[16]);
-                articulo.setObservaciones_directores((String) firstResult[17]);
-                articulo.setObservaciones_gestion((String) firstResult[18]);
-                articulo.setIndice_miar((String) firstResult[12]);
-                articulo.setCompilado((Boolean) firstResult[0]);
-                articulo.setFinanciamiento_prodep((Boolean) firstResult[1]);
-
-                // Buscar las entidades de Instituto y Tipo_Publicacion basadas en los IDs
-                Instituto instituto = institutoDao.findById(idInstituto)
-                                .orElseThrow(() -> new ResourceNotFoundException("Instituto not found"));
-                Tipo_Publicacion tipoPublicacion = tipoPublicacionDao.findById(idTipoPublicacion)
-                                .orElseThrow(() -> new ResourceNotFoundException("Tipo_Publicacion not found"));
-                Trimestre trimestre = trimestreDao.findById(idTrimestre)
-                                .orElseThrow(() -> new ResourceNotFoundException("Trimestre not found"));
-                FileMetadata fileMetadata = fileMetadataRepository.findById(idFileMetadata)
-                                .orElseThrow(() -> new ResourceNotFoundException("Archivo not found"));
-
-                articulo.setInstituto(instituto);
-                articulo.setTipo_Publicacion(tipoPublicacion);
-
-                Tipo_PublicacionDto tipoPublicacionDto = new Tipo_PublicacionDto(
-                                tipoPublicacion.getId_publicacion_tipo(),
-                                tipoPublicacion.getDescripcion_publicacion_tipo());
-
-                InstitutoDto institutoDto = new InstitutoDto(
-                                instituto.getId(),
-                                instituto.getNombre());
-
-                TrimestreDto trimestreDto = new TrimestreDto(
-                                trimestre.getId_trimestre(),
-                                trimestre.getNombre(),
-                                trimestre.getFecha_inicio(),
-                                trimestre.getFecha_fin());
-
-                List<AutorDto> autoresDto = results.stream().map(result -> {
-                        AutorDto autorDto = new AutorDto();
-                        autorDto.setId_autor((Long) result[22]);
-                        autorDto.setApellidoMaternoAutor((String) result[23]);
-                        autorDto.setApellidoPaternoAutor((String) result[24]);
-                        autorDto.setAutorUnsis((Boolean) result[21]);
-                        autorDto.setNombre1Autor((String) result[25]);
-                        autorDto.setNombre2Autor((String) result[26]);
-                        return autorDto;
-                }).collect(Collectors.toList());
-
-                List<String> rolAutor = results.stream().map(result -> {
-                        String rolAutores = (String) firstResult[30];
-
-                        return rolAutores;
-                }).collect(Collectors.toList());
-
-                return new CitaApaDto(
-                                articulo.getId_articulo(),
-                                tipoPublicacionDto.getDescripcion_publicacion_tipo(),
-                                institutoDto.getNombre(),
-                                articulo.getFecha_publicacion(),
-                                articulo.getTitulo_revista(),
-                                articulo.getNumero_revista(),
-                                articulo.getVolumen_revista(),
-                                articulo.getPag_inicio(),
-                                articulo.getPag_final(),
-                                articulo.getDoi(),
-                                articulo.getIsbn_impreso(),
-                                articulo.getIsbn_digital(),
-                                autoresDto,
-                                articulo.getNombre_articulo(),
-                                articulo.getEditorial(),
-                                articulo.getNombre_capitulo(),
-                                articulo.getObservaciones_directores(),
-                                articulo.getObservaciones_gestion(),
-                                articulo.getIndice_miar(),
-                                articulo.isCompilado(),
-                                articulo.isFinanciamiento_prodep(),
-                                trimestreDto,
-                                fileMetadata.getFileName(),
-                                rolAutor);
-        }
-
         public List<CitaApaDto> getAllCitasApa(Long idArticulo, Long institutoId, Long autorId, String fechaInicio,
                         String fechaFin,
-                        Integer tipo) {
+                        Integer tipo, Integer estatus) {
 
                 List<Object[]> results = articuloDao.findAllArticulosWithAutores(idArticulo, autorId, institutoId,
                                 fechaInicio,
-                                fechaFin, tipo);
+                                fechaFin, tipo, estatus);
                 if (results.isEmpty()) {
                         throw new ResourceNotFoundException("No se encontraron artículos");
                 }
@@ -341,9 +233,9 @@ public class ArticuloServiceImpl implements ArticuloService {
                         if (!articulosMap.containsKey(articuloId)) {
                                 Articulos articulo = new Articulos();
                                 articulo.setId_articulo(articuloId);
-                                articulo.setCompilado((Boolean) result[1]);
-                                articulo.setDoi((String) result[2]);
-                                articulo.setEditorial((String) result[3]);
+                                articulo.setDoi((String) result[1]);
+                                articulo.setEditorial((String) result[2]);
+                                articulo.setEstatus((Integer) result[3]);
                                 articulo.setFecha_publicacion((Date) result[4]);
                                 articulo.setFinanciamiento_prodep((Boolean) result[5]);
                                 articulo.setIndice_miar((String) result[6]);
@@ -418,7 +310,8 @@ public class ArticuloServiceImpl implements ArticuloService {
                                                 articulo.isFinanciamiento_prodep(),
                                                 trimestreDto,
                                                 fileMetadata.getFileName(),
-                                                new ArrayList<>());
+                                                new ArrayList<>(),
+                                                articulo.getEstatus());
 
                                 articulosMap.put(articuloId, citaApaDto);
                         }

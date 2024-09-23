@@ -113,6 +113,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+        estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
       }
       : {
         institutoId: this.filtrarPorInstituto ? this.selectedInstituto || null : null,
@@ -120,6 +121,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+        estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
       };
 
     // Establecer el encabezado 'Accept' para recibir un archivo Excel
