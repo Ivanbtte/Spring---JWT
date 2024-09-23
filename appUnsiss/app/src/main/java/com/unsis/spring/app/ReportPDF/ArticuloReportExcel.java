@@ -49,7 +49,6 @@ import jakarta.servlet.http.HttpServletResponse;
 public class ArticuloReportExcel {
     private XSSFWorkbook libro;
     private XSSFSheet hoja;
-    private final String UPLOAD_DIR = "./uploads/Static/";
 
     private List<CitaApaDto> listarArticulos;
 
@@ -83,10 +82,10 @@ public class ArticuloReportExcel {
 
         estilo.setWrapText(true);
         combinarCeldasUniversidad();
-        Path rutabase = Paths.get(UPLOAD_DIR + "logo.png");
+        Path rutabase = Paths.get("uploads/Static/logo.png").normalize();
 
         String rutaArchivo = rutabase.toString();
-        // insertarImagen(rutaArchivo);
+        insertarImagen(rutaArchivo);
 
         String[] cabeceras = { "ID", "Tipo publicación", "Fecha de publicación", "Folio", "Cita en norma APA 7ed",
                 "Nombre del producto", "Instituto", "Financiamiento PRODEP (Si/No)", "Trimestre", "Compilado (Si/No)",

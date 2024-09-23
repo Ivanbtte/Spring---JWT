@@ -35,8 +35,6 @@ import com.unsis.spring.app.Service.BD1.FileService;
 @RequestMapping("/api/v1/files")
 public class FileController {
 
-    private final String UPLOAD_DIR = "./uploads/Static/";
-
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
@@ -128,7 +126,7 @@ public class FileController {
     @GetMapping("/descargar-formato")
     public ResponseEntity<Resource> descargarFormatoExcel() {
         try {
-            Path path = Paths.get(UPLOAD_DIR + "CargarUsuarios.xlsx");
+            Path path = Paths.get("uploads/Static/CargarUsuarios.xlsx").normalize();
             Resource resource = new UrlResource(path.toUri());
 
             if (resource.exists()) {
