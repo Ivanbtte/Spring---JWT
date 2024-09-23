@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest } from './loginRequest';
-import  {  Observable, throwError, catchError, BehaviorSubject , tap, map} from 'rxjs';
+import { Observable, throwError, catchError, BehaviorSubject, tap, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { EncryptionServiceService } from './encryption-service.service';
 import { CookieService } from 'ngx-cookie-service';
@@ -12,19 +12,23 @@ import { CookieService } from 'ngx-cookie-service';
 export class LoginService {
 
   currentUserLoginOn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  currentUserData: BehaviorSubject<String> =new BehaviorSubject<String>("");
+  currentUserData: BehaviorSubject<String> = new BehaviorSubject<String>("");
 
   constructor(
     private http: HttpClient,
     private encryptionService: EncryptionServiceService,
     private cookieService: CookieService // Inyecta el servicio de cookies
-  ) { 
+  ) {
     const token = this.cookieService.get('token') || sessionStorage.getItem('token');
     this.currentUserLoginOn = new BehaviorSubject<boolean>(!!token);
     this.currentUserData = new BehaviorSubject<String>(token || '');
   }
 
   login(credentials: LoginRequest): Observable<any> {
+
+    // Limpiar sessionStorage y cookies antes de iniciar sesión
+    this.clearSessionAndCookies();
+
     return this.http.post<any>(environment.urlHost + "auth/login", credentials).pipe(
       tap((userData) => {
         const encryptedRole = this.encryptionService.encrypt(userData.role);
@@ -32,7 +36,7 @@ export class LoginService {
         const encryptedId = this.encryptionService.encrypt(String(userData.id));
         const encryptedIdUser = this.encryptionService.encrypt(String(userData.idUser));
 
-       // Guardar en sessionStorage
+        // Guardar en sessionStorage
         sessionStorage.setItem("token", userData.token);
         sessionStorage.setItem("role", encryptedRole);
         sessionStorage.setItem("_biz_s_t_y", encryptedInstituto);
@@ -53,6 +57,20 @@ export class LoginService {
       catchError(this.handleError)
     );
   }
+
+  // Método para limpiar sessionStorage y cookies
+  clearSessionAndCookies() {
+    // Limpiar sessionStorage
+    sessionStorage.clear();
+
+    // Limpiar cookies específicas
+    this.cookieService.delete('token');
+    this.cookieService.delete('role');
+    this.cookieService.delete('_biz_s_t_y');
+    this.cookieService.delete('_biz_v_e_z');
+    this.cookieService.delete('_biz_u_s');
+  }
+
   logout(): void {
     // Eliminar de sessionStorage
     sessionStorage.removeItem("token");
@@ -71,25 +89,25 @@ export class LoginService {
     this.currentUserLoginOn.next(false);
   }
 
-  private handleError(error:HttpErrorResponse){
-    if(error.status===0){
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
       console.error('Se ha producio un error ', error.error);
     }
-    else{
+    else {
       console.error('Backend retornó el código de estado ', error);
     }
-    return throwError(()=> new Error('Algo falló. Por favor intente nuevamente.'));
+    return throwError(() => new Error('Algo falló. Por favor intente nuevamente.'));
   }
 
-  get userData():Observable<String>{
+  get userData(): Observable<String> {
     return this.currentUserData.asObservable();
   }
 
-  get userLoginOn(): Observable<boolean>{
+  get userLoginOn(): Observable<boolean> {
     return this.currentUserLoginOn.asObservable();
   }
 
-  get userToken():String{
+  get userToken(): String {
     return this.currentUserData.value;
   }
   getUserRole(): string {
@@ -104,7 +122,7 @@ export class LoginService {
     const id = this.cookieService.get('_biz_v_e_z') || sessionStorage.getItem('_biz_v_e_z');
     return this.encryptionService.decrypt(id || '');
   }
-  
+
   getIdUser(): string {
     const idU = this.cookieService.get('_biz_u_s') || sessionStorage.getItem('_biz_u_s');
     return this.encryptionService.decrypt(idU || '');

@@ -4,6 +4,7 @@ import { Articulo } from 'src/app/services/articulo/articulo';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { FileService } from 'src/app/services/fileService/file.service';
+import { LoginService } from 'src/app/services/auth/login.service';
 
 @Component({
   selector: 'app-registrar-publicacion',
@@ -29,7 +30,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   fileName: string = '';
 
 
-  constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService) {
+  constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService, private loginService: LoginService) {
     this.investigadores.push({ rol: 'Autor', agregado: false });
    }
 
@@ -466,8 +467,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
-                      this.router.navigate(['/mis-publicaciones']); // Redirigir a las publicaciones
+                       // Obtener el rol del usuario desde el servicio login
+                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+
+                    // Enrutamiento basado en el rol del usuario
+                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                      this.router.navigate(['/consultar-publicacion']);
+                    } else {
+                      this.router.navigate(['/mis-publicaciones']);
                     }
+                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
@@ -570,8 +579,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
+                       // Obtener el rol del usuario desde el servicio login
+                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+
+                    // Enrutamiento basado en el rol del usuario
+                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                      this.router.navigate(['/consultar-publicacion']);
+                    } else {
                       this.router.navigate(['/mis-publicaciones']);
                     }
+                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
@@ -678,8 +695,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Capítulo registrado exitosamente', 'success');
+                    // Obtener el rol del usuario desde el servicio login
+                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+
+                    // Enrutamiento basado en el rol del usuario
+                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                      this.router.navigate(['/consultar-publicacion']);
+                    } else {
                       this.router.navigate(['/mis-publicaciones']);
                     }
+                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
