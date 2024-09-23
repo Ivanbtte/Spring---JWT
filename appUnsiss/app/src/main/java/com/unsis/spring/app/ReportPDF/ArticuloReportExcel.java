@@ -299,8 +299,15 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(9);
-            boolean compilado = cita.getCompilado();
-            String compiladoStr = compilado ? "Sí" : "No";
+            Integer est = cita.getEstatus();
+            String compiladoStr;
+            if (est >= 1 && est <= 3) {
+                compiladoStr = "No";
+            } else if (est == 4) {
+                compiladoStr = "Si";
+            } else {
+                compiladoStr = "Valor no válido"; // Esto es opcional, si deseas manejar otros valores fuera del rango
+            }
             celda.setCellValue(compiladoStr);
             hoja.autoSizeColumn(9);
             celda.setCellStyle(estilo);
@@ -572,12 +579,26 @@ public class ArticuloReportExcel {
                     String inicialNombre1 = autor.getNombre1Autor() != null && !autor.getNombre1Autor().isEmpty()
                             ? autor.getNombre1Autor().substring(0, 1) + "."
                             : "";
-
                     String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
                             ? autor.getNombre2Autor().substring(0, 1) + "."
                             : "";
-                    return String.format("%s %s, %s %s", apellidoPaterno, apellidoMaterno, inicialNombre1,
-                            inicialNombre2);
+
+                    // Si ambos apellidos están presentes, añadir guion solo si es autor UNSIS
+                    String apellidos;
+                    if (autor.getAutorUnsis() != null && autor.getAutorUnsis()) {
+                        if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
+                            apellidos = apellidoPaterno + "-" + apellidoMaterno;
+                        } else if (!apellidoPaterno.isEmpty()) {
+                            apellidos = apellidoPaterno;
+                        } else {
+                            apellidos = apellidoMaterno;
+                        }
+                    } else {
+                        // Si no es UNSIS, concatenar sin guion
+                        apellidos = (apellidoPaterno + " " + apellidoMaterno).trim();
+                    }
+
+                    return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
                 })
                 .collect(Collectors.joining(", "));
     }
@@ -599,9 +620,23 @@ public class ArticuloReportExcel {
                             ? autor.getNombre2Autor().substring(0, 1) + "."
                             : "";
 
+                    // Si ambos apellidos están presentes, añadir guion solo si es autor UNSIS
+                    String apellidos;
+                    if (autor.getAutorUnsis() != null && autor.getAutorUnsis()) {
+                        if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
+                            apellidos = apellidoPaterno + "-" + apellidoMaterno;
+                        } else if (!apellidoPaterno.isEmpty()) {
+                            apellidos = apellidoPaterno;
+                        } else {
+                            apellidos = apellidoMaterno;
+                        }
+                    } else {
+                        // Si no es UNSIS, concatenar sin guion
+                        apellidos = (apellidoPaterno + " " + apellidoMaterno).trim();
+                    }
+
                     // Formatea el nombre completo del autor
-                    return String.format("%s %s, %s %s", apellidoPaterno, apellidoMaterno, inicialNombre1,
-                            inicialNombre2);
+                    return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
                 })
                 .collect(Collectors.joining(", "));
 
