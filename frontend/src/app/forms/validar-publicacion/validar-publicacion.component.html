@@ -98,11 +98,16 @@
     <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
 
   </div>
-  <div *ngIf="rolUsuario === 'INVESTIGADOR' || rolUsuario==='ROOT'" class="card-footer">
+  <div *ngIf="rolUsuario === 'INVESTIGADOR'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
     <button class="btn-cancelar" (click)="cancelarInves()">Regresar</button> <!-- Botón Cancelar -->
   </div>
+  <div *ngIf="rolUsuario==='ROOT'" class="card-footer">
+    <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
+    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
+  </div>
   <div class="card-footer">
     <button class="btn-descargar" (click)="descargarPublicacion(articulo.fileMetadata.id)">Descargar Archivo</button>
+    
   </div>
 </div>
