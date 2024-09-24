@@ -136,9 +136,9 @@ public class ArticuloReportExcel {
     private void combinarCeldasUniversidad() {
         // Crear una fila para escribir en la celda combinada
         String textoUniversidad = "UNIVERSIDAD DE LA SIERRA SUR";
-        String publi = "CONCENTRADO DE PUBLICACIONES";
-        String gestion = "GESTION ACADEMICA";
-        String direccion = "MIAHUATLAN DE PORFIRIO DIAZ OAXACA A";
+        String publi = "Concentrado de publicaciones";
+        String gestion = "Gestión Academica";
+        String direccion = "Miahuatlán de Porfirio Diaz Oaxaca a";
         // Obtener la fecha actual y formatearla
         DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String fechaActual = LocalDate.now().format(formatoFecha);
@@ -150,7 +150,7 @@ public class ArticuloReportExcel {
         CellStyle estiloFila3 = libro.createCellStyle();
         XSSFFont fuenteFila3 = libro.createFont();
         fuenteFila3.setBold(true);
-        fuenteFila3.setFontHeight(26);
+        fuenteFila3.setFontHeight(28);
         fuenteFila3.setFontName("Arial");
         estiloFila3.setFont(fuenteFila3);
         estiloFila3.setAlignment(HorizontalAlignment.CENTER);
@@ -254,12 +254,12 @@ public class ArticuloReportExcel {
             String anio = fechaMap.get("fechaCompleta");
 
             celda = fila.createCell(2);
-            celda.setCellValue(anio);
+            celda.setCellValue(anio);  //Fecha de publicacion
             hoja.autoSizeColumn(2);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(3);
-            celda.setCellValue(cita.getFileMetadata());
+            celda.setCellValue(cita.getFileMetadata());  //Nombre del archivo
             hoja.autoSizeColumn(3);
             celda.setCellStyle(estilo);
 
@@ -282,13 +282,13 @@ public class ArticuloReportExcel {
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(6);
-            celda.setCellValue(cita.getInstituto());
+            celda.setCellValue(cita.getInstituto()); //Instituto de la publicacion
             hoja.autoSizeColumn(6);
             celda.setCellStyle(estilo);
 
             celda = fila.createCell(7);
             boolean financiamientoProdep = cita.getFinanciamientoProdep();
-            String financiamientoProdepStr = financiamientoProdep ? "Sí" : "No";
+            String financiamientoProdepStr = financiamientoProdep ? "Sí" : "No"; 
             celda.setCellValue(financiamientoProdepStr);
             hoja.autoSizeColumn(7);
             celda.setCellStyle(estilo);
@@ -439,7 +439,7 @@ public class ArticuloReportExcel {
 
         String cita = "";
 
-        // Generar la cita en formato APA según el tipo de publicación
+        // Generar la cita en formato APA 7 según el tipo de publicación
         if (tipoPublicacion.equals(articulos)) {
             cita = String.format("%s (%s). %s. %s, %s(%s), %s. https://doi.org/%s",
                     autores, anio, tituloArticulo, tituloRevista,
@@ -579,26 +579,27 @@ public class ArticuloReportExcel {
                     String inicialNombre1 = autor.getNombre1Autor() != null && !autor.getNombre1Autor().isEmpty()
                             ? autor.getNombre1Autor().substring(0, 1) + "."
                             : "";
-                    String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
+                    String inicialNombre2 = (autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty())
                             ? autor.getNombre2Autor().substring(0, 1) + "."
                             : "";
 
-                    // Si ambos apellidos están presentes, añadir guion solo si es autor UNSIS
+                    // Si ambos apellidos están presentes, añadir guion entre ellos
                     String apellidos;
-                    if (autor.getAutorUnsis() != null && autor.getAutorUnsis()) {
-                        if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
-                            apellidos = apellidoPaterno + "-" + apellidoMaterno;
-                        } else if (!apellidoPaterno.isEmpty()) {
-                            apellidos = apellidoPaterno;
-                        } else {
-                            apellidos = apellidoMaterno;
-                        }
+                    if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
+                        apellidos = apellidoPaterno + "-" + apellidoMaterno;
+                    } else if (!apellidoPaterno.isEmpty()) {
+                        apellidos = apellidoPaterno;
                     } else {
-                        // Si no es UNSIS, concatenar sin guion
-                        apellidos = (apellidoPaterno + " " + apellidoMaterno).trim();
+                        apellidos = apellidoMaterno;
                     }
 
-                    return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
+                    // Formatear el nombre completo del autor, omitiendo el segundo nombre si está
+                    // vacío
+                    if (!inicialNombre2.isEmpty()) {
+                        return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
+                    } else {
+                        return String.format("%s, %s", apellidos, inicialNombre1);
+                    }
                 })
                 .collect(Collectors.joining(", "));
     }
@@ -616,27 +617,27 @@ public class ArticuloReportExcel {
                     String inicialNombre1 = autor.getNombre1Autor() != null && !autor.getNombre1Autor().isEmpty()
                             ? autor.getNombre1Autor().substring(0, 1) + "."
                             : "";
-                    String inicialNombre2 = autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty()
+                    String inicialNombre2 = (autor.getNombre2Autor() != null && !autor.getNombre2Autor().isEmpty())
                             ? autor.getNombre2Autor().substring(0, 1) + "."
                             : "";
 
-                    // Si ambos apellidos están presentes, añadir guion solo si es autor UNSIS
+                    // Si ambos apellidos están presentes, añadir guion entre ellos
                     String apellidos;
-                    if (autor.getAutorUnsis() != null && autor.getAutorUnsis()) {
-                        if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
-                            apellidos = apellidoPaterno + "-" + apellidoMaterno;
-                        } else if (!apellidoPaterno.isEmpty()) {
-                            apellidos = apellidoPaterno;
-                        } else {
-                            apellidos = apellidoMaterno;
-                        }
+                    if (!apellidoPaterno.isEmpty() && !apellidoMaterno.isEmpty()) {
+                        apellidos = apellidoPaterno + "-" + apellidoMaterno;
+                    } else if (!apellidoPaterno.isEmpty()) {
+                        apellidos = apellidoPaterno;
                     } else {
-                        // Si no es UNSIS, concatenar sin guion
-                        apellidos = (apellidoPaterno + " " + apellidoMaterno).trim();
+                        apellidos = apellidoMaterno;
                     }
 
-                    // Formatea el nombre completo del autor
-                    return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
+                    // Formatear el nombre completo del autor, omitiendo el segundo nombre si está
+                    // vacío
+                    if (!inicialNombre2.isEmpty()) {
+                        return String.format("%s, %s %s", apellidos, inicialNombre1, inicialNombre2);
+                    } else {
+                        return String.format("%s, %s", apellidos, inicialNombre1);
+                    }
                 })
                 .collect(Collectors.joining(", "));
 
