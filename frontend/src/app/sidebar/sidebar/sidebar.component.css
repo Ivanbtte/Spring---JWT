@@ -47,9 +47,9 @@
   align-items: center;
   width: 100%; /* Ocupa todo el ancho del contenedor */
   height: 100%; /* Ocupa toda la altura del contenedor */
-  padding: 0; /* Asegúrate de que el enlace no tenga padding extra */
+  padding: 0; /* Elimina el padding adicional */
+  box-sizing: border-box; /* Incluye padding y borde en el ancho y alto */
 }
-
 .sidebar-item .fa {
   max-width: 15px;
   max-height: 15px;

@@ -219,7 +219,6 @@ export class ConsultarPublicacionComponent implements OnInit {
         id_articulo: arr[6],
         aceptado_director: arr[22],
         aceptado_gestion: arr[22],
-        titulo_revista: arr[19],
         fecha_publicacion: arr[5],
         nombre_articulo: arr[15],
         observaciones_directores: arr[17],

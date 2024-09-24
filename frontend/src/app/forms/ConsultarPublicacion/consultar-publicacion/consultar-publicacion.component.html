@@ -7,25 +7,48 @@
         <!--Bloque Taller Izquierdo-->
         <div class="card mt-4 altura">
             <!--Cuadro superior I-->
-            <div class="card-body" *ngIf="userRole === 'ADMIN' || userRole === 'ROOT'">
-                <form (ngSubmit)="searchPublications()">
+            <div class="card-body">
+                <!-- Contenedor para Filtro por Estado e Instituto -->
+                <div class="form-group-container">
+                    <!-- Filtro por Estado de Publicación -->
                     <div class="form-group">
                         <label>
-                            <input type="checkbox" [(ngModel)]="filtrarPorInstituto"
-                                [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('instituto')" />
-                            Filtrar por instituto     <i class="fa fa-university"></i>
+                            <input type="checkbox" [(ngModel)]="filtrarPorEstado" [ngModelOptions]="{standalone: true}"
+                                (change)="onCheckboxChange('estado')" />
+                            Filtrar por estado de publicación <i class="fa fa-archive"></i>
                         </label>
+                        <div *ngIf="filtrarPorEstado" class="form-group">
+                            <label for="estado">Estado de la publicación</label>
+                            <select id="estado" [(ngModel)]="selectedEstado" name="estado" (change)="onEstadoChange()">
+                                <option [value]="1">Recientes</option>
+                                <option [value]="2">Rechazados</option>
+                                <option [value]="3">Sin Revisar</option>
+                                <option [value]="4">Aceptados</option>
+                            </select>
+                        </div>
                     </div>
-                    <div *ngIf="filtrarPorInstituto" class="form-group">
-                        <label for="instituto">Instituto</label>
-                        <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
-                            <option value="">Seleccione un instituto</option>
-                            <option *ngFor="let instituto of institutos" [value]="instituto.id"> {{ instituto.nombre }}
-                            </option>
-                        </select>
+            
+                    <!-- Filtro por Instituto (condicionado por rol) -->
+                    <div class="form-group" *ngIf="userRole === 'ADMIN' || userRole === 'ROOT'">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="filtrarPorInstituto" [ngModelOptions]="{standalone: true}"
+                                (change)="onCheckboxChange('instituto')" />
+                            Filtrar por instituto <i class="fa fa-university"></i>
+                        </label>
+                        <div *ngIf="filtrarPorInstituto" class="form-group">
+                            <label for="instituto">Instituto</label>
+                            <select class="form-control" id="instituto" [(ngModel)]="selectedInstituto" name="instituto">
+                                <option value="">Seleccione un instituto</option>
+                                <option *ngFor="let instituto of institutos" [value]="instituto.id">
+                                    {{ instituto.nombre }}
+                                </option>
+                            </select>
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
+            
+            
 
             <!--Cuadro inferior III-->
             <div class="card-body">
@@ -34,7 +57,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorProfesor" (change)="onFilterChange()"
                                 [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('profesor')" />
-                            Filtrar por profesor     <i class="fa fa-user"></i>
+                            Filtrar por profesor <i class="fa fa-user"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorProfesor">
@@ -62,22 +85,7 @@
                             </div>
                         </div>
                     </div>
-                    <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorEstado" 
-                        [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('estado')" />
-                        Filtrar por estado de publicación  <i class="fa fa-archive"></i>
-                      </label>
-                      <div *ngIf="filtrarPorEstado" class="form-group-container">
-                        <div class="form-group">
-                          <label for="estado"> Estado de la publicación</label>
-                          <select id="estado" [(ngModel)]="selectedEstado" name="estado" (change)="onEstadoChange()">
-                            <option [value]="1">Recientes</option>
-                            <option [value]="2">Rechazados</option>
-                            <option [value]="3">Sin Revisar</option>
-                            <option [value]="4">Aceptados</option>
-                          </select>
-                        </div>
-                      </div>                      
+                    
                 </form>
             </div>
         </div>
@@ -88,21 +96,23 @@
             <div class="card-body">
                 <form>
                     <!-- Checkbox para seleccionar Fecha o Trimestre -->
-                    <div class="form-group">
+                    <!-- Checkbox para seleccionar Fecha o Trimestre -->
+                    <div class="form-group form-group-horizontal">
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}"
                                 (change)="onCheckboxChange('fechas')" />
-                            Filtrar por fechas     <i class="fa fa-calendar"></i>
+                            Filtrar por fechas <i class="fa fa-calendar"></i>
                         </label>
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorTrimestre"
                                 [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('trimestre')" />
-                            Filtrar por trimestre     <i class="fa fa-calendar"></i>
+                            Filtrar por trimestre <i class="fa fa-calendar"></i>
                         </label>
                     </div>
 
+
                     <!-- Si se selecciona Filtrar por Fechas -->
-                    <div *ngIf="filtrarPorFechas" class="form-group-container">
+                    <div *ngIf="filtrarPorFechas" class="form-group-container-inline">
                         <div class="form-group">
                             <label for="startDate">Fecha de Inicio</label>
                             <input type="date" id="start" name="start" [(ngModel)]="startDate" class="form-control" />
@@ -114,7 +124,7 @@
                     </div>
 
                     <!-- Si se selecciona Filtrar por Trimestre -->
-                    <div *ngIf="filtrarPorTrimestre" class="form-group-container">
+                    <div *ngIf="filtrarPorTrimestre" class="form-group-container-inline">
                         <div class="form-group">
                             <label for="trimestre">Trimestre</label>
                             <select id="trimestre" [(ngModel)]="selectedTrimestre" name="trimestre"
@@ -132,6 +142,7 @@
                             </select>
                         </div>
                     </div>
+
                 </form>
             </div>
 
@@ -172,13 +183,13 @@
 
 
     <!-- Botón de descarga de zip-->
-    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-download" aria-hidden="true"></i>
+    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-download"
+            aria-hidden="true"></i>
         Descargar archivos</button>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Titulo de publicacion</th>
-                <th>Titulo de revista</th>
                 <th>Fecha de publicación</th>
                 <th>Observaciones Director</th>
                 <th>Observaciones Gestión</th>
@@ -188,7 +199,6 @@
         <tbody>
             <tr *ngFor="let articulo of articulosFiltrados| paginate: { itemsPerPage: 10, currentPage: p }">
                 <td>{{articulo.nombre_articulo}}</td>
-                <td>{{articulo.titulo_revista}}</td>
                 <td>{{formatDate(articulo.fecha_publicacion)}}</td>
                 <td>{{articulo.observaciones_directores}}</td>
                 <td>{{articulo.observaciones_gestion}}</td>

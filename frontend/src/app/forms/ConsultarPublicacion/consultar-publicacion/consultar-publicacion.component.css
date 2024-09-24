@@ -10,7 +10,7 @@
 /* Card adjustments for a cleaner look con fondo rojizo */
 .card {
   margin-bottom: 20px;
-  background-color: #ffcfcf; /* Fondo rojizo claro */
+  background-color: #ffffff; /* Fondo rojizo claro */
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -31,29 +31,30 @@
 .form-group-container {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 20px;
 }
-
-/* Alinear los checkboxes con el texto */
+/* Alinear los checkboxes con el texto en una misma línea */
 .form-group label {
   display: flex;
   align-items: center; /* Alinear verticalmente el texto con el checkbox */
+  gap: 8px; /* Espacio entre el checkbox y el texto */
+  line-height: 1.5; /* Asegurar que el texto no empuje hacia abajo */
 }
 
 .form-group label input[type="checkbox"] {
-  margin-right: 8px; /* Espacio entre el checkbox y el texto */
+  margin: 0; /* Eliminar cualquier margen adicional */
+  vertical-align: middle; /* Asegura que el checkbox se alinee con el centro del texto */
+  position: relative; /* Esto ayuda a mantener el checkbox en su lugar en caso de interferencias */
 }
-
 /* Checkbox personalizado */
 input[type="checkbox"] {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #007bff; /* Color del borde */
-  border-radius: 4px;
+  display: block;
   position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
   cursor: pointer;
+  font-size: 18px;
+  user-select: none;
 }
 
 input[type="checkbox"]:checked {
@@ -61,7 +62,6 @@ input[type="checkbox"]:checked {
 }
 
 input[type="checkbox"]:checked::after {
-  content: "\2714"; /* Símbolo de check */
   color: white;
   font-size: 16px;
   position: absolute;
@@ -76,9 +76,9 @@ select {
   padding: 8px;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  background-color: #f1f1f1; /* Fondo claro */
+  background-color: #f1f1f1;
   font-size: 14px;
-  color: #495057;
+  color: #000000;
 }
 
 select:focus {
@@ -91,7 +91,7 @@ select:focus {
 label {
   font-size: 14px;
   font-weight: bold;
-  color: #333;
+  color: #00000095;
   margin-bottom: 5px;
 }
 
@@ -115,7 +115,7 @@ button.btn-primary {
 }
 
 button.btn-primary:hover {
-  background-color: #0056b3;
+  background-color: #5c8bbe;
 }
 
 button.btn-success {
@@ -124,7 +124,7 @@ button.btn-success {
 }
 
 button.btn-success:hover {
-  background-color: #218838;
+  background-color: #4fc569;
 }
 
 /* Estructura en columnas con ancho adecuado */
@@ -145,4 +145,40 @@ button.btn-success:hover {
   .card {
     flex: 1 1 100%; /* Para pantallas más pequeñas, columnas en una fila */
   }
+}
+/* Para alinear los checkboxes de Filtrar por Fechas y Filtrar por Trimestre en una sola fila */
+.form-group-horizontal {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos en los extremos */
+  align-items: center; /* Alinea verticalmente los elementos al centro */
+}
+
+.form-group-horizontal label {
+  flex: 1; /* Cada label ocupa un espacio proporcional */
+}
+
+.form-group-horizontal label:nth-child(2) {
+  text-align: right; /* Alinea el segundo label a la derecha */
+}
+/* Alinear los checkboxes y los elementos de entrada en la misma línea */
+.form-group-container-inline {
+  display: flex;
+  justify-content: space-between; /* Distribuye uniformemente los elementos */
+  gap: 20px; /* Espacio entre los elementos */
+  align-items: center; /* Alinea verticalmente los campos de entrada */
+}
+
+/* Mantener consistencia en el ancho de los inputs */
+.form-group-container-inline .form-group {
+  flex: 1; /* Cada grupo ocupa el mismo espacio */
+}
+
+.form-group-container-inline .form-group label {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.form-group-container-inline .form-control,
+.form-group-container-inline select {
+  width: 100%; /* Los inputs toman el 100% del espacio disponible */
 }
