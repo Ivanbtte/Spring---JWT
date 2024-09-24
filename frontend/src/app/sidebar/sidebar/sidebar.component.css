@@ -29,23 +29,25 @@
   width: 240px; /* Ancho del sidebar expandido */
 }
 
+/* Sidebar item: asegúrate de que todo el contenedor sea clicable */
 .sidebar-item {
   cursor: pointer;
   padding: 10px 15px;
   color: white;
-  height: 50px; /* Ajusta según sea necesario */
-  overflow: hidden;
+  height: 50px;
   display: flex;
   align-items: center;
+  transition: background-color 0.3s ease;
 }
+
 .sidebar-item a {
   text-decoration: none;
   color: white;
   display: flex;
   align-items: center;
-  height: 100%; /* Ocupa toda la altura del contenedor */
   width: 100%; /* Ocupa todo el ancho del contenedor */
-  padding: 0; /* Elimina el padding para evitar desplazamiento */
+  height: 100%; /* Ocupa toda la altura del contenedor */
+  padding: 0; /* Asegúrate de que el enlace no tenga padding extra */
 }
 
 .sidebar-item .fa {
@@ -65,6 +67,7 @@
 .sidebar-item:hover {
   background-color: #555;
 }
+
 
 /* Main Content Styles */
 .container {

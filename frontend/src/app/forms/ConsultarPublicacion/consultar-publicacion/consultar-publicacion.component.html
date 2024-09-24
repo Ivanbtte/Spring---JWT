@@ -13,7 +13,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorInstituto"
                                 [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('instituto')" />
-                            Filtrar por instituto <i class="fa fa-university"></i>
+                            Filtrar por instituto     <i class="fa fa-university"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorInstituto" class="form-group">
@@ -34,7 +34,7 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorProfesor" (change)="onFilterChange()"
                                 [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('profesor')" />
-                            Filtrar por profesor <i class="fa fa-user"></i>
+                            Filtrar por profesor     <i class="fa fa-user"></i>
                         </label>
                     </div>
                     <div *ngIf="filtrarPorProfesor">
@@ -63,12 +63,13 @@
                         </div>
                     </div>
                     <label>
-                        <input type="checkbox" [(ngModel)]="filtrarPorEstado" [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('estado')" />
-                        Estado de la publicaciòn
+                        <input type="checkbox" [(ngModel)]="filtrarPorEstado" 
+                        [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('estado')" />
+                        Filtrar por estado de publicación  <i class="fa fa-archive"></i>
                       </label>
                       <div *ngIf="filtrarPorEstado" class="form-group-container">
                         <div class="form-group">
-                          <label for="estado">Estado de la publicación</label>
+                          <label for="estado"> Estado de la publicación</label>
                           <select id="estado" [(ngModel)]="selectedEstado" name="estado" (change)="onEstadoChange()">
                             <option [value]="1">Recientes</option>
                             <option [value]="2">Rechazados</option>
@@ -91,12 +92,12 @@
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorFechas" [ngModelOptions]="{standalone: true}"
                                 (change)="onCheckboxChange('fechas')" />
-                            Filtrar por fechas <i class="fa fa-calendar"></i>
+                            Filtrar por fechas     <i class="fa fa-calendar"></i>
                         </label>
                         <label>
                             <input type="checkbox" [(ngModel)]="filtrarPorTrimestre"
                                 [ngModelOptions]="{standalone: true}" (change)="onCheckboxChange('trimestre')" />
-                            Filtrar por trimestre <i class="fa fa-calendar"></i>
+                            Filtrar por trimestre     <i class="fa fa-calendar"></i>
                         </label>
                     </div>
 
@@ -171,7 +172,7 @@
 
 
     <!-- Botón de descarga de zip-->
-    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-search" aria-hidden="true"></i>
+    <button type="button" class="btn btn-primary" (click)="dowloadZip()"><i class="fa fa-download" aria-hidden="true"></i>
         Descargar archivos</button>
     <table class="table table-striped">
         <thead>
