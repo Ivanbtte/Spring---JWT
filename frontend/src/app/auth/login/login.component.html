@@ -6,7 +6,7 @@
         <div class="text-center my-3">
           <i class="fa fa-user-circle-o fa-5x"></i>
         </div>
-        <p class="text-danger">{{loginError}}</p>
+        <p class="text-white">{{loginError}}</p> <!-- Cambiado a text-white -->
 
         <div class="form-group">
           <label for="exampleInputEmail1"><i class="fa fa-envelope-o"></i> Correo</label>
@@ -14,7 +14,7 @@
             <input formControlName="username" type="email" class="form-control" id="exampleInputEmail1"
               aria-describedby="emailHelp" placeholder="Ingresar Correo">
           </div>
-          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
+          <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-white"> <!-- Cambiado a text-white -->
             <div *ngIf="email.errors?.['required']">El Correo es requerido.</div>
             <div *ngIf="email.errors?.['email']">El Correo debe tener un formato válido.</div>
           </div>
@@ -26,12 +26,12 @@
             <input formControlName="password" [type]="passwordFieldType" class="form-control pr-5"
               id="exampleInputPassword1" placeholder="Contraseña">
             <span class="input-group-text position-absolute"
-              style="right: 0px;  top: 40%; transform: translateY(-50%); width: 40px; height: 80%; border-radius: 5px;"
+              style="right: 0px; top: 40%; transform: translateY(-50%); width: 40px; height: 80%; border-radius: 5px;"
               (click)="togglePasswordVisibility()">
               <i [class]="passwordToggleIcon"></i>
             </span>
           </div>
-          <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-danger">
+          <div *ngIf="password.invalid && (password.dirty || password.touched)" class="text-white"> <!-- Cambiado a text-white -->
             <div *ngIf="password.errors?.['required']">La contraseña es requerida.</div>
           </div>
         </div>

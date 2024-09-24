@@ -19,6 +19,8 @@ export class MisPublicacionesComponent implements OnInit {
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   filtrarPorTipo: boolean = false;
+  filtrarPorEstado: boolean = false;
+  selectedEstado: string | null = null;
   selectedInstituto: number | null = null;
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
@@ -108,6 +110,7 @@ export class MisPublicacionesComponent implements OnInit {
         fechaInicio: this.filtrarPorFechas ? (this.startDate || null) : null || this.filtrarPorTrimestre ? (this.startDate || null) : null,
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
+        estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
       };
       this.articuloService.searchPublications(searchCriteria).subscribe(data => {
         this.articulosFiltrados = this.convertirDatos(data);
@@ -296,4 +299,9 @@ export class MisPublicacionesComponent implements OnInit {
       console.warn("No se seleccionaron ambos valores (trimestre o año).");
     }
   }
+  onEstadoChange() {
+    // Lógica para manejar el cambio de estado.
+    console.log('Estado cambiado:', this.selectedEstado);
+  }
+  
 }

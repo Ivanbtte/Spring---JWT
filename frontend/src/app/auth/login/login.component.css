@@ -135,9 +135,10 @@ body {
   border-color: #787b7e;
 }
 
-#loginform .text-danger {
+#loginform .text-white {
   font-size: 12px;
   margin-top: 5px;
+  color: #ffffff; /* Cambia este color según lo que prefieras */
 }
 
 /* Right section styles */
@@ -178,7 +179,7 @@ hr {
 
 /* Navbar styles */
 .navbar {
-  background-color: #550603;
+  background-color: #ffffff;
   padding: 10px 20px;
   border-radius: 0 0 10px 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -200,7 +201,7 @@ hr {
 
 .navbar-nav .nav-item .nav-link:hover {
   color: #83b5eb;
-  background-color: #3b0503;
+  background-color: #ffffff;
   border-radius: 5px;
 }
 
