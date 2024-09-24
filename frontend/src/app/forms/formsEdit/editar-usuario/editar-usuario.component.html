@@ -1,17 +1,19 @@
 <app-nav></app-nav>
 <app-sidebar></app-sidebar>
+
 <div class="container">
   <h3 class="text-center">Edición de Usuario</h3>
+
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    
     <label for="email">Email:</label>
     <div class="input-group">
       <input id="username" class="form-control" formControlName="username" type="email" />
     </div>
 
-    <div class="form-group">
+    <div class="form-group"  *ngIf="!isAdmin">
       <label for="role">Rol</label>
       <select class="form-control" id="role" formControlName="role">
-        <option value="ADMIN">Administrador</option>
         <option value="INVESTIGADOR">Investigador</option>
         <option value="COORDINADOR">Director</option>
       </select>
@@ -20,45 +22,34 @@
     <div class="form-group">
       <label for="password">Contraseña</label>
       <div class="input-group">
-        <input type="password" class="form-control" id="password" formControlName="password" [type]="passwordFieldType"
-          placeholder="Ingrese su contraseña" required>
-      </div>
-      <div *ngIf="userForm.get('password')?.errors?.['required'] && userForm.get('password')?.touched"
-        class="text-danger">
-        La contraseña es requerida.
-      </div>
-      <div *ngIf="userForm.get('password')?.errors?.['minlength'] && userForm.get('password')?.touched"
-        class="text-danger">
-        La contraseña debe tener al menos 8 caracteres.
-      </div>
-      <div *ngIf="userForm.get('password')?.errors?.['uppercase'] && userForm.get('password')?.touched"
-        class="text-danger">
-        La contraseña debe contener al menos una letra mayúscula.
-      </div>
-      <div *ngIf="userForm.get('password')?.errors?.['number'] && userForm.get('password')?.touched"
-        class="text-danger">
-        La contraseña debe contener al menos un número.
-      </div>
-      <div *ngIf="userForm.get('password')?.errors?.['special'] && userForm.get('password')?.touched"
-        class="text-danger">
-        La contraseña debe contener al menos un símbolo especial.
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="confirmPassword">Confirmar Contraseña</label>
-      <div class="input-group">
-        <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword"
-          [type]="passwordFieldType" placeholder="Confirme su contraseña" required>
+        <input 
+          type="password" 
+          class="form-control" 
+          id="password" 
+          formControlName="password" 
+          [type]="passwordFieldType" 
+          placeholder="Ingrese su contraseña">
         <div class="input-group-append">
           <span class="input-group-text password-toggle" (click)="togglePasswordVisibility()">
             <i [class]="passwordToggleIcon"></i>
           </span>
         </div>
       </div>
-      <div *ngIf="userForm.get('confirmPassword')?.errors?.['required'] && userForm.get('confirmPassword')?.touched"
-        class="text-danger">
-        La confirmación de la contraseña es requerida.
+      <div *ngIf="userForm.get('password')?.errors?.['minlength'] && userForm.get('password')?.touched" class="text-danger">
+        La contraseña debe tener al menos 8 caracteres.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar Contraseña</label>
+      <div class="input-group">
+        <input 
+          type="password" 
+          class="form-control" 
+          id="confirmPassword" 
+          formControlName="confirmPassword" 
+          [type]="passwordFieldType" 
+          placeholder="Confirme su contraseña">
       </div>
       <div *ngIf="userForm.errors?.['mismatch'] && userForm.get('confirmPassword')?.touched" class="text-danger">
         Las contraseñas no coinciden.

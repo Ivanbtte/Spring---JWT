@@ -1,73 +1,184 @@
-.content {
-  margin-top: 20px;
-}
-/* Asegúrate de que el sidebar tenga un ancho fijo o proporcional */
-app-sidebar {
-  width: 250px; /* Ajusta este valor según tus necesidades */
-  float: left;  /* Alinea el sidebar a la izquierda */
-  margin-right: 15px; /* Añade espacio entre el sidebar y el contenido principal */
-}
-label {
-  display: block;
-  font: 1rem 'Fira Sans', sans-serif;
-}
-
-input,
-label {
-  margin: 0.4rem 0;
-}
-
+/* Ajustes generales */
 .container {
   margin: 50px auto;
   padding: 20px;
-  background-color: #fff;
+  background-color: #ffffff; /* Fondo neutro para la sección */
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn-report {
-  color: cadetblue;
-  background-color: bisque;
-}
-
-.form-group-container-2 {
-  display: flex;
-  justify-content: space-between;
-}
-
-.form-group-container {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
+/* Card adjustments for a cleaner look con fondo rojizo */
 .card {
   margin-bottom: 20px;
-  flex: 1 1 48%;
-  /* Adjusts width to 48% and allows wrapping */
-  height: auto;
+  background-color: #ffffff; /* Fondo rojizo claro */
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 1 1 48%; /* Mantener la estructura en columnas */
+  box-sizing: border-box;
 }
 
-.separacion {
-  margin-top: 20px;
-}
-
+/* Mantener la estructura de dos columnas */
 .card-container {
+  
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 20px;
-  /* Adjust the gap between cards as needed */
+  gap: 20px; /* Ajustar el espacio entre las tarjetas */
 }
 
-.card-body {
+/* Filtros personalizados */
+.form-group-container {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+/* Alinear los checkboxes con el texto en una misma línea */
+.form-group label {
+  display: flex;
+  align-items: center; /* Alinear verticalmente el texto con el checkbox */
+  gap: 8px; /* Espacio entre el checkbox y el texto */
+  line-height: 1.5; /* Asegurar que el texto no empuje hacia abajo */
 }
 
+.form-group label input[type="checkbox"] {
+  margin: 0; /* Eliminar cualquier margen adicional */
+  vertical-align: middle; /* Asegura que el checkbox se alinee con el centro del texto */
+  position: relative; /* Esto ayuda a mantener el checkbox en su lugar en caso de interferencias */
+}
+/* Checkbox personalizado */
+input[type="checkbox"] {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
 
+input[type="checkbox"]:checked {
+  background-color: #007bff; /* Color al estar seleccionado */
+}
+
+input[type="checkbox"]:checked::after {
+  color: white;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;  /* Centrar verticalmente */
+  left: 50%; /* Centrar horizontalmente */
+  transform: translate(-50%, -50%); /* Ajustar la posición del check */
+}
+
+/* Mejorar la apariencia de los selects (comboboxes) */
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  color: #000000;
+}
+
+select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Labels y campos */
+label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #00000095;
+  margin-bottom: 5px;
+}
+
+/* Separar el bloque de filtros para mejorar la visibilidad */
+.card-body {
+  background-color: #fdf3f3;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+/* Botones */
+button.btn {
+  margin-right: 10px;
+}
+
+button.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+button.btn-primary:hover {
+  background-color: #5c8bbe;
+}
+
+button.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+button.btn-success:hover {
+  background-color: #4fc569;
+}
+
+/* Estructura en columnas con ancho adecuado */
+@media (min-width: 768px) {
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .card {
+    flex: 1 1 48%; /* Dos columnas con espacio entre ellas */
+  }
+}
+
+/* Para pantallas pequeñas, las tarjetas serán de ancho completo */
+@media (max-width: 767px) {
+  .card {
+    flex: 1 1 100%; /* Para pantallas más pequeñas, columnas en una fila */
+  }
+}
+/* Para alinear los checkboxes de Filtrar por Fechas y Filtrar por Trimestre en una sola fila */
+.form-group-horizontal {
+  display: flex;
+  justify-content: space-between; /* Distribuye los elementos en los extremos */
+  align-items: center; /* Alinea verticalmente los elementos al centro */
+}
+
+.form-group-horizontal label {
+  flex: 1; /* Cada label ocupa un espacio proporcional */
+}
+
+.form-group-horizontal label:nth-child(2) {
+  text-align: right; /* Alinea el segundo label a la derecha */
+}
+/* Alinear los checkboxes y los elementos de entrada en la misma línea */
+.form-group-container-inline {
+  display: flex;
+  justify-content: space-between; /* Distribuye uniformemente los elementos */
+  gap: 20px; /* Espacio entre los elementos */
+  align-items: center; /* Alinea verticalmente los campos de entrada */
+}
+
+/* Mantener consistencia en el ancho de los inputs */
+.form-group-container-inline .form-group {
+  flex: 1; /* Cada grupo ocupa el mismo espacio */
+}
+
+.form-group-container-inline .form-group label {
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.form-group-container-inline .form-control,
+.form-group-container-inline select {
+  width: 100%; /* Los inputs toman el 100% del espacio disponible */
+}

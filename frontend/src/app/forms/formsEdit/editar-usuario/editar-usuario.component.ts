@@ -16,6 +16,7 @@ export class EditarUsuarioComponent implements OnInit {
   passwordToggleIcon: string = 'fa fa-eye';
   username: string = 'username';
   userstatus: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,15 +29,11 @@ export class EditarUsuarioComponent implements OnInit {
       role: ['', Validators.required],
       username: [''],
       password: ['', [
-        Validators.required,
         Validators.minLength(8),
         this.passwordValidator
       ]],
-      confirmPassword: ['', [Validators.required]]
-    });
-    this.userForm.setValidators(this.passwordMatchValidator);
-    this.userForm.get('role')?.valueChanges.subscribe((newRole) => {
-    });
+      confirmPassword: ['']
+    }, { validator: this.passwordMatchValidator });
   }
 
   ngOnInit(): void {
@@ -52,12 +49,11 @@ export class EditarUsuarioComponent implements OnInit {
         this.userId = user.id;
         this.username = user.username;
         this.userstatus = user.enabled;
-
+        this.isAdmin = user.role === 'ADMIN' || user.role === 'ROOT'; 
         this.userForm.patchValue({
           id: this.userId,
           role: user.role || '',
           username: user.username || ''
-          // La contraseña no se carga para evitar exposición accidental
         });
       },
       error => {
@@ -66,57 +62,50 @@ export class EditarUsuarioComponent implements OnInit {
     );
   }
 
-
-
   onSubmit() {
     if (this.userForm.invalid) {
-      this.userForm.markAllAsTouched(); // Mostrar errores
+      this.userForm.markAllAsTouched();
       return;
     }
 
-    if (this.userForm.valid) {
-      // Obtener los datos actuales del usuario para no sobrescribir campos innecesariamente
-      this.registrarusuarioService.getUserById(this.userId).subscribe(
-        currentUserData => {
-          // Crear un objeto con los valores actuales del usuario y solo modificar lo que cambió
-          const updatedUser = {
-            id: this.userId,
-            username: this.userForm.value.email || currentUserData.username, // Actualiza si el campo fue modificado
-            password: this.userForm.value.password || currentUserData.password, // Actualiza si el campo fue modificado
-            role: this.userForm.value.role ? this.userForm.value.role.toUpperCase() : currentUserData.role, // Actualiza si el campo fue modificado
-          };
+    this.registrarusuarioService.getUserById(this.userId).subscribe(
+      currentUserData => {
+        const updatedUser = {
+          id: this.userId,
+          username: this.userForm.value.username || currentUserData.username,
+          password: this.userForm.value.password ? this.userForm.value.password : currentUserData.password, // Actualizar solo si se cambia la contraseña
+          role: this.userForm.value.role ? this.userForm.value.role.toUpperCase() : currentUserData.role,
+        };
 
-          // Enviar la actualización del usuario con solo los campos que fueron modificados
-          this.registrarusuarioService.updateUserPass(this.userId, updatedUser).subscribe(
-            userResponse => {
-              // Redirigir al usuario a la página de usuarios
-              this.router.navigate(['/usuario']);
-              Swal.fire({
-                icon: "success",
-                title: "¡Exitoso!",
-                text: "El usuario ha sido editado correctamente.",
-              });
-            },
-            error => {
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Algo salió mal!",
-              });
-            }
-          );
-        },
-        error => {
-          Swal.fire({
-            icon: "error",
-            title: "Error al obtener los datos del usuario",
-            text: "No se pudieron cargar los datos actuales del usuario.",
-          });
-        }
-      );
-    }
+        this.registrarusuarioService.updateUserPass(this.userId, updatedUser).subscribe(
+          userResponse => {
+            this.router.navigate(['/usuario']);
+            Swal.fire({
+              icon: "success",
+              title: "¡Exitoso!",
+              text: "El usuario ha sido editado correctamente.",
+            });
+          },
+          error => {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Algo salió mal!",
+            });
+          }
+        );
+      },
+      error => {
+        Swal.fire({
+          icon: "error",
+          title: "Error al obtener los datos del usuario",
+          text: "No se pudieron cargar los datos actuales del usuario.",
+        });
+      }
+    );
   }
 
+  // Validación personalizada para la contraseña: solo aplicarla si se ingresa un valor
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
     if (!value) {
@@ -134,38 +123,14 @@ export class EditarUsuarioComponent implements OnInit {
     return null;
   }
 
+  // Validación para asegurarse de que las contraseñas coincidan, pero solo si se ingresan
   passwordMatchValidator(form: AbstractControl): ValidationErrors | null {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    return password && confirmPassword && password === confirmPassword ? null : { mismatch: true };
-  }
-
-  convertEmailToLowerCase(): void {
-    const emailControl = this.userForm.get('email');
-    if (emailControl) {
-      const emailValue = emailControl.value;
-      emailControl.setValue(emailValue.toLowerCase(), { emitEvent: false });
+    if (!password && !confirmPassword) {
+      return null; // Si ambos están vacíos, no hay error
     }
-  }
-
-  onKeyPress(event: KeyboardEvent, field: string): void {
-    const charCode = event.charCode;
-    const char = String.fromCharCode(charCode);
-    if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ'´]$/.test(char)) {
-      // Prevenir la entrada del carácter no permitido.
-      event.preventDefault();
-    }
-  }
-
-  onKeyPressNumber(event: KeyboardEvent): void {
-    const charCode = event.charCode;
-    const char = String.fromCharCode(charCode);
-
-    // Verifica si el carácter es un número (0-9)
-    if (!/^\d$/.test(char)) {
-      // Prevenir la entrada de caracteres no permitidos
-      event.preventDefault();
-    }
+    return password === confirmPassword ? null : { mismatch: true };
   }
 
   togglePasswordVisibility() {
@@ -175,17 +140,6 @@ export class EditarUsuarioComponent implements OnInit {
     } else {
       this.passwordFieldType = 'password';
       this.passwordToggleIcon = 'fa fa-eye';
-    }
-  }
-
-  updateEmailFieldState(role: string): void {
-    const emailControl = this.userForm.get('email');
-    if (emailControl) {
-      if (role === 'COORDINADOR' || role === 'INVESTIGADOR') {
-        emailControl.disable(); // Desactiva el campo si el rol es COORDINADOR o INVESTIGADOR
-      } else if (role === 'ADMIN' || role === 'ROOT') {
-        emailControl.enable(); // Habilita el campo si el rol es ADMIN o ROOT
-      }
     }
   }
 
