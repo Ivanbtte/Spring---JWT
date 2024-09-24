@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -17,7 +18,7 @@ export class FileService {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
   
-    return this.http.post(`${this.baseUrl}/files/upload`, formData);
+    return this.http.post(`${environment.urlApi}files/upload`, formData);
   }
 
   updateFile(id: number, file: File): Observable<any> {
@@ -25,11 +26,11 @@ export class FileService {
     formData.append('file', file, file.name);
     
     // Incluye el ID del archivo en la URL para que el servidor sepa cuál archivo actualizar
-    return this.http.put(`${this.baseUrl}/files/update/${id}`, formData);
+    return this.http.put(`${environment.urlApi}files/update/${id}`, formData);
   }
   
 
   downloadFile(id: number): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/files/download/${id}`, { responseType: 'blob' });
+    return this.http.get(`${environment.urlApi}files/download/${id}`, { responseType: 'blob' });
   }
 }

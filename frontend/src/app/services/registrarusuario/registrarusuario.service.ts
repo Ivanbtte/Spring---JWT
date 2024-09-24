@@ -64,22 +64,4 @@ export class RegistrarusuarioService {
     return this.http.put<Investigador>(`${this.apiUrl}investigador/${investigadorId}`, investigador);
   }
 
-  /*updateInvestigador(userId: number, user: any): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}investigador/${userId}`, user);
-  }
-  */
-
-  /*reporte() {
-    const headers = new HttpHeaders({
-      'Accept': 'application/pdf'
-    });
-    return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
-  }*/
-
-  /*  reporteExe() {
-      const headers = new HttpHeaders({
-        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      });
-      return this.http.get(this.apiUrl + "/exportarExel", { headers, responseType: 'blob' });
-    }*/
 }
