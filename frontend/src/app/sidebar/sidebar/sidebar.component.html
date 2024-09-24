@@ -65,8 +65,10 @@
   </a>
   <a class="nav-link" (click)="logout()" routerLink="/inicio">
     <div *ngIf="userLoginOn" class="nav-item">
+      <div class="sidebar-item logout-item">
       <i class="fa fa-sign-out" aria-hidden="true"></i>
       <span class="sidebar-item-title">Cerrar Sesión</span>
+    </div>
     </div>
   </a>
 </div>
