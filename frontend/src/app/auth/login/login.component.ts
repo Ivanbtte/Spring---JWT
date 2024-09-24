@@ -48,7 +48,6 @@ export class LoginComponent implements OnInit {
       this.loginError = "";
       this.loginService.login(this.loginForm.value as LoginRequest).subscribe({
         next: (userData) => {
-          console.log(userData);
           this.userRole = this.loginService.getUserRole();
           if (this.userRole === 'ADMIN' || this.userRole === 'ROOT' || this.userRole === 'COORDINADOR') {
             this.router.navigateByUrl('/consultar-publicacion');

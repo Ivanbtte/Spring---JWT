@@ -15,6 +15,12 @@ export class JwtInterceptorService implements HttpInterceptor{
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let token = this.cookieService.get('token') || this.loginService.userToken;
 
+    // Hacer una excepción para la ruta '/auth/login'
+    if (req.url.includes('/auth/login')) {
+      // No incluir el token en esta ruta específica
+      return next.handle(req);
+    }
+
     if (token && !this.excludedUrls.some(url => req.url.includes(url))) {
       req = req.clone({
         setHeaders: {
