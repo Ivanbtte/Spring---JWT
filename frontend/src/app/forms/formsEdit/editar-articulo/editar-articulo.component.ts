@@ -223,7 +223,7 @@ export class EditarArticuloComponent implements OnInit {
 
       // Si el autor fue previamente agregado, eliminamos la marca de agregado para que pueda ser editado
       if (investigador.agregado) {
-        this.eliminarInvestigador(index);
+        investigador.agregado = false; // Cambia este flag en lugar de eliminar inmediatamente
       }
     }
   }
@@ -387,7 +387,7 @@ export class EditarArticuloComponent implements OnInit {
       Swal.fire('Error', 'El DOI es obligatorio', 'error');
       return false;
     }
-  
+
     // Validar investigadores no UNSIS
     for (const investigador of this.investigadores) {
       if (!investigador.autorUnsis) {
@@ -401,10 +401,10 @@ export class EditarArticuloComponent implements OnInit {
         }
       }
     }
-  
+
     return true;
   }
-  
+
 
   ValidarLibro(): boolean {
     // Validar campos obligatorios
@@ -412,27 +412,27 @@ export class EditarArticuloComponent implements OnInit {
       Swal.fire('Error', 'El título del libro es obligatorio', 'error');
       return false;
     }
-  
+
     if (!this.articulo.editorial || !this.articulo.editorial.trim()) {
       Swal.fire('Error', 'La editorial del libro es obligatoria', 'error');
       return false;
     }
-  
+
     if (!this.selectedInstitutoPublicacion) {
       Swal.fire('Error', 'El instituto de afiliación es obligatorio', 'error');
       return false;
     }
-  
+
     if (!this.selectedTrimestre) {
       Swal.fire('Error', 'El trimestre es obligatorio', 'error');
       return false;
     }
-  
+
     if (!this.articulo.fecha_publicacion) {
       Swal.fire('Error', 'La fecha de publicación es obligatoria', 'error');
       return false;
     }
-  
+
     // Validar que al menos uno de los ISBN esté presente
     if (!this.articulo.isbn_impreso && !this.articulo.isbn_digital) {
       Swal.fire('Error', 'Debe proporcionar al menos un ISBN (impreso o digital)', 'error');
@@ -445,7 +445,7 @@ export class EditarArticuloComponent implements OnInit {
     }
     return true;
   }
-  
+
 
   validarCap(): boolean {
     if (!this.articulo.nombre_capitulo) {
@@ -486,7 +486,7 @@ export class EditarArticuloComponent implements OnInit {
     }
     return true;
   }
-  
+
   actualizarAutorNoUnsis(investigador: any, index: number) {
     if (!investigador.primerNombre || !investigador.apellidoPaterno) {
       Swal.fire('Error', 'El primer nombre y el apellido paterno son obligatorios', 'error');

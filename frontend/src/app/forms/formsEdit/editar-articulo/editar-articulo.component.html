@@ -43,12 +43,15 @@
                     <h5 class="card-title">Autor {{ i + 1 }}</h5>
 
                     <div class="form-group">
-                        <label>¿Autor UNSIS?</label>
-                        <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
-                            (change)="onAutorUnsisChange(investigador, i)"
-                            [disabled]="!investigador.editable && investigador.agregado">
+                        <br>
+                        <label class="checkbox-container">¿El autor pertenece a la UNSIS?
+                            <input type="checkbox" [(ngModel)]="investigador.autorUnsis"
+                                (change)="onAutorUnsisChange(investigador, i)"
+                                [disabled]="!investigador.editable && investigador.agregado">
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
-
+                    
                     <div *ngIf="investigador.autorUnsis; else noAutorUnsis">
                         <div class="form-group">
                             <label for="instituto{{ i }}">Instituto</label>
