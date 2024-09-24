@@ -9,15 +9,11 @@ import { AutorRequest } from '../registrarusuario/autor';
 })
 export class AutorService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/autor';
-  private apiUrl1 = 'http://localhost:8080/api/v1';
-
-
   constructor(private http: HttpClient) { }
 
 
   getAutorByArticuloById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}/autores`).pipe(
+    return this.http.get<any>(`${environment.urlApi}autor/${id}/autores`).pipe(
       catchError(this.handleError)
     );
   }
@@ -30,7 +26,7 @@ export class AutorService {
 
   // Método para eliminar la relación entre autor UNSIS y artículo
   eliminarRelacionAutorUnsis(idAutor: number, idArticulo: number): Observable<any> {
-    const url = `${this.apiUrl1}/autor-unsis/${idAutor}/articulo/${idArticulo}`;
+    const url = `${environment.urlApi}autor-unsis/${idAutor}/articulo/${idArticulo}`;
     return this.http.delete(url).pipe(
       catchError(this.handleError)
     );
@@ -38,7 +34,7 @@ export class AutorService {
 
   // Método para eliminar la relación entre autor no UNSIS y artículo
   eliminarAutorNoUnsisRelacionado(idAutor: number, idArticulo: number): Observable<any> {
-    const url = `${this.apiUrl1}/autor-no-unsis/${idAutor}/articulo/${idArticulo}`;
+    const url = `${environment.urlApi}autor-no-unsis/${idAutor}/articulo/${idArticulo}`;
     return this.http.delete(url).pipe(
       catchError(this.handleError)
     );

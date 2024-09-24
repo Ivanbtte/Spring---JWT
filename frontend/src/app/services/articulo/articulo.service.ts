@@ -11,8 +11,6 @@ import { LoginService } from '../auth/login.service';
 })
 export class ArticuloService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/articulo';
-
   constructor(private http: HttpClient) { }
 
   // Nuevo método para obtener institutos
@@ -45,7 +43,7 @@ export class ArticuloService {
   }
 
   searchPublications(criteria: any): Observable<any> {
-    return this.http.post<any>(environment.urlApi + 'articulosfiltro', criteria);
+    return this.http.post<any>(environment.urlApi + 'articulos/filtro', criteria);
   }
 
   dowloadzip(criteria: any): Observable<Blob> {
@@ -128,7 +126,7 @@ export class ArticuloService {
     const headers = new HttpHeaders({
       'Accept': 'application/pdf'
     });
-    return this.http.get(this.apiUrl + "/exportarPDF", { headers, responseType: 'blob' });
+    return this.http.get(environment.urlApi + "/exportarPDF", { headers, responseType: 'blob' });
   }
 
   reporteExe(criterios: any) {
@@ -138,7 +136,7 @@ export class ArticuloService {
     });
 
     // Enviamos una solicitud POST con los criterios en el cuerpo
-    return this.http.post(`${this.apiUrl}/exportarExcel`, criterios, {
+    return this.http.post(`${environment.urlApi}articulos/exportarExcel`, criterios, {
       headers: headers,
       responseType: 'blob' // Esto es para manejar la respuesta del archivo binario
     });

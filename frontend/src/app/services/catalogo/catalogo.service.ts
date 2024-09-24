@@ -10,39 +10,35 @@ import { institutoRequest } from './institutoRequest';
   providedIn: 'root'
 })
 export class CatalogoService {
-  private apiUrlTrimestre = 'http://localhost:8080/api/v1/trimestre';
-  private apiUrlInstituto = 'http://localhost:8080/api/v1/instituto';
-  private apiUrlTipoPublicacion = 'http://localhost:8080/api/v1/tipo_Publicacion';
-  private apiUrl = environment.urlApi;
 
   constructor(private http: HttpClient) { }
 
   addTrimestre(trimestre: trimestreRequest): Observable<any> {
-    return this.http.post<any>(this.apiUrlTrimestre, trimestre);
+    return this.http.post<any>(environment.urlApi + 'trimestre', trimestre);
   }
 
   addInstituto(instituto: institutoRequest): Observable<any> {
-    return this.http.post<any>(this.apiUrlInstituto, instituto);
+    return this.http.post<any>(environment.urlApi + 'instituto', instituto);
   }
 
   addTipoPublicacion(tipoPublicacion: tipoRequest): Observable<any> {
-    return this.http.post<any>(this.apiUrlTipoPublicacion, tipoPublicacion);
+    return this.http.post<any>(environment.urlApi + 'tipo_Publicacion', tipoPublicacion);
   }
 
   getTrimestres(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}trimestre`).pipe(
+    return this.http.get<any[]>(`${environment.urlApi}trimestre`).pipe(
       catchError(this.handleError)
     );
   }
 
   getInstitutos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}instituto`).pipe(
+    return this.http.get<any[]>(`${environment.urlApi}instituto`).pipe(
       catchError(this.handleError)
     );
   }
 
   getTiposPublicacion(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}tipo_Publicacion`).pipe(
+    return this.http.get<any[]>(`${environment.urlApi}tipo_Publicacion`).pipe(
       catchError(this.handleError)
     );
   }
@@ -51,7 +47,7 @@ export class CatalogoService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<any>(`${this.apiUrl}upload`, formData).pipe(
+    return this.http.post<any>(`${environment.urlApi}upload`, formData).pipe(
       catchError(this.handleError)
     );
   }

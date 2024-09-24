@@ -262,7 +262,7 @@ public class ArticuloController {
      * }
      */
 
-    @PostMapping(value = "/articulo/exportarExcel")
+    @PostMapping(value = "/articulos/exportarExcel")
     public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
             throws DocumentException, IOException {
 
@@ -299,7 +299,7 @@ public class ArticuloController {
         exporter.exportar(response);
     }
 
-    @PostMapping(value = "/articulosfiltro")
+    @PostMapping(value = "/articulos/filtro")
     public ResponseEntity<Object> getFilteredArticulos(@RequestBody SearchCriteria criteria) {
         Map<String, Object> map = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

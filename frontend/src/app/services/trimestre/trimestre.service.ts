@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -8,11 +9,10 @@ import { catchError, Observable, throwError } from 'rxjs';
 export class TrimestreService {
 
   constructor(private http: HttpClient) { }
-  private apiUrl = 'http://localhost:8080/api/v1/trimestre';
 
   // Método para obtener un trimestre por su ID
   getTrimestre(id: number): Observable<any> {
-    const url = `${this.apiUrl}/${id}`;
+    const url = `${environment.urlApi}${id}`;
     return this.http.get<any>(url).pipe(
       catchError(this.handleError) // Manejo de errores
     );
@@ -28,7 +28,7 @@ export class TrimestreService {
       fecha_fin: this.formatDateForInput(trimestre.fecha_fin)
     };
 
-    return this.http.put(`${this.apiUrl}/${id}`, formattedTrimestre, { headers }).pipe(
+    return this.http.put(`${environment.urlApi}${id}`, formattedTrimestre, { headers }).pipe(
       catchError(this.handleError)
     );
   }
