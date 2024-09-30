@@ -150,7 +150,7 @@ export class EditarInvestigadorComponent implements OnInit {
                 autorUnsis: this.autorunsis
               }
             };
-            this.registrarusuarioService.updateAutor(this.investigadorId!, autor).subscribe(
+            this.registrarusuarioService.updateAutor(this.autorId, autor).subscribe(
               autorResponse => {
                 this.registrarusuarioService.updateInvestigador(this.investigadorId!, investigador).subscribe(
                   investigadorResponse => {

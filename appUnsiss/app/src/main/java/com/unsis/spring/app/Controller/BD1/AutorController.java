@@ -72,26 +72,44 @@ public class AutorController {
     }
 
     @PutMapping("/autor/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody AutorDto autorDto) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
+public ResponseEntity<Object> update(@PathVariable Long id, @RequestBody AutorDto autorDto) {
+    Map<String, Object> map = new HashMap<>();
+    try {
+        // Log de los datos recibidos
+        System.out.println("Datos recibidos en el update:");
+        System.out.println("ID: " + id);
+        System.out.println("Nombre1: " + autorDto.getNombre1Autor());
+        System.out.println("Nombre2: " + autorDto.getNombre2Autor());
+        System.out.println("Apellido Paterno: " + autorDto.getApellidoPaternoAutor());
+        System.out.println("Apellido Materno: " + autorDto.getApellidoMaternoAutor());
+        System.out.println("Autor Unsis: " + autorDto.getAutorUnsis());
 
-            AutorDto currentrAutor = autorService.findById(id);
+        AutorDto currentrAutor = autorService.findById(id);
 
-            currentrAutor.setNombre1Autor(autorDto.getNombre1Autor());
-            currentrAutor.setNombre2Autor(autorDto.getNombre2Autor());
-            currentrAutor.setApellidoPaternoAutor(autorDto.getApellidoPaternoAutor());
-            currentrAutor.setApellidoMaternoAutor(autorDto.getApellidoMaternoAutor());
-            currentrAutor.setAutorUnsis(autorDto.getAutorUnsis());
+         // Log de los datos actuales del autor
+        System.out.println("Datos actuales del autor:");
 
-            AutorDto updatedAutor = autorService.save(currentrAutor);
+        System.out.println("Nombre1: " + currentrAutor.getNombre1Autor());
+        System.out.println("Nombre2: " + currentrAutor.getNombre2Autor());
+        System.out.println("Apellido Paterno: " + currentrAutor.getApellidoPaternoAutor());
+        System.out.println("Apellido Materno: " + currentrAutor.getApellidoMaternoAutor());
+        System.out.println("Autor Unsis: " + currentrAutor.getAutorUnsis());
 
-            return new ResponseEntity<Object>(updatedAutor, HttpStatus.OK);
-        } catch (Exception e) {
-            map.put("message", e.getMessage());
-            return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        currentrAutor.setNombre1Autor(autorDto.getNombre1Autor());
+        currentrAutor.setNombre2Autor(autorDto.getNombre2Autor());
+        currentrAutor.setApellidoPaternoAutor(autorDto.getApellidoPaternoAutor());
+        currentrAutor.setApellidoMaternoAutor(autorDto.getApellidoMaternoAutor());
+        currentrAutor.setAutorUnsis(autorDto.getAutorUnsis());
+
+        AutorDto updatedAutor = autorService.save(currentrAutor);
+
+        return new ResponseEntity<>(updatedAutor, HttpStatus.OK);
+    } catch (Exception e) {
+        map.put("message", e.getMessage());
+        return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
     @DeleteMapping("/autor/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
