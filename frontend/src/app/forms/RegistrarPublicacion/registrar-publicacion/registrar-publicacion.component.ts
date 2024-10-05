@@ -28,13 +28,16 @@ export class RegistrarPublicacionComponent implements OnInit {
   fechaInicioPermitida!: Date;
   fechaFinPermitida!: Date;
   fileName: string = '';
+  rolUsuario: string | null = '';
 
 
   constructor(private articuloService: ArticuloService, private router: Router, private fileService: FileService, private loginService: LoginService) {
     this.investigadores.push({ rol: 'Autor', agregado: false });
-   }
+  }
 
   ngOnInit(): void {
+    this.rolUsuario = this.loginService.getUserRole();
+    // Captura el ID de la URL
     // Llama al método para obtener los institutos cuando se inicializa el componente
     this.articuloService.getInstitutos().subscribe(
       (data: any[]) => {
@@ -44,17 +47,31 @@ export class RegistrarPublicacionComponent implements OnInit {
       (error) => {
         console.error('Error al obtener institutos', error);
       }
-    ); 
-
-    // Llama al método para obtener los trimestres cuando se inicializa el componente
-    this.articuloService.getTrimestres().subscribe(
-      (data: any[]) => {
-        this.trimestres = data;
-      },
-      (error) => {
-        console.error('Error al obtener trimestres', error);
-      }
     );
+
+    if (this.rolUsuario === 'ADMIN') {
+      // Llama al método para obtener los trimestres cuando se inicializa el componente
+      this.articuloService.getTrimestres().subscribe(
+        (data: any[]) => {
+          this.trimestres = data;
+        },
+        (error) => {
+          console.error('Error al obtener trimestres', error);
+        }
+      );
+    }
+    else {
+      // Llama al método para obtener los trimestres cuando se inicializa el componente
+      this.articuloService.getTrimestresFilter().subscribe(
+        (data: any[]) => {
+          this.trimestres = data;
+        },
+        (error) => {
+          console.error('Error al obtener trimestres', error);
+        }
+      );
+    }
+
   }
 
   file!: number;
@@ -223,7 +240,7 @@ export class RegistrarPublicacionComponent implements OnInit {
   capitalize(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
-  
+
   validarCampos(): boolean {
     // Validar campos obligatorios
     if (!this.titulo.trim()) {
@@ -408,11 +425,11 @@ export class RegistrarPublicacionComponent implements OnInit {
             Swal.showLoading();     // Muestra el indicador de carga
           }
         });
-  
+
         // Asegurarse de que this.fechaPublicacion no sea undefined, y asignar una fecha predeterminada si es necesario
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-  
+
         // Subir archivo
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
@@ -453,7 +470,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-  
+
             // Crear el artículo
             this.articuloService.crearArticulo(articulo).subscribe(response => {
               const articuloId = response.id_articulo;
@@ -467,16 +484,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Artículo registrado exitosamente', 'success');
-                       // Obtener el rol del usuario desde el servicio login
-                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+                      // Obtener el rol del usuario desde el servicio login
+                      const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
 
-                    // Enrutamiento basado en el rol del usuario
-                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
-                      this.router.navigate(['/consultar-publicacion']);
-                    } else {
-                      this.router.navigate(['/mis-publicaciones']);
+                      // Enrutamiento basado en el rol del usuario
+                      if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                        this.router.navigate(['/consultar-publicacion']);
+                      } else {
+                        this.router.navigate(['/mis-publicaciones']);
+                      }
                     }
-                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
@@ -528,10 +545,10 @@ export class RegistrarPublicacionComponent implements OnInit {
             Swal.showLoading();
           }
         });
-  
+
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-  
+
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
             this.file = response.id;
@@ -568,7 +585,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-  
+
             this.articuloService.crearArticulo(articulo).subscribe(response => {
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
@@ -579,16 +596,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Libro registrado exitosamente', 'success');
-                       // Obtener el rol del usuario desde el servicio login
-                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+                      // Obtener el rol del usuario desde el servicio login
+                      const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
 
-                    // Enrutamiento basado en el rol del usuario
-                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
-                      this.router.navigate(['/consultar-publicacion']);
-                    } else {
-                      this.router.navigate(['/mis-publicaciones']);
+                      // Enrutamiento basado en el rol del usuario
+                      if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                        this.router.navigate(['/consultar-publicacion']);
+                      } else {
+                        this.router.navigate(['/mis-publicaciones']);
+                      }
                     }
-                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);
@@ -640,10 +657,10 @@ export class RegistrarPublicacionComponent implements OnInit {
             Swal.showLoading();
           }
         });
-  
+
         const fechaPublicacionAjustada = this.fechaPublicacion ? new Date(this.fechaPublicacion) : new Date();
         fechaPublicacionAjustada.setDate(fechaPublicacionAjustada.getDate() + 1);
-  
+
         this.fileService.uploadFile(this.renamedFile).subscribe({
           next: (response) => {
             this.file = response.id;
@@ -683,7 +700,7 @@ export class RegistrarPublicacionComponent implements OnInit {
               aceptado_gestion: false,
               estatus: 1
             };
-  
+
             this.articuloService.crearArticulo(articulo).subscribe(response => {
               const articuloId = response.id_articulo;
               this.idsAutores.forEach((autorId, index) => {
@@ -695,16 +712,16 @@ export class RegistrarPublicacionComponent implements OnInit {
                       this.limpiarCampos();
                       Swal.close();  // Cerrar la alerta de carga
                       Swal.fire('Éxito', 'Capítulo registrado exitosamente', 'success');
-                    // Obtener el rol del usuario desde el servicio login
-                    const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
+                      // Obtener el rol del usuario desde el servicio login
+                      const rolUsuario = this.loginService.getUserRole();  // Llamar al método que obtiene el rol
 
-                    // Enrutamiento basado en el rol del usuario
-                    if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
-                      this.router.navigate(['/consultar-publicacion']);
-                    } else {
-                      this.router.navigate(['/mis-publicaciones']);
+                      // Enrutamiento basado en el rol del usuario
+                      if (rolUsuario === 'ADMIN' || rolUsuario === 'ROOT') {
+                        this.router.navigate(['/consultar-publicacion']);
+                      } else {
+                        this.router.navigate(['/mis-publicaciones']);
+                      }
                     }
-                  }
                   },
                   error => {
                     console.error(`Error al agregar autor ${autorId} al artículo ${articuloId}`, error);

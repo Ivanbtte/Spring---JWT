@@ -111,7 +111,7 @@ public class FileController {
 
             // Extraer file_metadata_id de los resultados filtrados
             List<Long> fileMetadataIds = articulos.stream()
-                    .map(articulo -> (Long) articulo[23]) // Suponiendo que file_metadata_id está en la posición 22
+                    .map(articulo -> (Long) articulo[24]) // Suponiendo que file_metadata_id está en la posición 22
                     .collect(Collectors.toList());
 
             // Crear y devolver el archivo ZIP

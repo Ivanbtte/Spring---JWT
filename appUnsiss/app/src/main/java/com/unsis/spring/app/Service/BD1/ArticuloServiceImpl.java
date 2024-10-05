@@ -30,6 +30,8 @@ import com.unsis.spring.app.Repository.BD1.InstitutoDao;
 import com.unsis.spring.app.Repository.BD1.InvestigadorDao;
 import com.unsis.spring.app.Repository.BD1.Tipo_PublicacionDao;
 import com.unsis.spring.app.Repository.BD1.TrimestreDao;
+import com.unsis.spring.app.User.Role;
+import com.unsis.spring.app.User.UserRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -39,6 +41,8 @@ import java.util.stream.Collectors;
 public class ArticuloServiceImpl implements ArticuloService {
         @Autowired
         private ArticuloDao articuloDao;
+        @Autowired
+        private UserRepository userRepository;
         @Autowired
         private Tipo_PublicacionDao tipoPublicacionDao;
         @Autowired
@@ -83,6 +87,18 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 // Maneja el caso donde no se encontró un correo válido
                                 System.err.println("No se encontró un correo de coordinador válido.");
                         }
+                        // Obtener y enviar correo a todos los administradores
+                        List<String> adminEmails = obtenerEmailsDeAdmins();
+                        if (!adminEmails.isEmpty()) {
+                                String adminSubject = "Nueva publicación para revisión - Admin";
+                                String adminText = "Se ha creado una nueva publicación que requiere revisión.";
+                                for (String adminEmail : adminEmails) {
+                                        emailService.sendEmail(adminEmail, adminSubject, adminText);
+                                }
+                        } else {
+                                System.err.println("No se encontraron administradores activos.");
+                        }
+
                 } catch (Exception e) {
                         // Maneja la excepción sin detener toda la transacción
                         System.err.println("Error enviando el correo: " + e.getMessage());
@@ -103,6 +119,14 @@ public class ArticuloServiceImpl implements ArticuloService {
                                 .orElseThrow(() -> new RuntimeException(
                                                 "No se encontró un coordinador activo para el instituto con ID: "
                                                                 + institutoId));
+        }
+
+        private List<String> obtenerEmailsDeAdmins() {
+                List<String> adminEmails = userRepository.findAllAdminEmailsByRole(Role.ADMIN);
+                if (adminEmails.isEmpty()) {
+                        throw new RuntimeException("No se encontraron administradores activos");
+                }
+                return adminEmails;
         }
 
         @Override

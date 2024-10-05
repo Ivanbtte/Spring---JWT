@@ -21,7 +21,7 @@ export class ArticuloService {
   }
 
   // Método para obtener trimestres
-  getTrimestres(): Observable<any[]> {
+  getTrimestresFilter(): Observable<any[]> {
     return this.http.get<any[]>(environment.urlApi + 'trimestre').pipe(
       map(trimestres => {
         // Ordena los trimestres por fecha de inicio descendente
@@ -29,6 +29,13 @@ export class ArticuloService {
         // Filtra para obtener solo los dos últimos trimestres
         return trimestres.slice(0, 2);
       })
+    );
+  }
+
+  // Método para obtener trimestres
+  getTrimestres(): Observable<any[]> {
+    return this.http.get<any[]>(environment.urlApi + 'trimestre').pipe(
+      catchError(this.handleError)
     );
   }
 
