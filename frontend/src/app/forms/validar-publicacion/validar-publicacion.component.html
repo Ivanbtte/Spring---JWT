@@ -3,7 +3,7 @@
 <div *ngIf="articulo" class="articulo-card">
   <h3 class="card-header">Título de la Publicación: {{ articulo.nombre_articulo }}</h3>
 <!-- Mostrar el mensaje dependiendo del estatus del artículo -->
-<div class="estatus-articulo">
+<div *ngIf="rolUsuario === 'COORDINADOR' || rolUsuario === 'ADMIN'" class="estatus-articulo">
   <p>
     <strong style="color: black;">Estado de la publicación:</strong>
     <span *ngIf="articulo.estatus === 1" class="text-warning">

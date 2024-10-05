@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.unsis.spring.app.DTO.AutorDto;
 import com.unsis.spring.app.Entity.BD1.Autor;
-import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Repository.BD1.AutorDao;
 
 import jakarta.transaction.Transactional;

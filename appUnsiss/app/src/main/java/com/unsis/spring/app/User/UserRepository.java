@@ -20,6 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("update User u set u.enabled = :enabled where u.username = :username")
     void setEnabledByUsername(@Param("username") String username, @Param("enabled") boolean enabled);
 
-    @Query("SELECT u.username FROM User u WHERE u.role = :role")
+    @Query("SELECT u.username FROM User u WHERE u.role = :role AND u.enabled = true")
     List<String> findAllAdminEmailsByRole(@Param("role") Role role);
 }
