@@ -35,17 +35,12 @@ const routes: Routes = [
   { path: 'no-authorized', component: NotAuthorizedComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR', 'ROOT', 'ADMIN', 'COORDINADOR'] } },
   { path: 'catalogo', component: CatalogoComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'registrar-catalogo', component: RegistrarCatalogoComponent, canActivate: [RutasGuard], data: { expectedRoles: [ 'ROOT'] } },
-  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent, canActivate: [RutasGuard], data: { expectedRoles: [ 'ROOT', 'ADMIN', 'COORDINADOR'] } },
+  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent, canActivate: [RutasGuard], data: { expectedRoles: [ 'ROOT', 'ADMIN', 'COORDINADOR','INVESTIGADOR'] } },
   { path: 'mis-publicaciones', component: MisPublicacionesComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR','COORDINADOR'] }},
   { path: 'cmbc', component: CambiarContraComponent, canActivate: [RutasGuard], data: { expectedRoles: ['INVESTIGADOR', 'ROOT', 'ADMIN', 'COORDINADOR'] }},
   { path: 'editar-trimestre/:id', component: EditarTrimestreComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
   { path: 'editar-instituto/:id', component: EditarInstitutoComponent, canActivate: [RutasGuard], data: { expectedRoles: ['ROOT'] } },
-  { path: 'no-authorized', component: NotAuthorizedComponent },
-  { path: 'catalogo', component: CatalogoComponent },
-  { path: 'registrar-catalogo', component: RegistrarCatalogoComponent },
-  { path: 'validar-publicacion/:id', component: ValidarPublicacionComponent },
-  { path: 'mis-publicaciones', component: MisPublicacionesComponent },
-];
+ ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
