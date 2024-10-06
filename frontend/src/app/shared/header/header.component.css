@@ -3,3 +3,6 @@ header {
   margin-top: 0;
   margin-bottom: 0px;
 }
+p.font-italic {
+  font-size: 24px; /* Cambia el valor según el tamaño que desees */
+}

@@ -4,7 +4,7 @@ import { CatalogoService } from 'src/app/services/catalogo/catalogo.service';
 import { Instituto } from 'src/app/services/instituto/instituto';
 import { InvestigadorService } from 'src/app/services/investigador/investigador.service';
 import { Trimestre } from 'src/app/services/trimestre/trimestre';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-catalogo',
@@ -130,13 +130,32 @@ export class CatalogoComponent implements OnInit {
     if (this.fileSelected) {
       this.investigadorService.cargarInvestigadoresDesdeExcel(this.fileSelected).subscribe(
         response => {
-          console.log('Archivo cargado exitosamente');
-          // Aquí puedes manejar la respuesta del backend
+          // Mensaje de éxito con SweetAlert2
+          Swal.fire({
+            icon: 'success',
+            title: 'Carga exitosa',
+            text: 'El archivo ha sido cargado correctamente.',
+            confirmButtonColor: '#3085d6',
+          });
         },
         error => {
-          console.error('Error al cargar el archivo', error);
+          // Mensaje de error con SweetAlert2
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al cargar',
+            text: 'Hubo un problema al cargar el archivo. Por favor, intenta nuevamente.',
+            confirmButtonColor: '#d33',
+          });
         }
       );
+    } else {
+      // Mensaje si no se ha seleccionado archivo
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin archivo seleccionado',
+        text: 'Por favor, selecciona un archivo antes de cargar.',
+        confirmButtonColor: '#f0ad4e',
+      });
     }
   }
 

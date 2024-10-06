@@ -69,22 +69,23 @@
         </table>
       </div>
 
-      <!-- Sección para Cargar Datos en Excel -->
-      <!-- Botón para descargar el formato de Excel -->
       <div *ngIf="selectedOption === 'cargar-datos'">
         <h2>Cargar Investigadores desde Excel</h2>
-
+      
         <!-- Botón para descargar el formato de Excel -->
-        <button (click)="descargarFormatoExcel()" class="btn btn-success">
+        <button (click)="descargarFormatoExcel()" class="btn btn-success mx-2 my-3">
           <i class="fa fa-download"></i> Descargar Formato de Excel
         </button>
-
+      
         <!-- Input para seleccionar archivo -->
-        <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls">
-
+        <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls" class="form-control my-3">
+      
         <!-- Botón para cargar investigadores -->
-        <button [disabled]="!isUploadButtonEnabled" (click)="cargarInvestigadores()">Cargar Investigadores</button>
+        <button [disabled]="!isUploadButtonEnabled" (click)="cargarInvestigadores()" class="btn btn-primary mx-2 my-3">
+          Cargar Investigadores
+        </button>
       </div>
+      
     </form>
   </div>
 </div>
