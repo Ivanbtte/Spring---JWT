@@ -71,8 +71,11 @@ public class ArticuloServiceImpl implements ArticuloService {
                 Optional<Articulos> existingArticulo = articuloDao.findByFechaPublicacionAndNombreArticulo(
                                 articulo.getFecha_publicacion(), tituloNormalizado);
                 if (existingArticulo.isPresent()) {
+                        // Obtener el nombre del instituto del artículo existente
+                        String nombreInstituto = existingArticulo.get().getInstituto().getNombre();
                         throw new IllegalArgumentException(
-                                        "Ya existe un artículo con el mismo título y fecha de publicación.");
+                                        "Ya existe un artículo con el mismo título y fecha de publicación en el instituto: "
+                                                        + nombreInstituto);
                 }
                 Articulos savedArticulo = articuloDao.save(articulo);
                 try {
