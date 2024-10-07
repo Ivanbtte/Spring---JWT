@@ -131,6 +131,7 @@ public class ArticuloController {
             currentArticulo.setCompilado(articuloDto.isCompilado());
             currentArticulo.setObservaciones_directores(articuloDto.getObservaciones_directores());
             currentArticulo.setObservaciones_gestion(articuloDto.getObservaciones_gestion());
+            currentArticulo.setObservaciones_investigador(articuloDto.getObservaciones_investigador());
             currentArticulo.setAceptado_director(articuloDto.isAceptado_director());
             currentArticulo.setAceptado_gestion(articuloDto.isAceptado_gestion());
             currentArticulo.setEstatus(articuloDto.getEstatus());

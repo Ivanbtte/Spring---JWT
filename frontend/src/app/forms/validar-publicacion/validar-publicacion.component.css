@@ -31,7 +31,8 @@
   .btn-rechazar,
   .btn-editar,
   .btn-descargar, 
-  .btn-cancelar{
+  .btn-cancelar,
+  .btn-observaciones{
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -40,6 +41,10 @@
     font-weight: bold;
   }
   
+  .btn-observaciones {
+    background-color: #5b5b5b; 
+  }
+
   .btn-cancelar {
     background-color: #8b0000; 
   }
@@ -60,6 +65,10 @@
     background-color: #F44336; /* Red */
   }
 
+  .btn-descargar:observaciones {
+    background-color: #f4f4f4; 
+  }
+  
   .btn-descargar:hover {
     background-color: #20b9df; /* Green */
   }
@@ -91,4 +100,24 @@
 
 .text-success {
   color: #4caf50; /* Verde para aceptado */
+}
+
+/* Estilo para el contenedor del checkbox y su etiqueta */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 10px; /* Espacio entre el checkbox y el texto */
+  width: 20px; /* Ajuste del tamaño del checkbox */
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkbox-container label {
+  font-size: 1em;
+  color: #333;
+  cursor: pointer; /* Hace que el texto sea clicable */
 }

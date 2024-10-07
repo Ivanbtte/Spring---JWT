@@ -3,6 +3,7 @@ export interface Observaciones {
     compilado: boolean;
     observaciones_directores?: string;
     observaciones_gestion?: string;
+    observaciones_investigador?: string;
     aceptado_director: boolean;
     aceptado_gestion: boolean;
     estatus: number;

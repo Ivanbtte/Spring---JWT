@@ -2,24 +2,24 @@
 <app-sidebar></app-sidebar>
 <div *ngIf="articulo" class="articulo-card">
   <h3 class="card-header">Título de la Publicación: {{ articulo.nombre_articulo }}</h3>
-<!-- Mostrar el mensaje dependiendo del estatus del artículo -->
-<div *ngIf="rolUsuario === 'COORDINADOR' || rolUsuario === 'ADMIN'" class="estatus-articulo">
-  <p>
-    <strong style="color: black;">Estado de la publicación:</strong>
-    <span *ngIf="articulo.estatus === 1" class="text-warning">
-      Pendiente de revisión Director de instituto
-    </span>
-    <span *ngIf="articulo.estatus === 2" class="text-danger">
-      Rechazado
-    </span>
-    <span *ngIf="articulo.estatus === 3" class="text-warning">
-      Pendiente de revisión Gestión académica
-    </span>
-    <span *ngIf="articulo.estatus === 4" class="text-success">
-      Aceptado
-    </span>
-  </p>
-</div>
+  <!-- Mostrar el mensaje dependiendo del estatus del artículo -->
+  <div *ngIf="rolUsuario === 'COORDINADOR' || rolUsuario === 'ADMIN'" class="estatus-articulo">
+    <p>
+      <strong style="color: black;">Estado de la publicación:</strong>
+      <span *ngIf="articulo.estatus === 1" class="text-warning">
+        Pendiente de revisión Director de instituto
+      </span>
+      <span *ngIf="articulo.estatus === 2" class="text-danger">
+        Rechazado
+      </span>
+      <span *ngIf="articulo.estatus === 3" class="text-warning">
+        Pendiente de revisión Gestión académica
+      </span>
+      <span *ngIf="articulo.estatus === 4" class="text-success">
+        Aceptado
+      </span>
+    </p>
+  </div>
 
   <div class="card-body">
     <!-- Si el tipo de publicación es 1 -->
@@ -37,6 +37,8 @@
         articulo.observaciones_gestion }}</p>
       <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
         articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'INVESTIGADOR'"><strong>Observaciones para el investigador:</strong> {{
+        articulo.observaciones_investigador }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 2 -->
@@ -54,6 +56,8 @@
         articulo.observaciones_gestion }}</p>
       <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
         articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'INVESTIGADOR'"><strong>Observaciones para el investigador:</strong> {{
+        articulo.observaciones_investigador }}</p>
     </div>
 
     <!-- Si el tipo de publicación es 3 -->
@@ -68,46 +72,75 @@
         articulo.observaciones_gestion }}</p>
       <p *ngIf="rolUsuario === 'ADMIN'"><strong>Observaciones del director de instituto:</strong> {{
         articulo.observaciones_directores }}</p>
+      <p *ngIf="rolUsuario === 'INVESTIGADOR'"><strong>Observaciones para el investigador:</strong> {{
+        articulo.observaciones_investigador }}</p>
     </div>
 
-    <!-- Cuadro de Texto para Observaciones -->
-    <div *ngIf="rolUsuario === 'ADMIN'" class="form-group">
-      <label for="observaciones">Observaciones:</label>
-      <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_gestion" rows="4"
+    <!-- Botón para mostrar el campo de observaciones -->
+    <button class="btn-observaciones"
+      *ngIf="(rolUsuario === 'COORDINADOR' && articulo.estatus === 1) || (rolUsuario === 'ADMIN' && articulo.estatus === 3)"
+      (click)="toggleObservaciones()">
+      Agregar Observaciones
+    </button>
+
+    <!-- Cuadro de Texto para Observaciones para ADMIN -->
+    <div *ngIf="rolUsuario === 'ADMIN' && mostrarObservaciones" class="form-group">
+      <label for="observaciones">Observaciones para director de instituto:</label>
+      <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_gestion" rows="2"
         [disabled]="articulo.estatus === 4 || articulo.estatus === 2"
         placeholder="Escribe tus observaciones aquí..."></textarea>
     </div>
 
-    <!-- Cuadro de Texto para Observaciones -->
-    <div *ngIf="rolUsuario === 'COORDINADOR'" class="form-group">
-      <label for="observaciones">Observaciones:</label>
-      <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_directores" rows="4"
-        [disabled]="articulo.estatus === 4 || articulo.estatus === 2"
+    <!-- Cuadro de Texto para Observaciones para COORDINADOR -->
+    <div *ngIf="rolUsuario === 'COORDINADOR' && mostrarObservaciones" class="form-group">
+      <label for="observaciones">Observaciones para gestión académica:</label>
+      <textarea id="observaciones" class="form-control" [(ngModel)]="articulo.observaciones_directores" rows="2"
+        [disabled]="articulo.estatus === 4 || articulo.estatus === 2 || articulo.estatus === 3"
         placeholder="Escribe tus observaciones aquí..."></textarea>
+    </div>
+
+    <!-- Cuadro de Texto para Observaciones para el investigador -->
+    <div *ngIf="mostrarObservaciones" class="form-group">
+      <label for="observaciones">Observaciones para el investigador:</label>
+      <textarea id="observacionesinvest" class="form-control" [(ngModel)]="articulo.observaciones_investigador" rows="2"
+        [disabled]="
+      (rolUsuario === 'COORDINADOR' && (articulo.estatus === 2 || articulo.estatus === 4 || articulo.estatus === 3)) || 
+      (rolUsuario === 'ADMIN' && (articulo.estatus === 2 || articulo.estatus === 4))
+    " placeholder="Escribe tus observaciones aquí...">
+  </textarea>
+    </div>
+
+    <div *ngIf="rolUsuario === 'COORDINADOR' || rolUsuario === 'ADMIN'" class="checkbox-container">
+      <input type="checkbox" id="agree" name="agree" [(ngModel)]="articulo.compilado" [disabled]="
+          (rolUsuario === 'COORDINADOR' && (articulo.estatus === 2 || articulo.estatus === 4 || articulo.estatus === 3)) || 
+          (rolUsuario === 'ADMIN' && (articulo.estatus === 2 || articulo.estatus === 4))">
+      <label for="agree">¿Agregar al compilado?</label>
+    </div>
+
+    <div class="form-group">
+      <br>
+      <button class="btn-descargar" (click)="descargarPublicacion(articulo.fileMetadata.id)">Descargar Archivo</button>
     </div>
 
   </div>
   <div *ngIf="rolUsuario === 'COORDINADOR' && articulo.estatus === 1" class="card-footer">
-    <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
-    <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
-    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
+    <button class="btn-aceptar" (click)="aceptarPublicacion()">Enviar a Gestión Académica</button>
+    <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar Publicación</button>
   </div>
   <div *ngIf="rolUsuario === 'ADMIN' && articulo.estatus === 3" class="card-footer">
-    <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar</button>
-    <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar</button>
-    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
-
+    <button class="btn-aceptar" (click)="aceptarPublicacion()">Aceptar Publicación</button>
+    <button class="btn-rechazar" (click)="rechazarPublicacion()">Rechazar Publicación</button>
   </div>
   <div *ngIf="rolUsuario === 'INVESTIGADOR'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
-    <button class="btn-cancelar" (click)="cancelarInves()">Regresar</button> <!-- Botón Cancelar -->
   </div>
   <div *ngIf="rolUsuario==='ROOT'" class="card-footer">
     <button class="btn-editar" (click)="editarPublicacion(articulo)">Editar Publicación</button>
-    <button class="btn-cancelar" (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
   </div>
   <div class="card-footer">
-    <button class="btn-descargar" (click)="descargarPublicacion(articulo.fileMetadata.id)">Descargar Archivo</button>
-    
+
+    <button *ngIf="rolUsuario==='ROOT' || 'ADMIN' || 'COORDINADOR'" class="btn-cancelar"
+      (click)="cancelarAdmin()">Regresar</button> <!-- Botón Cancelar -->
+
   </div>
 </div>

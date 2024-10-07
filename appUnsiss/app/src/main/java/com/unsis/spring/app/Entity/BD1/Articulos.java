@@ -100,6 +100,9 @@ public class Articulos {
     private String observaciones_gestion;
 
     @Column
+    private String observaciones_investigador;
+
+    @Column
     private String indice_miar;
 
     @Column(nullable = false)
@@ -122,8 +125,9 @@ public class Articulos {
             String titulo_revista, Integer numero_revista, String volumen_revista, Integer pag_inicio,
             Integer pag_final, String doi, String isbn_impreso, String isbn_digital, String nombre_articulo,
             String editorial, String nombre_capitulo, String observaciones_directores, String observaciones_gestion,
-            String indice_miar, boolean compilado, Trimestre trimestre, boolean financiamiento_prodep,
-            FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion, Integer estatus) {
+            String observaciones_investigador, String indice_miar, boolean compilado, Trimestre trimestre, 
+            boolean financiamiento_prodep, FileMetadata fileMetadata, boolean aceptado_director, boolean aceptado_gestion, 
+            Integer estatus) {
 
         this.id_articulo = id_articulo;
         this.tipo_Publicacion = tipo_Publicacion;
@@ -142,6 +146,7 @@ public class Articulos {
         this.nombre_capitulo = nombre_capitulo;
         this.observaciones_directores = observaciones_directores;
         this.observaciones_gestion = observaciones_gestion;
+        this.observaciones_investigador = observaciones_investigador;
         this.indice_miar = indice_miar;
         this.compilado = compilado;
         this.trimestre = trimestre;

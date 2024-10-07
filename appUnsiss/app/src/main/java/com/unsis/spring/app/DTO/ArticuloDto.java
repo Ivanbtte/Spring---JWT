@@ -29,6 +29,7 @@ public class ArticuloDto {
     private String nombre_capitulo;
     private String observaciones_directores;
     private String observaciones_gestion;
+    private String observaciones_investigador;
     private String indice_miar;
     private boolean compilado;
     private TrimestreDto trimestre;
