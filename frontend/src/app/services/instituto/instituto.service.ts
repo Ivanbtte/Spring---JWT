@@ -18,7 +18,7 @@ export class InstitutoService {
 
   // Método para obtener un instituto por ID (GET)
   getInstituto(id: number): Observable<any> {
-    return this.http.get(`${environment.urlApi}${id}`).pipe(
+    return this.http.get(environment.urlApi + 'instituto/'+ id).pipe(
       catchError(this.handleError)
     );
   }
@@ -26,7 +26,7 @@ export class InstitutoService {
   // Método para actualizar un instituto por ID (PUT)
   updateInstituto(id: number, instituto: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put(`${environment.urlApi}${id}`, instituto, { headers }).pipe(
+    return this.http.put(environment.urlApi + 'instituto/'+ id, instituto, { headers }).pipe(
       catchError(this.handleError)
     );
   }

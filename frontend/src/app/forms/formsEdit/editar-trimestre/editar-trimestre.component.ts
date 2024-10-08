@@ -80,11 +80,11 @@ export class EditarTrimestreComponent implements OnInit {
     if (inicio >= fin) {
       return false;
     }
-
+/*
     // Validar que las fechas sean del mismo año
     if (inicio.getFullYear() !== fin.getFullYear()) {
       return false;
-    }
+    }*/
 
     return true;
   }

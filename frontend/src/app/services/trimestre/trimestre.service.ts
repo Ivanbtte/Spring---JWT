@@ -12,9 +12,8 @@ export class TrimestreService {
 
   // Método para obtener un trimestre por su ID
   getTrimestre(id: number): Observable<any> {
-    const url = `${environment.urlApi}${id}`;
-    return this.http.get<any>(url).pipe(
-      catchError(this.handleError) // Manejo de errores
+    return this.http.get(environment.urlApi + 'trimestre/'+ id).pipe(
+      catchError(this.handleError)
     );
   }
   // Método para actualizar un trimestre
@@ -28,7 +27,7 @@ export class TrimestreService {
       fecha_fin: this.formatDateForInput(trimestre.fecha_fin)
     };
 
-    return this.http.put(`${environment.urlApi}${id}`, formattedTrimestre, { headers }).pipe(
+    return this.http.put(environment.urlApi + 'trimestre/'+ id, formattedTrimestre, { headers }).pipe(
       catchError(this.handleError)
     );
   }
