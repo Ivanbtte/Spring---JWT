@@ -30,7 +30,6 @@ import com.unsis.spring.app.Entity.BD1.Articulo_Autor;
 import com.unsis.spring.app.Entity.BD1.Articulos;
 import com.unsis.spring.app.Entity.BD1.Autor;
 import com.unsis.spring.app.ReportPDF.ArticuloReportExcel;
-import com.unsis.spring.app.ReportPDF.ArticuloReportPDF;
 import com.unsis.spring.app.ExceptionHandler.ResourceNotFoundException;
 import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
@@ -38,7 +37,7 @@ import com.unsis.spring.app.Service.BD1.AutorService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/api/v1")
 public class ArticuloController {
     @Autowired
@@ -242,27 +241,6 @@ public class ArticuloController {
         }
     }
     
-    /*
-     * @GetMapping(value = "/articulos/exportarPDF")
-     * public void exportarPDFdeArticulo(HttpServletResponse response) throws
-     * DocumentException, IOException {
-     * response.setContentType("application/pdf");
-     * 
-     * DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-     * String fechaActual = dateFormatter.format(new Date());
-     * 
-     * String cabecera = "Content-Disposition";
-     * String valor = "attachment; filename=Articulos_" + fechaActual + ".pdf";
-     * 
-     * response.setHeader(cabecera, valor);
-     * 
-     * List<CitaApaDto> articulos = articuloService.getAllCitasApa();
-     * 
-     * ArticuloReportPDF exporter = new ArticuloReportPDF(articulos);
-     * exporter.exportar(response);
-     * }
-     */
-
     @PostMapping(value = "/articulos/exportarExcel")
     public void exportarExelDeArticulo(@RequestBody SearchCriteria criteria, HttpServletResponse response)
             throws DocumentException, IOException {

@@ -17,22 +17,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.unsis.spring.app.DTO.InstitutoDto;
-import com.unsis.spring.app.Service.BD1.InstitutoService;
+import com.unsis.spring.app.DTO.TrimestreDto;
+import com.unsis.spring.app.Service.BD1.TrimestreService;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:4200" })
+@CrossOrigin(origins = { "http://localhost:8080" })
 @RequestMapping("/api/v1")
-public class InstitutoController {
+public class TrimestreController {
 
     @Autowired
-    private InstitutoService institutoService;
+    private TrimestreService trimestreService;
 
-    @GetMapping(value = "/instituto")
+    @GetMapping(value = "/trimestre")
     public ResponseEntity<Object> get() {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            List<InstitutoDto> list = institutoService.findAll();
+            List<TrimestreDto> list = trimestreService.findAll();
             return new ResponseEntity<Object>(list, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
@@ -40,10 +40,10 @@ public class InstitutoController {
         }
     }
 
-    @GetMapping(value = "/instituto/{id}")
+    @GetMapping(value = "/trimestre/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id) {
         try {
-            InstitutoDto data = institutoService.findById(id);
+            TrimestreDto data = trimestreService.findById(id);
             return new ResponseEntity<Object>(data, HttpStatus.OK);
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<String, Object>();
@@ -52,11 +52,11 @@ public class InstitutoController {
         }
     }
 
-    @PostMapping(value = "/instituto")
-    public ResponseEntity<Object> create(@RequestBody InstitutoDto institutoDto) {
+    @PostMapping(value = "/trimestre")
+    public ResponseEntity<Object> create(@RequestBody TrimestreDto trimestreDto) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            InstitutoDto res = institutoService.save(institutoDto);
+            TrimestreDto res = trimestreService.save(trimestreDto);
             return new ResponseEntity<Object>(res, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
@@ -64,29 +64,31 @@ public class InstitutoController {
         }
     }
 
-    @PutMapping("/instituto/{id}")
-    public ResponseEntity<Object> update(@RequestBody InstitutoDto institutoDto, @PathVariable Long id) {
+    @PutMapping("/trimestre/{id}")
+    public ResponseEntity<Object> update(@RequestBody TrimestreDto trimestreDto, @PathVariable Long id) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
 
-            InstitutoDto currentrInstituto = institutoService.findById(id);
+            TrimestreDto currentrTrimestre = trimestreService.findById(id);
 
-            currentrInstituto.setNombre(institutoDto.getNombre());
+            currentrTrimestre.setNombre(trimestreDto.getNombre());
+            currentrTrimestre.setFecha_inicio(trimestreDto.getFecha_inicio());
+            currentrTrimestre.setFecha_fin(trimestreDto.getFecha_fin());
+            
+            TrimestreDto updatedTrimestre = trimestreService.save(currentrTrimestre);
 
-            InstitutoDto updatedInstituto = institutoService.save(currentrInstituto);
-
-            return new ResponseEntity<Object>(updatedInstituto, HttpStatus.OK);
+            return new ResponseEntity<Object>(updatedTrimestre, HttpStatus.OK);
         } catch (Exception e) {
             map.put("message", e.getMessage());
             return new ResponseEntity<>(map, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/instituto/{id}")
+    @DeleteMapping("/trimestre/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         Map<String, Object> map = new HashMap<>();
         try {
-            institutoService.delete(id);
+            trimestreService.delete(id);
             map.put("deleted", true);
             return new ResponseEntity<>(map, HttpStatus.OK);
         } catch (Exception e) {

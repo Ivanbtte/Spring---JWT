@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lowagie.text.DocumentException;
 import com.unsis.spring.app.Auth.AuthResponse;
-import com.unsis.spring.app.ReportPDF.UserReportExcel;
-import com.unsis.spring.app.ReportPDF.UserReportPDf;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:4200"})
+@CrossOrigin(origins = {"http://localhost:8080"})
 public class UserController {
      
     private final UserService userService;
@@ -67,42 +65,6 @@ public class UserController {
     public ResponseEntity<Void> disableUser(@PathVariable Integer id) {
         userService.disableUser(id);
         return ResponseEntity.ok().build();
-    }
-
-   /* @GetMapping(value = "/user/exportarPDF")
-    public void exportarPDFDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
-        response.setContentType("application/pdf");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Usuarios_" + fechaActual + ".pdf";
-
-        response.setHeader(cabecera, valor);
-
-        List<UserDTO> usuarios = userService.getAllUsers();
-     
-        UserReportPDf exporter = new UserReportPDf(usuarios);
-        exporter.exportar(response);
-    }*/
-
-    @GetMapping(value = "/user/exportarExel")
-    public void exportarExelDeUsuarios(HttpServletResponse response) throws DocumentException, IOException{
-        response.setContentType("application/octet-stream");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String fechaActual = dateFormatter.format(new Date());
-
-        String cabecera = "Content-Disposition";
-        String valor = "attachment; filename=Usuarios_" + fechaActual + ".xlsx";
-
-        response.setHeader(cabecera, valor);
-
-        List<UserDTO> usuarios = userService.getAllUsers();
-     
-        UserReportExcel exporter = new UserReportExcel(null, null, usuarios);
-        exporter.exportar(response);
     }
 
 }
