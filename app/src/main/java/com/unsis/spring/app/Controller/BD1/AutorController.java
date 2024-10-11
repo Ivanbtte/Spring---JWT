@@ -25,7 +25,7 @@ import com.unsis.spring.app.Service.BD1.ArticuloService;
 import com.unsis.spring.app.Service.BD1.AutorService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://192.168.3.20:8080")
 @RequestMapping("/api/v1")
 public class AutorController {
 

@@ -23,7 +23,7 @@ import com.unsis.spring.app.DTO.InvestigadorDto;
 import com.unsis.spring.app.Service.BD1.InvestigadorService;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:8080" })
+@CrossOrigin(origins = { "http://192.168.3.20:8080" })
 @RequestMapping("/api/v1")
 public class InvestigadorController {
 

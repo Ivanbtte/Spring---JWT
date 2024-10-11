@@ -56,7 +56,7 @@ public class SecurityConfig {
     public CorsFilter corsFilter() {
         var source = new UrlBasedCorsConfigurationSource();
         var config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080")); // Cambia esto a la URL de tu frontend
+        config.setAllowedOrigins(List.of("http://192.168.3.20:8080")); // Cambia esto a la URL de tu frontend
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
