@@ -85,7 +85,21 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <!-- Filtro por Compilado o No Compilado -->
+<div class="form-group">
+    <label>
+        <input type="checkbox" [(ngModel)]="filtrarPorCompilado" [ngModelOptions]="{standalone: true}" />
+        Filtrar por compilado <i class="fa fa-book"></i>
+    </label>
+    <div *ngIf="filtrarPorCompilado" class="form-group">
+        <label for="compilado">Estado de compilación</label>
+        <select id="compilado" [(ngModel)]="selectedCompilado" name="compilado" (change)="onCheckboxChange('compilado')">
+            <option [value]="true">Compilado</option>
+            <option [value]="false">No compilado</option>
+        </select>
+    </div>
+</div>
+
                 </form>
             </div>
         </div>

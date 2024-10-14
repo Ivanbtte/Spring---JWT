@@ -318,7 +318,8 @@ public class ArticuloController {
                     criteria.getFechaInicio(),
                     criteria.getFechaFin(),
                     criteria.getTipo(),
-                    criteria.getEstatus());
+                    criteria.getEstatus(),
+                    criteria.getCompilado());
             return new ResponseEntity<>(articulos, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

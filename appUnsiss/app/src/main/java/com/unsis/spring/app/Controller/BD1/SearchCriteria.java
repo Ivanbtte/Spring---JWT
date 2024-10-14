@@ -8,6 +8,7 @@ public class SearchCriteria {
     private String fechaFin;
     private Integer tipo;
     private Integer estatus;
+    private Boolean compilado;
 
     // Getters
     public Long getInstitutoId() {
@@ -36,6 +37,10 @@ public class SearchCriteria {
 
     public Integer getEstatus(){
         return estatus;
+    }
+
+    public Boolean getCompilado() {
+        return compilado;
     }
 
     // Setters
@@ -67,4 +72,7 @@ public class SearchCriteria {
         this.estatus = estatus;
     }
 
+    public void setCompilado(Boolean compilado) {
+        this.compilado = compilado;
+    }
 }
