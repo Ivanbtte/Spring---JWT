@@ -5,6 +5,8 @@ import { ArticuloService } from 'src/app/services/articulo/articulo.service';
 import { Observaciones } from 'src/app/services/articulo/observaciones';
 import { LoginService } from 'src/app/services/auth/login.service';
 import { FileService } from 'src/app/services/fileService/file.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-validar-publicacion',
@@ -82,11 +84,19 @@ export class ValidarPublicacionComponent implements OnInit {
         compilado: this.articulo.compilado
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
-        console.log('Artículo Editado exitosamente');
-        // Redirigir a /mis-publicaciones si el rol es COORDINADOR
-        this.router.navigate(['/mis-publicaciones']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Rechazo Exitoso',
+          text: 'La publicación ha sido rechazada exitosamente',
+        }).then(() => {
+          this.router.navigate(['/consultar-publicacion']);
+        });
       }, error => {
-        console.error('Error al Editar el artículo', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al rechazar',
+          text: 'Hubo un problema al rechazar la publicación.',
+        });
       });
     } else if (this.rolUsuario === 'ADMIN') {
       const observaciones: Observaciones = {
@@ -100,17 +110,29 @@ export class ValidarPublicacionComponent implements OnInit {
         compilado: this.articulo.compilado
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
-        console.log('Artículo Editado exitosamente');
+        Swal.fire({
+          icon: 'success',
+          title: 'Rechazo Exitoso',
+          text: 'La publicación ha sido rechazada exitosamente',
+        }).then(() => {
+          this.router.navigate(['/consultar-publicacion']);
+        });
       }, error => {
-        console.error('Error al Editar el artículo', error);
-        // Redirigir a /consultar-publicaciones si el rol es ADMIN
-        this.router.navigate(['/consultar-publicacion']);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al rechazar',
+          text: 'Hubo un problema al rechazar la publicación.',
+        });
       });
     } else {
-      // Acción por defecto o para otros roles (si aplica)
-      console.log('Acción para otros roles');
+      Swal.fire({
+        icon: 'info',
+        title: 'Acción no válida',
+        text: 'No tienes permisos para rechazar la publicación.',
+      });
     }
   }
+
 
   aceptarPublicacion() {
     if (this.rolUsuario === 'COORDINADOR') {
@@ -125,11 +147,19 @@ export class ValidarPublicacionComponent implements OnInit {
         compilado: this.articulo.compilado
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
-        console.log('Artículo Editado exitosamente');
-        // Redirigir a /mis-publicaciones si el rol es COORDINADOR
-        this.router.navigate(['/mis-publicaciones']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Aceptación Exitosa',
+          text: 'La publicación ha sido aceptada exitosamente',
+        }).then(() => {
+          this.router.navigate(['/consultar-publicacion']);
+        });
       }, error => {
-        console.error('Error al Editar el artículo', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al aceptar',
+          text: 'Hubo un problema al aceptar la publicación.',
+        });
       });
     } else if (this.rolUsuario === 'ADMIN') {
       const observaciones: Observaciones = {
@@ -143,17 +173,29 @@ export class ValidarPublicacionComponent implements OnInit {
         compilado: this.articulo.compilado
       };
       this.articuloService.agregarObservaciones(observaciones, this.route.snapshot.paramMap.get('id')).subscribe(response => {
-        console.log('Artículo Editado exitosamente');
-        // Redirigir a /consultar-publicaciones si el rol es ADMIN
-        this.router.navigate(['/consultar-publicacion']);
+        Swal.fire({
+          icon: 'success',
+          title: 'Aceptación Exitosa',
+          text: 'La publicación ha sido aceptada exitosamente',
+        }).then(() => {
+          this.router.navigate(['/consultar-publicacion']);
+        });
       }, error => {
-        console.error('Error al Editar el artículo', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al aceptar',
+          text: 'Hubo un problema al aceptar la publicación.',
+        });
       });
     } else {
-      // Acción por defecto o para otros roles (si aplica)
-      console.log('Acción para otros roles');
+      Swal.fire({
+        icon: 'info',
+        title: 'Acción no válida',
+        text: 'No tienes permisos para aceptar la publicación.',
+      });
     }
   }
+
 
   descargarPublicacion(fileId: string) {
     const id = +fileId; // Convertir el string a número

@@ -107,7 +107,8 @@ public class FileController {
                     criteria.getFechaInicio(),
                     criteria.getFechaFin(),
                     criteria.getTipo(),
-                    criteria.getEstatus());
+                    criteria.getEstatus(),
+                    criteria.getCompilado());
 
             // Extraer file_metadata_id de los resultados filtrados
             List<Long> fileMetadataIds = articulos.stream()

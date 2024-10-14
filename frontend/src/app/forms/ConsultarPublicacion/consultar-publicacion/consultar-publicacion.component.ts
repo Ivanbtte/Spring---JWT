@@ -21,6 +21,8 @@ export class ConsultarPublicacionComponent implements OnInit {
   filtrarPorProfesor: boolean = false;
   filtrarPorFechas: boolean = false;
   filtrarPorTipo: boolean = false;
+  filtrarPorCompilado: boolean = false;
+  selectedCompilado: boolean | null = null;
   selectedInstituto: number | null = null;
   selectedPublicacion: string | undefined;
   selectedProfesor: number | null = null;
@@ -160,6 +162,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
         estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
+        compilado:this.filtrarPorCompilado ? this.selectedCompilado || null : null,
       };
       this.articuloService.searchPublications(searchCriteria).subscribe(data => {
         this.articulosFiltrados = this.convertirDatos(data);
@@ -180,6 +183,7 @@ export class ConsultarPublicacionComponent implements OnInit {
         fechaFin: this.filtrarPorFechas ? (this.endDate || null) : null || this.filtrarPorTrimestre ? (this.endDate || null) : null,
         tipo: this.filtrarPorTipo ? this.selectedTipoPublicacion || null : null,
         estatus: this.filtrarPorEstado ? this.selectedEstado || null : null,
+        compilado:this.filtrarPorCompilado ? this.selectedCompilado || null : null,
       };
       this.articuloService.searchPublications(searchCriteria).subscribe(data => {
         this.articulosFiltrados = this.convertirDatos(data);
@@ -336,6 +340,11 @@ export class ConsultarPublicacionComponent implements OnInit {
             this.selectedEstado = null;
           }
           break;
+      case 'compilado':
+        if(!this.filtrarPorCompilado){
+          this.selectedCompilado=null;
+        }
+        break;
     }
   }
 

@@ -114,14 +114,16 @@ public interface ArticuloDao extends JpaRepository<Articulos, Long> {
                         "AND (:fechaInicio IS NULL OR a.fecha_publicacion >= CAST(:fechaInicio AS date)) " +
                         "AND (:fechaFin IS NULL OR a.fecha_publicacion <= CAST(:fechaFin AS date)) " +
                         "AND (:tipo IS NULL OR a.id_publicacion_tipo = :tipo)" +
-                        "AND (:estatus IS NULL OR a.estatus = :estatus)", nativeQuery = true)
+                        "AND (:estatus IS NULL OR a.estatus = :estatus)"+
+                        "AND (:compilado IS NULL OR a.compilado = :compilado)", nativeQuery = true)
         List<Object[]> findFilteredArticulos(
                         @Param("institutoId") Long institutoId,
                         @Param("autorId") Long autorId,
                         @Param("fechaInicio") String fechaInicio,
                         @Param("fechaFin") String fechaFin,
                         @Param("tipo") Integer tipo,
-                        @Param("estatus") Integer estatus);
+                        @Param("estatus") Integer estatus,
+                        @Param("compilado") Boolean compilado);
 
         // Reemplaza el método original con este
         @Query("SELECT a FROM Articulos a WHERE a.fecha_publicacion = :fechaPublicacion AND LOWER(a.nombre_articulo) = LOWER(:nombreArticulo)")
